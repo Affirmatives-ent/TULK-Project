@@ -1,0 +1,25 @@
+.groupsDiv {
+  text-align: center;
+}
+
+.groups {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-block: 10px;
+}
+
+.group {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--inputField-radius);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.group img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
