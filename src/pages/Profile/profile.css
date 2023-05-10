@@ -59,12 +59,22 @@
   font-weight: 400 !important;
 }
 
+.profile-bottom-page {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 2fr 3fr;
+}
+
+.profile-bottom-page-left {
+  width: 100%;
+}
+
 .profile-action-buttons {
+  padding-inline: 10px;
   margin-top: 20px;
   display: flex;
-  width: max(60%, 500px);
+  width: 100%;
   justify-content: space-between;
-  padding-inline: 50px;
 }
 
 .profile-action-buttons p {
@@ -81,7 +91,7 @@
 
 .profile-action-buttons p.active::before {
   content: "";
-  width: 120%;
+  width: 110%;
   left: 50%;
   transform: translateX(-50%);
   position: absolute;
@@ -89,4 +99,8 @@
   background: var(--gradient-clr);
   bottom: -5px;
   border-radius: 5px 5px 0 0;
+}
+
+.profile-bottom-page-right {
+  margin-top: 50px;
 }

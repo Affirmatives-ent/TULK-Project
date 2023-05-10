@@ -11,6 +11,7 @@
   top: 0;
   background: white;
   z-index: 999;
+  overflow: hidden;
 }
 
 .navbar-logo {
@@ -38,10 +39,10 @@
 .navbar-center a.active::before {
   content: "";
   position: absolute;
-  height: 7px;
+  height: 10px;
   width: 100px;
   background-image: var(--gradient-clr);
-  bottom: -10px;
+  bottom: -20px;
   left: -42px;
   border-radius: 10px 10px 0 0;
 }

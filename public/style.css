@@ -55,6 +55,10 @@ a {
   font-weight: 500;
 }
 
+.btn-secondary:hover {
+  background: #a8a8a8;
+}
+
 .h-100 {
   font-size: 18px;
   font-weight: 600;

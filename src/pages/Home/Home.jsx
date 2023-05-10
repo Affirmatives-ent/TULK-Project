@@ -1,6 +1,8 @@
 import "./home.css";
-
+// images
 import profilePhoto from "../../images/image-25.png";
+
+// components
 import NewPeople from "../../components/newPeople/NewPeople";
 import Friends from "../../components/Friends/Friends";
 import Groups from "../../components/groups/Groups";

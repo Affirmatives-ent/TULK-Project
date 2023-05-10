@@ -1,5 +1,6 @@
 // utils
-import { NavLink, BrowserRouter as Router } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 // style
 import "./navbar.css";
@@ -15,6 +16,21 @@ import { GrGroup } from "react-icons/gr";
 import { BsChatLeftDots, BsBell, BsSearch } from "react-icons/bs";
 
 export default function Navbar() {
+  // store the search input in a variable
+  const [searchInput, setSearchInput] = useState("");
+
+  // react hook to be used to redirect user to search result page
+  const navigate = useNavigate();
+
+  // function to redirect user to search result page on search
+  const showSearchResult = (e) => {
+    e.preventDefault();
+
+    // navigate user to search result page if search entry is not blank
+    if (searchInput.trim() !== "") {
+      navigate("/searchResult");
+    }
+  };
   return (
     <div className="navbar">
       <div className="navbar-left">
@@ -31,14 +47,23 @@ export default function Navbar() {
           <SlPeople className="navbar-icon" />
         </NavLink>
 
-        <GrGroup className="navbar-icon" />
+        <NavLink to="/group">
+          <GrGroup className="navbar-icon" />
+        </NavLink>
+
         <BsChatLeftDots className="navbar-icon" />
       </div>
       <div className="navbar-right-space"></div>
       <div className="navbar-right">
         <div className="navbar-search">
           <BsSearch />
-          <input type="text" placeholder="Search Tulk" />
+          <form onSubmit={showSearchResult}>
+            <input
+              type="text"
+              placeholder="Search Tulk"
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
+          </form>
         </div>
         <div className="navbar-notification">
           <BsBell />

@@ -13,7 +13,7 @@ export default function UserFriends() {
             <img src={userPhoto6} alt="" />
           </div>
           <div className="user-friend-name-location">
-            <h3 className="h100">Chris Pessi</h3>
+            <h3 className="h-100">Chris Pessi</h3>
             <small className="small-text">Location: Japan</small>
           </div>
         </div>
@@ -23,7 +23,7 @@ export default function UserFriends() {
             <img src={userPhoto6} alt="" />
           </div>
           <div className="user-friend-name-location">
-            <h3 className="h100">Chris Pessi</h3>
+            <h3 className="h-100">Chris Pessi</h3>
             <small className="small-text">Location: Japan</small>
           </div>
         </div>
@@ -33,7 +33,7 @@ export default function UserFriends() {
             <img src={userPhoto6} alt="" />
           </div>
           <div className="user-friend-name-location">
-            <h3 className="h100">Chris Pessi</h3>
+            <h3 className="h-100">Chris Pessi</h3>
             <small className="small-text">Location: Japan</small>
           </div>
         </div>
@@ -43,7 +43,7 @@ export default function UserFriends() {
             <img src={userPhoto6} alt="" />
           </div>
           <div className="user-friend-name-location">
-            <h3 className="h100">Chris Pessi</h3>
+            <h3 className="h-100">Chris Pessi</h3>
             <small className="small-text">Location: Japan</small>
           </div>
         </div>
@@ -53,7 +53,7 @@ export default function UserFriends() {
             <img src={userPhoto6} alt="" />
           </div>
           <div className="user-friend-name-location">
-            <h3 className="h100">Chris Pessi</h3>
+            <h3 className="h-100">Chris Pessi</h3>
             <small className="small-text">Location: Japan</small>
           </div>
         </div>
@@ -63,7 +63,7 @@ export default function UserFriends() {
             <img src={userPhoto6} alt="" />
           </div>
           <div className="user-friend-name-location">
-            <h3 className="h100">Chris Pessi</h3>
+            <h3 className="h-100">Chris Pessi</h3>
             <small className="small-text">Location: Japan</small>
           </div>
         </div>
