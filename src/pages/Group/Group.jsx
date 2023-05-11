@@ -8,6 +8,9 @@ import { useState } from "react";
 import Post from "../../components/Post/Post";
 import CreatePost from "../../components/CreatePost/CreatePost";
 
+// icons
+import { FaEllipsisH } from "react-icons/fa";
+
 export default function Group() {
   const [showGroupActionLinks, setShowGroupActionLinks] = useState(false);
 
@@ -38,7 +41,7 @@ export default function Group() {
 
           <div className="group-edit-button">
             <button className="btn-secondary" onClick={toggleGroupActionLinks}>
-              ...
+              <FaEllipsisH />
             </button>
             {showGroupActionLinks && (
               <div className="group-edit-links">

@@ -11,7 +11,7 @@ export default function NewPeople() {
       <div className="newPeopleHeader">
         <p className="text-body">Who is new</p>
       </div>
-      <div className="newPoeple">
+      <div className="newPeople">
         <div className="newPerson">
           <img src={newPerson2} alt="" />
         </div>

@@ -1,4 +1,6 @@
+// styles
 import "./home.css";
+
 // images
 import profilePhoto from "../../images/image-25.png";
 
@@ -11,19 +13,21 @@ import Stories from "../../components/Stories/Stories";
 import CreatePost from "../../components/CreatePost/CreatePost";
 import News from "../../components/News/News";
 import Post from "../../components/Post/Post";
+import ChatPopup from "../../components/ChatPopup/ChatPopup";
 
 export default function Home() {
   return (
     <div className="home">
       <div className="home-left">
         <div className="home-left-profile-link">
-          <img src={profilePhoto} alt="profile photo" />
+          <img src={profilePhoto} alt="" />
           <h3 className="h-100">Oludare Omolaja</h3>
         </div>
         <NewPeople />
         <Friends />
         <Groups />
         <MessageContacts />
+        <ChatPopup />
       </div>
       <div className="home-center">
         <Stories />

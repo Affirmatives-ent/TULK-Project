@@ -1,3 +1,4 @@
+// styles
 import "./friends.css";
 
 // images

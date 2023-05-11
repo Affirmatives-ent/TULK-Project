@@ -49,6 +49,11 @@
   align-items: flex-end;
 }
 
+.group-edit-button button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .group-edit-links {
   padding: 0;
   background: #d2cfcf;

@@ -1,3 +1,4 @@
+// styles
 import "./post.css";
 
 // icons
