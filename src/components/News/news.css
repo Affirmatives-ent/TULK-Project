@@ -1,24 +1,25 @@
 .newsDiv {
-  background: white;
-  padding: 15px;
-  margin-right: 4vw;
-  border-radius: var(--inputField-radius);
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .news {
   display: flex;
-  gap: 20px;
   align-items: center;
   margin-bottom: 10px;
-  margin-right: auto;
+  cursor: pointer;
+  border-radius: var(--inputField-radius);
+  background: white;
+  padding: 10px;
 }
 
 .newsImg {
-  flex: 50%;
-  max-width: 150px;
-  height: 100px;
+  min-width: 50px;
+  max-width: 100px;
+  min-height: 50px;
   border-radius: var(--inputField-radius);
   overflow: hidden;
+  margin-right: 10px;
 }
 
 .newsImg img {
@@ -27,12 +28,11 @@
   object-fit: cover;
 }
 
-.newsBody {
-  max-width: 250px;
-  flex: 50%;
-}
+/* .newsBody-header-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+} */
 
-.newsHr {
-  margin-bottom: 10px;
-  max-width: 350px;
+.newsBody p {
+  margin-top: 10px;
 }

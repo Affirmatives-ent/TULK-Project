@@ -1,32 +1,35 @@
 .navbar {
   width: 100vw;
   height: 60px;
-  display: grid;
-  grid-template-columns: 26vw 40vw 6vw 28vw;
-  align-items: center !important;
+  display: flex;
+  align-items: center;
+  gap: 2vw;
   box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.05);
-  padding: 10px 0;
-  margin-bottom: 10px;
+  padding: 10px 1vw;
   position: fixed;
   top: 0;
   background: white;
   z-index: 999;
-  overflow: hidden;
+}
+
+.navbar-left {
+  max-width: 300px;
+  flex-basis: 25%;
 }
 
 .navbar-logo {
   height: 30px;
-  padding-left: 2vw;
+  width: 100px;
   cursor: pointer;
-  margin-block: auto;
 }
 
 .navbar-logo img {
   height: 100%;
+  object-fit: cover;
 }
 
 .navbar-center {
-  height: 100%;
+  flex-basis: 50%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -41,7 +44,7 @@
 .navbar-center a.active::before {
   content: "";
   position: absolute;
-  height: 10px;
+  height: 6px;
   width: 100px;
   background-image: var(--gradient-clr);
   bottom: -20px;
@@ -57,11 +60,12 @@
 }
 
 .navbar-right {
+  flex-basis: 25%;
+  margin-left: auto;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 20px;
-  padding-right: 2vw;
+  gap: 1vw;
 }
 
 .navbar-search {
@@ -94,4 +98,82 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* invisible items on desktop */
+.navbar-mobile-links {
+  display: none;
+}
+
+/* Mobile medai query */
+@media screen and (max-width: 920px) {
+  .navbar {
+    padding-inline: 2vw;
+    justify-content: space-between;
+  }
+
+  .navbar-left {
+    flex-basis: 20%;
+  }
+
+  .navbar-logo {
+    width: 100%;
+    max-height: 30px;
+    cursor: pointer;
+  }
+
+  .navbar-logo img {
+    width: 100%;
+    object-fit: contain;
+  }
+
+  .navbar-center {
+    display: none;
+  }
+
+  .navbar-right {
+    display: none;
+  }
+
+  /* visible items only on mobile */
+  .navbar-mobile-links {
+    display: flex;
+    flex-basis: 80%;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .navbar-mobile-search-input {
+    flex-basis: 85%;
+    width: 100%;
+    background-color: var(--grey-bg-clr);
+    border-radius: var(--inputField-radius);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .navbar-mobile-search-input input {
+    border: none;
+    outline: none;
+    background: none;
+  }
+
+  .navbar-mobile-burger {
+    flex-basis: 15%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .navbar-mobile-burger img {
+    min-width: 40px;
+    width: 40px;
+    min-height: 40px;
+    height: 40px;
+  }
 }

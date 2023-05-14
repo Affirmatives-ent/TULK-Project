@@ -1,0 +1,89 @@
+.login {
+  width: 100%;
+  padding-inline: 2vw;
+  display: grid;
+  grid-template-columns: 45% 55%;
+  gap: 30px;
+  margin-top: 80px;
+}
+
+.login-left,
+.login-right {
+  width: 100%;
+  height: calc(100vh - 80px);
+}
+
+.login-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: -80px;
+}
+
+.welcome-img {
+  max-width: 300px;
+}
+
+.welcome-img img {
+  width: 100%;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.login-form form {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.login-form form input,
+.login-form form button {
+  margin: 0;
+  width: 300px;
+  padding: 10px;
+  border-radius: var(--inputField-radius);
+}
+
+.login-form form input {
+  border: 1px solid #a8a8a8;
+  margin: 0;
+}
+
+.forgotten-password-link {
+  align-self: flex-start;
+  font-size: 14px;
+}
+
+.signup-btn-modal-popup button {
+  width: 300px;
+  padding: 10px;
+  margin-top: 10px;
+}
+.news-nav {
+  width: 80%;
+  margin-bottom: 20px;
+}
+
+.news-nav ul {
+  display: flex;
+  list-style: none;
+  justify-content: space-between;
+}
+
+.news-nav ul li {
+  padding-inline: 10px;
+  cursor: pointer;
+}
+
+.news-nav ul li.active {
+  font-weight: bold;
+}

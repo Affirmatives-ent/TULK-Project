@@ -12,6 +12,7 @@ export default function ChatPopup() {
   const toggleChatPopupBody = () => {
     document.getElementById("chatPopupBody").classList.toggle("active");
   };
+
   return (
     <div className="chat-popup">
       <div className="chat-popup-header" onClick={toggleChatPopupBody}>

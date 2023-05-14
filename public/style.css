@@ -35,12 +35,16 @@ a {
   color: inherit;
 }
 
+img {
+  max-width: 100%;
+}
+
 /* ------ Utility classes ------ */
 .btn-solid {
   background-image: var(--gradient-clr);
   color: white;
   border-radius: 10px;
-  padding: 7px 15px;
+  padding: 10px 15px;
   border: none;
   cursor: pointer;
 }
@@ -49,7 +53,7 @@ a {
   background: #d2cfcf;
   color: var(--font-clr);
   border-radius: 10px;
-  padding: 7px 15px;
+  padding: 10px 15px;
   border: none;
   cursor: pointer;
   font-weight: 500;
@@ -95,4 +99,8 @@ a {
 
 .mt-lg {
   margin-top: 45px;
+}
+
+.mt-top {
+  margin-top: 80px;
 }

@@ -35,7 +35,9 @@ export default function Navbar() {
     <div className="navbar">
       <div className="navbar-left">
         <div className="navbar-logo">
-          <img src={logo} alt="logo" />
+          <NavLink to="/">
+            <img src={logo} alt="logo" />
+          </NavLink>
         </div>
       </div>
       <div className="navbar-center">
@@ -53,7 +55,6 @@ export default function Navbar() {
 
         <BsChatLeftDots className="navbar-icon" />
       </div>
-      <div className="navbar-right-space"></div>
       <div className="navbar-right">
         <div className="navbar-search">
           <BsSearch />
@@ -69,6 +70,21 @@ export default function Navbar() {
           <BsBell />
         </div>
         <div className="navbar-profile-link">
+          <img src={profilePhoto} alt="profile link" />
+        </div>
+      </div>
+      <div className="navbar-mobile-links">
+        <div className="navbar-mobile-search-input">
+          <BsSearch />
+          <form onSubmit={showSearchResult}>
+            <input
+              type="text"
+              placeholder="Search Tulk"
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
+          </form>
+        </div>
+        <div className="navbar-mobile-burger">
           <img src={profilePhoto} alt="profile link" />
         </div>
       </div>

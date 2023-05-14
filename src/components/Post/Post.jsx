@@ -2,7 +2,7 @@
 import "./post.css";
 
 // icons
-import { AiFillHeart } from "react-icons/ai";
+import { AiFillHeart, AiOutlineSend } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 import { BiRepost } from "react-icons/bi";
 
@@ -80,7 +80,9 @@ export default function Post() {
           </div>
           <div className="comment-box">
             <input type="text" placeholder="Write your comment..." />
-            <button className="btn-solid">Post Comment</button>
+            <button>
+              <AiOutlineSend />
+            </button>
           </div>
         </div>
       </div>
