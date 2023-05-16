@@ -1,103 +1,124 @@
-from rest_framework import viewsets, status
-from django.shortcuts import get_object_or_404
-from rest_framework.decorators import action
+
+from rest_framework import generics
+from . import serializers, models
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import get_user_model
+from rest_framework import status
+from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from .models import User, UserProfile
-from .serializers import UserSerializer, UserProfileSerializer
-from .permissions import UserOwnerOrGetAndPost
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.shortcuts import get_object_or_404
+
+from . import serializers
+from .models import UserProfile
+
+User = get_user_model()
 
 
-class UserViewSet(viewsets.ViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [UserOwnerOrGetAndPost,]
+class UserRegisterationAPIView(GenericAPIView):
+    """
+    An endpoint for the client to create a new User.
+    """
 
-    def list(self, request):
-        queryset = self.queryset
-        serializer = self.serializer_class(
-            queryset, many=True, context={'request': request})
-        return Response(serializer.data)
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.UserRegistrationSerializer
 
-    def create(self, request):
-        serializer = self.serializer_class(
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        token = RefreshToken.for_user(user)
+        data = serializer.data
+        data["tokens"] = {"refresh": str(
+            token), "access": str(token.access_token)}
+        return Response(data, status=status.HTTP_201_CREATED)
+
+
+class UserLoginAPIView(GenericAPIView):
+    """
+    An endpoint to authenticate existing users using their email and password.
+    """
+
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.UserLoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(
             data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def retrieve(self, request, pk=None):
-        user = get_object_or_404(self.queryset, pk=pk)
-        serializer = self.serializer_class(user, context={'request': request})
-        return Response(serializer.data)
-
-    def update(self, request, pk=None):
-        user = get_object_or_404(self.queryset, pk=pk)
-        serializer = self.serializer_class(
-            user, data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def partial_update(self, request, pk=None):
-        user = get_object_or_404(self.queryset, pk=pk)
-        serializer = self.serializer_class(
-            user, data=request.data, partial=True, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def destroy(self, request, pk=None):
-        user = get_object_or_404(self.queryset, pk=pk)
-        user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data
+        serializer = serializers.UserSerializer(
+            user, context={'request': request})
+        token = RefreshToken.for_user(user)
+        data = serializer.data
+        data["tokens"] = {"refresh": str(
+            token), "access": str(token.access_token)}
+        return Response(data, status=status.HTTP_200_OK)
 
 
-class UserProfileViewSet(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
-    permission_classes = [UserOwnerOrGetAndPost,]
+class UserLogoutAPIView(GenericAPIView):
+    """
+    An endpoint to logout users.
+    """
 
-    def list(self, request):
-        queryset = self.queryset
-        serializer = self.serializer_class(
-            queryset, many=True, context={'request': request})
-        return Response(serializer.data)
+    permission_classes = (IsAuthenticated,)
 
-    def create(self, request):
-        serializer = self.serializer_class(
-            data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request, *args, **kwargs):
+        try:
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    def retrieve(self, request, pk=None):
-        user = get_object_or_404(self.queryset, pk=pk)
-        serializer = self.serializer_class(user, context={'request': request})
-        return Response(serializer.data)
 
-    def update(self, request, pk=None):
-        user = get_object_or_404(self.queryset, pk=pk)
-        serializer = self.serializer_class(
-            user, data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class UserAPIView(RetrieveUpdateAPIView):
+    """
+    Get, Update user information
+    """
 
-    def partial_update(self, request, pk=None):
-        user = get_object_or_404(self.queryset, pk=pk)
-        serializer = self.serializer_class(
-            user, data=request.data, partial=True, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.UserSerializer
 
-    def destroy(self, request, pk=None):
-        user = get_object_or_404(self.queryset, pk=pk)
-        user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def get_object(self):
+        return self.request.user
+
+    def get(self, request, *args, **kwargs):
+        # Retrieve the user profile
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        # Update the user profile
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        # Partial update of the user profile
+        return self.partial_update(request, *args, **kwargs)
+
+
+class UserProfileAPIView(generics.RetrieveUpdateAPIView):
+    """
+    Get, Update user profile
+    """
+
+    serializer_class = serializers.UserProfileSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        user = self.request.user
+        profile = get_object_or_404(models.UserProfile, user=user)
+        return profile
+
+    def get(self, request, *args, **kwargs):
+        # Retrieve the user profile
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        # Update the user profile
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        # Partial update of the user profile
+        return self.partial_update(request, *args, **kwargs)

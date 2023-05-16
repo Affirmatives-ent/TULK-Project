@@ -1,18 +1,21 @@
+from typing import Optional
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import BaseBackend
+from django.contrib.auth.base_user import AbstractBaseUser
 
 UserModel = get_user_model()
 
 
 class EmailOrPhoneBackend(BaseBackend):
-    def authenticate(self, request, email_or_phone=None, password=None, **kwargs):
+    def authenticate(self, request, email_or_phone_number=None, password=None, **kwargs):
         try:
             # try to get user by email
-            user = UserModel.objects.get(email=email_or_phone)
+            user = UserModel.objects.get(email=email_or_phone_number)
         except UserModel.DoesNotExist:
             try:
                 # try to get user by phone number
-                user = UserModel.objects.get(phone_number=email_or_phone)
+                user = UserModel.objects.get(
+                    phone_number=email_or_phone_number)
             except UserModel.DoesNotExist:
                 return None
 
