@@ -8,6 +8,9 @@ import "./profile.css";
 import profileCoverPhoto from "../../images/flowers-276014__340 1.png";
 import profileUserAvatar from "../../images/image-25.png";
 
+// icons
+import { FaEllipsisH } from "react-icons/fa";
+
 // components
 import UserPhotos from "../../components/UserPhotos/UserPhotos";
 import UserFriends from "../../components/UserFriends/UserFriends";
@@ -15,12 +18,23 @@ import UserGroups from "../../components/UserGroups/UserGroups";
 import CreatePost from "../../components/CreatePost/CreatePost";
 import Post from "../../components/Post/Post";
 
+// data
+import { users, posts } from "../../data/data";
+
 // buttons from DOM
 const showFriendsBtn = document.getElementById("showFriendsBtn");
 const showPhotosBtn = document.getElementById("showPhotosBtn");
 const showGroupsBtn = document.getElementById("showGroupsBtn");
 
 export default function Profile() {
+  // variable to store current user
+  const currentUser = users[8];
+
+  const currentUserPosts = posts.filter((post) => {
+    return post.userId === currentUser.id;
+  });
+
+  console.log(currentUserPosts);
   // functions
   const [showPhotos, setShowPhotos] = useState(true);
   const [showFriends, setShowFriends] = useState(false);
@@ -106,26 +120,42 @@ export default function Profile() {
             <img src={profileUserAvatar} alt="" />
           </div>
           <div className="profile-user-name-slogan">
-            <h2 className="h-200">Oludare Adebayo</h2>
+            <h2 className="h-200">{currentUser.name}</h2>
             <div className="profile-user-slogan mt-xsm">
-              <p>The man with the style</p>
+              <p>{currentUser.company.catchPhrase}</p>
             </div>
           </div>
 
           <div className="profile-user-edit-button">
-            <button className="btn-secondary">Edit Profile</button>
+            <button className="btn-secondary">
+              <FaEllipsisH />
+            </button>
           </div>
         </div>
       </div>
 
       <div className="profile-user-info">
-        <h3 className="h-100">Works at: Affirmatives Entertainment </h3>
-        <h3 className="h-100">Studied at: University of Lagos</h3>
-        <h3 className="h-100">Marital Status: Single</h3>
-        <h3 className="h-100">Birthday: 30 December </h3>
-        <h3 className="h-100">Contact: 08072940649 </h3>
-        <h3 className="h-100">Email: affirmatives.ent@gmail.com</h3>
-        <h3 className="h-100">Web: tulkonline.com</h3>
+        <h3 className="h-100">
+          Works at: <b>{currentUser.company.name} </b>
+        </h3>
+        <h3 className="h-100">
+          Studied at: <b>{currentUser.address.city}</b>
+        </h3>
+        <h3 className="h-100">
+          Marital Status: <b>Single</b>
+        </h3>
+        <h3 className="h-100">
+          Birthday: <b>30 December </b>
+        </h3>
+        <h3 className="h-100">
+          Contact: <b>{currentUser.phone} </b>
+        </h3>
+        <h3 className="h-100">
+          Email: <b>{currentUser.email}</b>
+        </h3>
+        <h3 className="h-100">
+          Web: <b>{currentUser.website}</b>
+        </h3>
       </div>
 
       <div className="profile-bottom-page">
@@ -152,10 +182,9 @@ export default function Profile() {
         </div>
         <div className="profile-bottom-page-right">
           <CreatePost />
-          <Post />
-          <Post />
-          <Post />
-          <Post />
+          {currentUserPosts.map((currentUserPost) => {
+            return <Post key={currentUserPost.id} post={currentUserPost} />;
+          })}
         </div>
       </div>
     </div>

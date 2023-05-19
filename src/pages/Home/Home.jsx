@@ -19,6 +19,9 @@ import Post from "../../components/Post/Post";
 import ChatPopup from "../../components/ChatPopup/ChatPopup";
 import Chat from "../../components/Chat/Chat";
 
+// data
+import { posts } from "../../data/data";
+
 export default function Home() {
   // variable to store state of chat Modal whether active or not
   const [showChatModal, setShowChatModal] = useState(false);
@@ -40,11 +43,9 @@ export default function Home() {
         {showChatModal && <Chat setShowChatModal={setShowChatModal} />}
         {/* <Stories /> */}
         <CreatePost />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
+        {posts.map((post) => {
+          return <Post post={post} key={post.id} />;
+        })}
       </div>
       {/* <div className="home-right-toggle-feed"></div> */}
       <div className="home-right">

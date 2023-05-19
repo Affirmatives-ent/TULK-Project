@@ -11,6 +11,9 @@ import CreatePost from "../../components/CreatePost/CreatePost";
 // icons
 import { FaEllipsisH } from "react-icons/fa";
 
+// data
+import { posts, users } from "../../data/data";
+
 export default function Group() {
   const [showGroupActionLinks, setShowGroupActionLinks] = useState(false);
 
@@ -73,10 +76,7 @@ export default function Group() {
 
       <div className="group-posts">
         <CreatePost />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
+        <Post userId={users[0].id} />
       </div>
     </div>
   );

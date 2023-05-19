@@ -4,13 +4,16 @@
 }
 
 .news {
-  display: flex;
-  align-items: center;
   margin-bottom: 10px;
   cursor: pointer;
   border-radius: var(--inputField-radius);
   background: white;
   padding: 10px;
+}
+
+.news-content {
+  display: flex;
+  align-items: flex-start;
 }
 
 .newsImg {
@@ -35,4 +38,25 @@
 
 .newsBody p {
   margin-top: 10px;
+}
+
+.news-extra {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.news-action {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.news-like-count,
+.news-comment-count,
+.news-share {
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }

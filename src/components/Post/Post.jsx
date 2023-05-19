@@ -5,12 +5,21 @@ import "./post.css";
 import { AiFillHeart, AiOutlineSend } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 import { BiRepost } from "react-icons/bi";
+import { RiShareBoxFill } from "react-icons/ri";
 
 // images
 import posterImg from "../../images/Frame 43.png";
 import postImg from "../../images/man-walking-dog.png";
 
-export default function Post() {
+// data
+import { users } from "../../data/data";
+
+export default function Post({ post }) {
+  // select name of a user where user id = post.userId
+  const x = users.filter((user) => {
+    return user.id === post.userId;
+  });
+
   return (
     <div className="postDiv">
       <div className="post">
@@ -19,17 +28,14 @@ export default function Post() {
             <img src={posterImg} alt="" />
           </div>
           <div className="poster-name">
-            <h3 className="h-100">Olu of Warri</h3>
+            <h3 className="h-100">{x[0].name}</h3>
           </div>
         </div>
         <div className="post-img">
           <img src={postImg} alt="" />
         </div>
         <div className="post-desc">
-          <p className="text-body">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deleniti
-            dolore ipsa iusto non cupiditate cum id vel dolor dicta tempora?
-          </p>
+          <p className="text-body">{post.body}</p>
         </div>
         <div className="post-action">
           <div className="post-like-comment">
@@ -46,7 +52,7 @@ export default function Post() {
 
           <div className="post-repost">
             <p className="text-body">3</p>
-            <BiRepost className="post-like-icon" />
+            <RiShareBoxFill className="post-like-icon" />
           </div>
         </div>
 
