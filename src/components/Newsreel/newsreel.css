@@ -1,0 +1,8 @@
+.newsreelDiv {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.newsreelDiv a {
+  text-decoration: none !important;
+}

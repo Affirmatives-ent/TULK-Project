@@ -841,3 +841,89 @@ export const posts = [
     body: "cupiditate quo est a modi nesciunt soluta\nipsa voluptas error itaque dicta in\nautem qui minus magnam et distinctio eum\naccusamus ratione error aut",
   },
 ];
+
+export const news = [
+  {
+    newsId: 1,
+    newsTag: "Politics",
+    newsHeader: "Obasanjo faults appointment of former IGPs as chairmen",
+    newsBody:
+      "Former President Olusegun Obasanjo has said that the 2023 general election was a show of shame and that he is too old to keep quiet and not talk about it. \n Obasanjo said this at an event in Abuja on Thursday, April 5. He described the election outcome as a “sickening show of shame” and urged the incoming administration to put measures in place that would foster national reconciliation. \n The former Nigerian leader said the government needs to make a concerted effort into rescuing a nation that has been plunged into dystopia. \n “Given what we saw during the election, Nigeria is now even more divided and more corroded than we thought. This places a deep onus on any administration following the current one, to urgently facilitate the process of national moral rearmament and national reconciliation for the aggrieved and will lead us across Nigeria and to assuage the youth. This must be done in sync with the imperative of national value orientation that Nigeria requires to build a collective sense of enduring and local values and national belonging.",
+    newsPostTime: "12 mins ago",
+  },
+  {
+    newsId: 2,
+    newsTag: "Politics",
+    newsHeader: "Firm announces programme to boost modern retail sector",
+    newsBody:
+      "Former President Olusegun Obasanjo has said that the 2023 general election was a show of shame and that he is too old to keep quiet and not talk about it. \n Obasanjo said this at an event in Abuja on Thursday, April 5. He described the election outcome as a “sickening show of shame” and urged the incoming administration to put measures in place that would foster national reconciliation. \n The former Nigerian leader said the government needs to make a concerted effort into rescuing a nation that has been plunged into dystopia. \n “Given what we saw during the election, Nigeria is now even more divided and more corroded than we thought. This places a deep onus on any administration following the current one, to urgently facilitate the process of national moral rearmament and national reconciliation for the aggrieved and will lead us across Nigeria and to assuage the youth. This must be done in sync with the imperative of national value orientation that Nigeria requires to build a collective sense of enduring and local values and national belonging.",
+    newsPostTime: "12 mins ago",
+  },
+  {
+    newsId: 3,
+    newsTag: "Politics",
+    newsHeader:
+      "NCC dedicates toll-free number 622 for presidential election monitoring",
+    newsBody:
+      "Former President Olusegun Obasanjo has said that the 2023 general election was a show of shame and that he is too old to keep quiet and not talk about it. \n Obasanjo said this at an event in Abuja on Thursday, April 5. He described the election outcome as a “sickening show of shame” and urged the incoming administration to put measures in place that would foster national reconciliation. \n The former Nigerian leader said the government needs to make a concerted effort into rescuing a nation that has been plunged into dystopia. \n “Given what we saw during the election, Nigeria is now even more divided and more corroded than we thought. This places a deep onus on any administration following the current one, to urgently facilitate the process of national moral rearmament and national reconciliation for the aggrieved and will lead us across Nigeria and to assuage the youth. This must be done in sync with the imperative of national value orientation that Nigeria requires to build a collective sense of enduring and local values and national belonging.",
+    newsPostTime: "12 mins ago",
+  },
+  {
+    newsId: 4,
+    newsTag: "Politics",
+    newsHeader: "Obasanjo faults appointment of former IGPs as chairmen",
+    newsBody:
+      "Former President Olusegun Obasanjo has said that the 2023 general election was a show of shame and that he is too old to keep quiet and not talk about it. \n Obasanjo said this at an event in Abuja on Thursday, April 5. He described the election outcome as a “sickening show of shame” and urged the incoming administration to put measures in place that would foster national reconciliation. \n The former Nigerian leader said the government needs to make a concerted effort into rescuing a nation that has been plunged into dystopia. \n “Given what we saw during the election, Nigeria is now even more divided and more corroded than we thought. This places a deep onus on any administration following the current one, to urgently facilitate the process of national moral rearmament and national reconciliation for the aggrieved and will lead us across Nigeria and to assuage the youth. This must be done in sync with the imperative of national value orientation that Nigeria requires to build a collective sense of enduring and local values and national belonging.",
+    newsPostTime: "12 mins ago",
+  },
+  {
+    newsId: 5,
+    newsTag: "Politics",
+    newsHeader: "News title or highlight to flow by side of each story picture",
+    newsBody:
+      "Former President Olusegun Obasanjo has said that the 2023 general election was a show of shame and that he is too old to keep quiet and not talk about it. \n Obasanjo said this at an event in Abuja on Thursday, April 5. He described the election outcome as a “sickening show of shame” and urged the incoming administration to put measures in place that would foster national reconciliation. \n The former Nigerian leader said the government needs to make a concerted effort into rescuing a nation that has been plunged into dystopia. \n “Given what we saw during the election, Nigeria is now even more divided and more corroded than we thought. This places a deep onus on any administration following the current one, to urgently facilitate the process of national moral rearmament and national reconciliation for the aggrieved and will lead us across Nigeria and to assuage the youth. This must be done in sync with the imperative of national value orientation that Nigeria requires to build a collective sense of enduring and local values and national belonging.",
+    newsPostTime: "12 mins ago",
+  },
+  {
+    newsId: 6,
+    newsTag: "Politics",
+    newsHeader:
+      "NCC dedicates toll-free number 622 for presidential election monitoring",
+    newsBody:
+      "Former President Olusegun Obasanjo has said that the 2023 general election was a show of shame and that he is too old to keep quiet and not talk about it. \n Obasanjo said this at an event in Abuja on Thursday, April 5. He described the election outcome as a “sickening show of shame” and urged the incoming administration to put measures in place that would foster national reconciliation. \n The former Nigerian leader said the government needs to make a concerted effort into rescuing a nation that has been plunged into dystopia. \n “Given what we saw during the election, Nigeria is now even more divided and more corroded than we thought. This places a deep onus on any administration following the current one, to urgently facilitate the process of national moral rearmament and national reconciliation for the aggrieved and will lead us across Nigeria and to assuage the youth. This must be done in sync with the imperative of national value orientation that Nigeria requires to build a collective sense of enduring and local values and national belonging.",
+    newsPostTime: "12 mins ago",
+  },
+  {
+    newsId: 7,
+    newsTag: "Politics",
+    newsHeader: "Obasanjo faults appointment of former IGPs as chairmen",
+    newsBody:
+      "Former President Olusegun Obasanjo has said that the 2023 general election was a show of shame and that he is too old to keep quiet and not talk about it. \n Obasanjo said this at an event in Abuja on Thursday, April 5. He described the election outcome as a “sickening show of shame” and urged the incoming administration to put measures in place that would foster national reconciliation. \n The former Nigerian leader said the government needs to make a concerted effort into rescuing a nation that has been plunged into dystopia. \n “Given what we saw during the election, Nigeria is now even more divided and more corroded than we thought. This places a deep onus on any administration following the current one, to urgently facilitate the process of national moral rearmament and national reconciliation for the aggrieved and will lead us across Nigeria and to assuage the youth. This must be done in sync with the imperative of national value orientation that Nigeria requires to build a collective sense of enduring and local values and national belonging.",
+    newsPostTime: "12 mins ago",
+  },
+  {
+    newsId: 8,
+    newsTag: "Politics",
+    newsHeader: "News title or highlight to flow by side of each story picture",
+    newsBody:
+      "Former President Olusegun Obasanjo has said that the 2023 general election was a show of shame and that he is too old to keep quiet and not talk about it. \n Obasanjo said this at an event in Abuja on Thursday, April 5. He described the election outcome as a “sickening show of shame” and urged the incoming administration to put measures in place that would foster national reconciliation. \n The former Nigerian leader said the government needs to make a concerted effort into rescuing a nation that has been plunged into dystopia. \n “Given what we saw during the election, Nigeria is now even more divided and more corroded than we thought. This places a deep onus on any administration following the current one, to urgently facilitate the process of national moral rearmament and national reconciliation for the aggrieved and will lead us across Nigeria and to assuage the youth. This must be done in sync with the imperative of national value orientation that Nigeria requires to build a collective sense of enduring and local values and national belonging.",
+    newsPostTime: "12 mins ago",
+  },
+  {
+    newsId: 9,
+    newsTag: "Politics",
+    newsHeader:
+      "NCC dedicates toll-free number 622 for presidential election monitoring",
+    newsBody:
+      "Former President Olusegun Obasanjo has said that the 2023 general election was a show of shame and that he is too old to keep quiet and not talk about it. \n Obasanjo said this at an event in Abuja on Thursday, April 5. He described the election outcome as a “sickening show of shame” and urged the incoming administration to put measures in place that would foster national reconciliation. \n The former Nigerian leader said the government needs to make a concerted effort into rescuing a nation that has been plunged into dystopia. \n “Given what we saw during the election, Nigeria is now even more divided and more corroded than we thought. This places a deep onus on any administration following the current one, to urgently facilitate the process of national moral rearmament and national reconciliation for the aggrieved and will lead us across Nigeria and to assuage the youth. This must be done in sync with the imperative of national value orientation that Nigeria requires to build a collective sense of enduring and local values and national belonging.",
+    newsPostTime: "12 mins ago",
+  },
+  {
+    newsId: 10,
+    newsTag: "Politics",
+    newsHeader: "Firm announces programme to boost modern retail sector",
+    newsBody:
+      "Former President Olusegun Obasanjo has said that the 2023 general election was a show of shame and that he is too old to keep quiet and not talk about it. \n Obasanjo said this at an event in Abuja on Thursday, April 5. He described the election outcome as a “sickening show of shame” and urged the incoming administration to put measures in place that would foster national reconciliation. \n The former Nigerian leader said the government needs to make a concerted effort into rescuing a nation that has been plunged into dystopia. \n “Given what we saw during the election, Nigeria is now even more divided and more corroded than we thought. This places a deep onus on any administration following the current one, to urgently facilitate the process of national moral rearmament and national reconciliation for the aggrieved and will lead us across Nigeria and to assuage the youth. This must be done in sync with the imperative of national value orientation that Nigeria requires to build a collective sense of enduring and local values and national belonging.",
+    newsPostTime: "12 mins ago",
+  },
+];

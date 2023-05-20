@@ -4,7 +4,7 @@ import "./newsPage.css";
 // icons
 import { TfiLayoutGrid3Alt } from "react-icons/tfi";
 import { BsSearch } from "react-icons/bs";
-import News from "../../components/News/News";
+import Newsreel from "../../components/Newsreel/Newsreel";
 
 export default function NewsPage() {
   // function to show search news input field when search icon is clicked
@@ -31,7 +31,7 @@ export default function NewsPage() {
       </div>
 
       <div className="newspage-body">
-        <News newsPage />
+        <Newsreel newsPage />
       </div>
     </div>
   );

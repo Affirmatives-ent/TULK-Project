@@ -3,7 +3,7 @@ import "./login.css";
 
 // images
 import welcomeImg from "../../images/TULK-hot-1.png";
-import News from "../../components/News/News";
+import Newsreel from "../../components/Newsreel/Newsreel";
 import { useState } from "react";
 import Signup from "../../components/Signup/Signup";
 
@@ -53,7 +53,7 @@ export default function Login() {
             <li>Entertainment & More</li>
           </ul>
         </div>
-        <News loginPage />
+        <Newsreel loginPage />
       </div>
     </div>
   );
