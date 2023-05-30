@@ -1,6 +1,11 @@
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
+from dotenv import load_dotenv
+import os
+from django.db.models import Q
+from django.contrib.auth import get_user_model
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,9 +34,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     "corsheaders",
-    "rest_framework.authtoken",
+    "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
-    'accounts'
+    "drf_spectacular",
+    'accounts',
+    'posts',
+    'djoser',
 
 ]
 
@@ -66,17 +74,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backendAPI.wsgi.application'
 
-
+load_dotenv()
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Tulk_db',
+        'USER': 'postgres',
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
+MY_SENDCHAMP_PUBLIC_KEY = os.getenv('SENDCHAMP_KEY')
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -103,11 +115,18 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
 
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Blog API Project",
+    "DESCRIPTION": "A sample blog to learn about DRF",
+    "VERSION": "1.0.0",
+    # OTHER SETTINGS
+}
+
 
 AUTHENTICATION_BACKENDS = [
     'accounts.authentications.EmailOrPhoneBackend',
@@ -120,10 +139,17 @@ CORS_ORIGIN_WHITELIST = (
 )
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=14),
-    "ROTATE_REFRESH_TOKENS": True,
-    "BLACKLIST_AFTER_ROTATION": True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=180),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
+
+
+DJOSER = {
+    'USER_ID_FIELD': 'phone_number',
+    'LOGIN_FIELD': 'phone_number',
 }
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -136,7 +162,9 @@ USE_I18N = True
 
 USE_TZ = True
 
+MAX_OTP_TRY = 3
 
+MIN_PASSWORD_LENGTH = 8
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
