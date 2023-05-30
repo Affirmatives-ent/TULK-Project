@@ -1,5 +1,4 @@
 .profile {
-  margin-top: 65px;
   height: 100%;
   max-width: max(60vw, 800px);
   margin-inline: auto;
@@ -103,4 +102,56 @@
 
 .profile-bottom-page-right {
   margin-top: 50px;
+}
+
+/* Mobile media query */
+@media screen and (max-width: 920px) {
+  .profile-cover-photo {
+    max-height: 100px;
+  }
+
+  .profile-user-avatar {
+    top: -40px;
+    min-width: 100px;
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-user-image-name {
+    padding-inline: 2vw;
+  }
+
+  .profile-user-name-slogan {
+    margin-top: 10px;
+    margin-left: 10px;
+  }
+
+  .profile-user-name-slogan h2 {
+    font-size: 18px;
+  }
+
+  .profile-user-slogan p {
+    font-size: 12px;
+  }
+
+  .profile-user-edit-button {
+    margin-top: 10px;
+  }
+
+  .profile-user-info {
+    margin-top: -20px;
+    padding-inline: 2vw;
+    gap: 2px;
+  }
+
+  .profile-user-info h3 {
+    font-size: 14px !important;
+  }
+
+  .profile-bottom-page {
+    display: block;
+    width: min(500px, 100%);
+    padding-inline: 2vw;
+    margin-inline: auto;
+  }
 }

@@ -1,11 +1,9 @@
 .chat-popup {
-  width: 100%;
-  border-radius: var(--inputField-radius);
   overflow: hidden;
   margin-top: 20px;
   border: 1px solid #d2cfcf;
   background: white;
-  position: absolute;
+  /* position: absolute; */
   bottom: 0;
   z-index: 900;
 }

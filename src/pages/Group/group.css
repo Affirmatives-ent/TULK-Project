@@ -1,5 +1,4 @@
 .group-page {
-  margin-top: 65px;
   height: 100%;
   width: 100%;
   max-width: max(60vw, 800px);
@@ -44,9 +43,6 @@
   margin-top: 30px;
   margin-left: auto;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
 }
 
 .group-edit-button button {
@@ -58,9 +54,13 @@
   padding: 0;
   background: #d2cfcf;
   border-radius: var(--inputField-radius);
-  position: relative;
-  top: 10px;
+  position: absolute;
+  min-width: 200px;
+  height: 160px;
+  top: 40px;
+  right: 0;
   overflow: hidden;
+  z-index: 100;
 }
 
 .group-edit-links ul li {
@@ -99,7 +99,60 @@
 }
 
 .group-posts {
-  max-width: 60%;
+  max-width: min(600px, 100%);
   margin-inline: auto;
   margin-top: 50px;
+}
+
+/* Mobile media query */
+@media screen and (max-width: 920px) {
+  .group-cover-photo {
+    max-height: 100px;
+  }
+
+  .group-avatar {
+    top: -40px;
+    min-width: 100px;
+    width: 100px;
+    height: 100px;
+  }
+
+  .group-image-name {
+    padding-inline: 2vw;
+  }
+
+  .group-name-slogan {
+    margin-top: 10px;
+    margin-left: 10px;
+  }
+
+  .group-name-slogan h2 {
+    font-size: 18px;
+  }
+
+  .group-slogan p {
+    font-size: 12px;
+  }
+
+  .group-edit-button {
+    margin-top: 10px;
+  }
+
+  .group-info {
+    margin-top: -20px;
+    padding-inline: 2vw;
+    gap: 2px;
+    padding-bottom: 0;
+  }
+
+  .group-info h3 {
+    font-size: 14px !important;
+  }
+
+  .group-posts {
+    max-width: 100%;
+    margin-inline: auto;
+    padding-inline: 2vw;
+    margin-top: 50px;
+  }
 }

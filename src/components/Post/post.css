@@ -7,6 +7,10 @@
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
 }
 
+.post {
+  width: 100%;
+}
+
 .post-head {
   display: flex;
   align-items: center;
@@ -54,6 +58,7 @@
 
 .post-comments {
   margin-bottom: 20px;
+  padding-inline: 10px;
 }
 
 .post-like-comment {
@@ -73,10 +78,13 @@
   gap: 10px;
   align-items: center;
   margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #d2d0d0;
 }
 
 .commenter-image {
   min-width: 30px;
+  width: 30px;
   height: 30px;
   border-radius: 50%;
   overflow: hidden;
@@ -90,11 +98,12 @@
 
 .post-comment-box {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
 }
 
 .post-comment-box .user-image {
+  min-width: 30px;
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -110,16 +119,24 @@
 .comment-box {
   width: 100%;
   display: flex;
-  align-items: flex-start;
-  flex-direction: column;
+  align-items: center;
   gap: 10px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: var(--inputField-radius);
+  padding: 10px;
 }
 
 .comment-box input {
-  border-radius: var(--inputField-radius);
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.1);
   border: none;
   outline: none;
+  background: none;
   width: 100%;
+}
+
+.comment-box button {
+  border: none;
+  display: flex;
+  align-items: center;
+  background: none;
+  font-size: 20px;
 }
