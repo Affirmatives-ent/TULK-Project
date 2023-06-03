@@ -4,16 +4,21 @@ from django.contrib.auth import authenticate
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.conf import settings
-from django.utils.crypto import get_random_string
 from django.contrib.auth.hashers import make_password
-from twilio.rest import Client
-import random
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='accounts:user-detail',
+        lookup_field='pk'
+    )
+
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'date_of_birth', 'gender',
+        fields = ['url', 'id', 'first_name', 'last_name', 'date_of_birth', 'gender',
                   'email', 'phone_number', 'is_active', 'is_staff']
 
 
@@ -21,11 +26,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     user_id = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), source='user', write_only=True)
+    user_url = serializers.HyperlinkedRelatedField(
+        view_name='userprofile-detail', read_only=True, lookup_field="user.pk")
 
     class Meta:
         model = UserProfile
-        fields = ['id', 'avatar', 'background_image',
-                  'school', 'marital_status', 'bio', 'website', 'location', 'user', 'user_id']
+        fields = ['id', 'avatar', 'background_image', 'school', 'marital_status',
+                  'bio', 'website', 'location', 'user', 'user_id', 'user_url']
 
         extra_kwargs = {
             'avatar': {'required': False},

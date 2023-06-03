@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     "drf_spectacular",
     'accounts',
     'posts',
-    'djoser',
 
 ]
 

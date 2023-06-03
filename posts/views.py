@@ -1,94 +1,72 @@
+from rest_framework import generics
 from django.shortcuts import get_object_or_404
-from rest_framework import permissions, status, viewsets
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-from posts.models import Comment, Post
-from posts.serializers import (
-    CommentReadSerializer,
-    CommentWriteSerializer,
-    PostReadSerializer,
-    PostWriteSerializer,
+from .models import Post, Like, Comment, Share
+from .serializers import (
+    PostSerializer,
+    LikeSerializer,
+    CommentSerializer,
+    ShareSerializer
 )
 
-from .permissions import IsAuthorOrReadOnly
 
-
-class PostViewSet(viewsets.ModelViewSet):
-    """
-    CRUD posts
-    """
-
+class PostListCreateView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
+    serializer_class = PostSerializer
 
-    # In order to use different serializers for different
-    # actions, you can override the
-    # get_serializer_class(self) method
-    def get_serializer_class(self):
-        if self.action in ("create", "update", "partial_update", "destroy"):
-            return PostWriteSerializer
-
-        return PostReadSerializer
-
-    # get_permissions(self) method helps you separate
-    # permissions for different actions inside the same view.
-    def get_permissions(self):
-        if self.action in ("create",):
-            self.permission_classes = (permissions.IsAuthenticated,)
-        elif self.action in ("update", "partial_update", "destroy"):
-            self.permission_classes = (IsAuthorOrReadOnly,)
-        else:
-            self.permission_classes = (permissions.AllowAny,)
-
-        return super().get_permissions()
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
-class CommentViewSet(viewsets.ModelViewSet):
-    """
-    CRUD comments for a particular post
-    """
+class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
 
+
+class LikeCreateView(generics.CreateAPIView):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+
+    def perform_create(self, serializer):
+        post = get_object_or_404(Post, pk=self.kwargs['post_id'])
+        user = self.request.user
+
+        # Check if a like already exists for the post and user
+        existing_like = Like.objects.filter(post=post, user=user).first()
+        if existing_like:
+            existing_like.delete()
+
+        # Create a new like
+        serializer.save(post=post, user=user)
+
+
+class LikeDestroyView(generics.DestroyAPIView):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+
+
+class CommentCreateView(generics.CreateAPIView):
     queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
 
-    def get_queryset(self):
-        res = super().get_queryset()
-        post_id = self.kwargs.get("post_id")
-        return res.filter(post__id=post_id)
-
-    def get_serializer_class(self):
-        if self.action in ("create", "update", "partial_update", "destroy"):
-            return CommentWriteSerializer
-
-        return CommentReadSerializer
-
-    def get_permissions(self):
-        if self.action in ("create",):
-            self.permission_classes = (permissions.IsAuthenticated,)
-        elif self.action in ("update", "partial_update", "destroy"):
-            self.permission_classes = (IsAuthorOrReadOnly,)
-        else:
-            self.permission_classes = (permissions.AllowAny,)
-
-        return super().get_permissions()
-
-# Here, we are using the normal APIView class
+    def perform_create(self, serializer):
+        post = get_object_or_404(Post, pk=self.kwargs['post_id'])
+        serializer.save(post=post, author=self.request.user)
 
 
-class LikePostAPIView(APIView):
-    """
-    Like, Dislike a post
-    """
+class CommentUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
 
-    permission_classes = (permissions.IsAuthenticated,)
 
-    def get(self, request, pk):
-        user = request.user
-        post = get_object_or_404(Post, pk=pk)
+class ShareCreateView(generics.CreateAPIView):
+    queryset = Share.objects.all()
+    serializer_class = ShareSerializer
 
-        if user in post.likes.all():
-            post.likes.remove(user)
+    def perform_create(self, serializer):
+        post = get_object_or_404(Post, pk=self.kwargs['post_id'])
+        serializer.save(post=post, user=self.request.user)
 
-        else:
-            post.likes.add(user)
 
-        return Response(status=status.HTTP_200_OK)
+class ShareDestroyView(generics.DestroyAPIView):
+    queryset = Share.objects.all()
+    serializer_class = ShareSerializer
