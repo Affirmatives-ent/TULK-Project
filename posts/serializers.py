@@ -1,33 +1,39 @@
-
+from .models import (Post, Comment, Share, Like)
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from .models import Comment, Post
+User = get_user_model()
 
 
-class PostReadSerializer(serializers.ModelSerializer):
+class PostSerializer(serializers.ModelSerializer):
     author = serializers.CharField(source="author.username", read_only=True)
     likes = serializers.SerializerMethodField(read_only=True)
+    comments_count = serializers.SerializerMethodField(read_only=True)
+    shares_count = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Post
         fields = "__all__"
 
     def get_likes(self, obj):
-        likes = list(
-            like.username for like in obj.likes.get_queryset().only("username")
-        )
-        return likes
+        return obj.likes.count()
+
+    def get_comments_count(self, obj):
+        return obj.comments.count()
+
+    def get_shares_count(self, obj):
+        return obj.shares.count()
 
 
-class PostWriteSerializer(serializers.ModelSerializer):
-    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
+class LikeSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source="user.username", read_only=True)
 
     class Meta:
-        model = Post
+        model = Like
         fields = "__all__"
 
 
-class CommentReadSerializer(serializers.ModelSerializer):
+class CommentSerializer(serializers.ModelSerializer):
     author = serializers.CharField(source="author.username", read_only=True)
 
     class Meta:
@@ -35,9 +41,9 @@ class CommentReadSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CommentWriteSerializer(serializers.ModelSerializer):
-    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
+class ShareSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source="user.username", read_only=True)
 
     class Meta:
-        model = Comment
+        model = Share
         fields = "__all__"

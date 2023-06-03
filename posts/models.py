@@ -1,31 +1,18 @@
-from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 
-
-# class Category(models.Model):
-#     name = models.CharField(_("Category name"), max_length=100)
-
-#     class Meta:
-#         verbose_name = _("Category")
-#         verbose_name_plural = _("Categories")
-
-#     def __str__(self):
-#         return self.name
+User = get_user_model()
 
 
 class Post(models.Model):
     author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         related_name="posts",
         null=True,
         on_delete=models.SET_NULL,
     )
-    body = models.TextField(_("Post body"))
+    body = models.TextField()
     post_image = models.ImageField(blank=True)
-    likes = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, related_name="post_likes", blank=True
-    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -33,19 +20,20 @@ class Post(models.Model):
         ordering = ("-created_at",)
 
     def __str__(self):
-        return f"{self.author.first_name}\'s Post"
+        return f"{self.author}'s Post"
 
 
 class Comment(models.Model):
     post = models.ForeignKey(
-        Post, related_name="comments", on_delete=models.CASCADE)
+        Post, related_name="comments", on_delete=models.CASCADE
+    )
     author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name="post_comments",
+        User,
+        related_name="comments",
         null=True,
         on_delete=models.SET_NULL,
     )
-    body = models.TextField(_("Comment body"))
+    body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -54,3 +42,41 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.body[:20]} by {self.author.username}"
+
+
+class Share(models.Model):
+    post = models.ForeignKey(
+        Post, related_name="shares", on_delete=models.CASCADE
+    )
+    user = models.ForeignKey(
+        User,
+        related_name="shared_posts",
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('post', 'user')
+
+    def __str__(self):
+        return f"{self.user.username} shared {self.post}"
+
+
+class Like(models.Model):
+    post = models.ForeignKey(
+        Post, related_name="likes", on_delete=models.CASCADE
+    )
+    user = models.ForeignKey(
+        User,
+        related_name="liked_posts",
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('post', 'user')
+
+    def __str__(self):
+        return f"{self.user.username} liked {self.post}"

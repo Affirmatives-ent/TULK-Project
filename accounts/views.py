@@ -74,22 +74,6 @@ class VerifyOTPAPIView(generics.GenericAPIView, mixins.UpdateModelMixin):
         return Response({"message": "OTP verified and account created successfully."})
 
 
-class UserAPIView(generics.RetrieveUpdateDestroyAPIView, generics.ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = serializers.UserSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
-
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [IsAdminUser()]
-        return [IsAuthenticated()]
-
-    def get_object(self):
-        pk = self.kwargs.get('pk')
-        return get_object_or_404(User, pk=pk)
-    # ... other actions such as create, retrieve, update, partial_update, destroy ...
-
-
 class UserLogoutAPIView(APIView):
     def post(self, request):
         refresh_token = request.data.get('refresh_token')
@@ -214,9 +198,26 @@ class ResetPasswordAPIView(APIView):
         return Response({"message": "Password reset successfully."}, status=status.HTTP_200_OK)
 
 
-class UserProfileAPIView(generics.RetrieveUpdateAPIView):
-    permission_classes = [IsAuthenticated]
+class UserListAPIView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
+    permission_classes = [IsAdminUser]
+
+
+class UserDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
+    permission_classes = [IsAdminUser]
+
+    # ... other actions such as create, retrieve, update, partial_update, destroy ...
+
+
+class UserProfileListAPIView(generics.ListAPIView):
+    queryset = models.UserProfile.objects.all()
     serializer_class = serializers.UserProfileSerializer
 
-    def get_object(self):
-        return self.request.user.userprofile
+
+class UserProfileDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.UserProfile.objects.all()

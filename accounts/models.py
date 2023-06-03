@@ -89,16 +89,6 @@ class User(PermissionsMixin, AbstractBaseUser):
         return self.email
 
 
-# class OTPVerification(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     otp = models.CharField(max_length=6)
-#     verified = models.BooleanField(default=False)
-#     created_at = models.DateTimeField(auto_now_add=True)
-
-#     def __str__(self):
-#         return f"OTP Verification for {self.user}"
-
-
 MARITAL_STATUS = (
     ('SINGLE', 'Single'),
     ('MARRIED', 'Married'),
