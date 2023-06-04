@@ -26,23 +26,23 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class LikeSerializer(serializers.ModelSerializer):
-    user = serializers.CharField(source="user.username", read_only=True)
+    user = serializers.CharField(source="user.first_name", read_only=True)
 
     class Meta:
         model = Like
-        fields = "__all__"
+        fields = ("body",)
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.CharField(source="author.username", read_only=True)
+    author = serializers.CharField(source="author.first_name", read_only=True)
 
     class Meta:
         model = Comment
-        fields = "__all__"
+        fields = ("author", "body",)
 
 
 class ShareSerializer(serializers.ModelSerializer):
-    user = serializers.CharField(source="user.username", read_only=True)
+    user = serializers.CharField(source="user.first_name", read_only=True)
 
     class Meta:
         model = Share
