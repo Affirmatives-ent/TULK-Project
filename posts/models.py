@@ -41,7 +41,7 @@ class Comment(models.Model):
         ordering = ("-created_at",)
 
     def __str__(self):
-        return f"{self.body[:20]} by {self.author.username}"
+        return f"{self.body[:20]} by {self.author.first_name}"
 
 
 class Share(models.Model):
