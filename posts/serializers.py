@@ -30,7 +30,7 @@ class LikeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Like
-        fields = ("body",)
+        fields = "__all__"
 
 
 class CommentSerializer(serializers.ModelSerializer):

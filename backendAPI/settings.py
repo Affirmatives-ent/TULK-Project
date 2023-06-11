@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 import os
 from django.db.models import Q
 from django.contrib.auth import get_user_model
+import django_heroku
+import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,7 +22,7 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -120,8 +122,8 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Blog API Project",
-    "DESCRIPTION": "A sample blog to learn about DRF",
+    "TITLE": "Tulk API Project",
+    "DESCRIPTION": "Tulk Social",
     "VERSION": "1.0.0",
     # OTHER SETTINGS
 }
@@ -146,10 +148,10 @@ SIMPLE_JWT = {
 }
 
 
-DJOSER = {
-    'USER_ID_FIELD': 'phone_number',
-    'LOGIN_FIELD': 'phone_number',
-}
+# DJOSER = {
+#     'USER_ID_FIELD': 'phone_number',
+#     'LOGIN_FIELD': 'phone_number',
+# }
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -168,6 +170,8 @@ MIN_PASSWORD_LENGTH = 8
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_DIR = (os.path.join(BASE_DIR, "static"),)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
