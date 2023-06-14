@@ -10,12 +10,14 @@ from .views import (
     VerifyPasswordOTPAPIView,
     ResetPasswordAPIView,
     UserProfileListAPIView,
-    UserProfileDetailAPIView
+    UserProfileDetailAPIView,
+    WelcomeAPIView
 )
 
 app_name = 'accounts'
 
 urlpatterns = [
+    path('', WelcomeAPIView.as_view(), name='welcome'),
     path('register/', UserRegistrationAPIView.as_view(), name='register'),
     path('verify-otp/<int:pk>/', VerifyOTPAPIView.as_view(), name='verify-otp'),
     path('users/', UserListAPIView.as_view(), name='user-list'),

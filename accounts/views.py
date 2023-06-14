@@ -18,6 +18,11 @@ from rest_framework.permissions import AllowAny
 User = get_user_model()
 
 
+class WelcomeAPIView(APIView):
+    def get(self, request):
+        return Response({"message": "Welcome to the TULK Social!"})
+
+
 class UserRegistrationAPIView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny,]
