@@ -1,1 +1,1 @@
-web gunicorn wsgi.tulk-project
+web gunicorn wsgi.TULK-Project:application --log-file -
