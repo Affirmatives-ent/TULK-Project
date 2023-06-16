@@ -80,11 +80,11 @@ load_dotenv()
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Tulk_db',
-        'USER': 'postgres',
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': 'localhost',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'db8dchlec1hvdo',
+        'USER': 'mkrfhcpzkmfyec',
+        'PASSWORD': 'bc5de3cdf3898b98788f15624d343584de3e551f6dfec67764f36b79b6dc3adf',
+        'HOST': 'ec2-3-234-204-26.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
@@ -172,10 +172,12 @@ MIN_PASSWORD_LENGTH = 8
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIR = (os.path.join(BASE_DIR, "static"),)
-django_heroku.settings(locals())
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
+
+django_heroku.settings(locals())
