@@ -45,10 +45,13 @@ class UserRegistrationAPIView(generics.CreateAPIView):
         user = serializer.save(is_active=False, otp=otp)
         print(user.id)
 
-        # Return the user object along with other data in the response
+        # Serialize the user object
+        user_serializer = self.serializer_class(user)
+
+        # Include the serialized user object in the response
         response_data = {
             "user_id": user.id,
-            "user": serializer.data,
+            "user": user_serializer.data,
             "message": "OTP sent successfully"
         }
 
