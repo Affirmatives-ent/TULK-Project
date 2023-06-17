@@ -29,16 +29,6 @@ def send_otp(phone_number, otp):
 
     response = requests.post(url, headers=headers, json=payload)
 
-    try:
-        response.raise_for_status()  # Raise an exception for non-2xx status codes
-        response_data = response.json()
-        # Extract relevant information from the response_data if needed
-        print(response_data)
-        # Return your own success response here
-    except requests.exceptions.HTTPError as e:
-        print("HTTP Error:", e)
-        print("Response:", response.text)
-
 
 def verify_otp(phone_number, otp):
     try:
