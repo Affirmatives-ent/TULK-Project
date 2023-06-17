@@ -27,6 +27,7 @@ class UserRegistrationAPIView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny,]
     serializer_class = serializers.UserRegistrationSerializer
+    user_serializer_class = serializers.UserSerializer  # Add this line
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -45,8 +46,9 @@ class UserRegistrationAPIView(generics.CreateAPIView):
         user = serializer.save(is_active=False, otp=otp)
         print(user.id)
 
-        # Serialize the user object
-        user_serializer = self.serializer_class(user)
+        # Serialize the user object using UserSerializer
+        user_serializer = self.user_serializer_class(
+            user)  # Use UserSerializer
 
         # Include the serialized user object in the response
         response_data = {
