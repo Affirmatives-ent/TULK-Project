@@ -48,14 +48,8 @@ class UserRegistrationAPIView(generics.CreateAPIView):
         # Return the user object along with other data in the response
         response_data = {
             "user_id": user.id,
-            "message": "OTP sent successfully",
-            "user": {
-                "id": user.id,
-                "username": user.username,
-                "email": user.email,
-                "phone_number": user.phone_number
-                # Add other user fields as needed
-            }
+            "user": serializer.data,
+            "message": "OTP sent successfully"
         }
 
         return Response(response_data, status=status.HTTP_201_CREATED)
