@@ -76,7 +76,7 @@ class VerifyOTPAPIView(generics.GenericAPIView, mixins.UpdateModelMixin):
 
         user.is_active = True
         user.save()
-        return Response({"message": "OTP verified and account created successfully."})
+        return Response({"user_id": user.id, "message": "OTP verified and account created successfully."})
 
 
 class UserLogoutAPIView(APIView):
