@@ -48,7 +48,7 @@ class UserRegistrationAPIView(generics.CreateAPIView):
 
         # Serialize the user object using UserSerializer
         user_serializer = self.user_serializer_class(
-            user)  # Use UserSerializer
+            user, context={'request': request})  # Use UserSerializer
 
         # Include the serialized user object in the response
         response_data = {
