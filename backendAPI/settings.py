@@ -90,10 +90,10 @@ load_dotenv()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'db8dchlec1hvdo',
-        'USER': 'mkrfhcpzkmfyec',
-        'PASSWORD': 'bc5de3cdf3898b98788f15624d343584de3e551f6dfec67764f36b79b6dc3adf',
-        'HOST': 'ec2-3-234-204-26.compute-1.amazonaws.com',
+        'NAME': 'delrdp5qeve891',
+        'USER': 'scnjxqcdqpocwf',
+        'PASSWORD': 'c19a88247a17d20be4cd29d1f132e73c34073fbcd497b611499a896dddaad692',
+        'HOST': 'ec2-34-236-103-63.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
