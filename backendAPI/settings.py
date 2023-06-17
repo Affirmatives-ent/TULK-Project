@@ -89,7 +89,7 @@ DATABASES = {
     }
 }
 
-MY_SENDCHAMP_PUBLIC_KEY = os.getenv('SENDCHAMP_KEY')
+# MY_SENDCHAMP_PUBLIC_KEY = os.getenv('SENDCHAMP_KEY')
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

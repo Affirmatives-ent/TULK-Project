@@ -1,3 +1,4 @@
+import os
 import datetime
 import json
 from django.conf import settings
@@ -5,10 +6,10 @@ from django.contrib.auth import get_user_model
 import requests
 User = get_user_model()
 
-url = "https://api.sendchamp.com/api/v1/verification/create"
-
 
 def send_otp(phone_number, otp):
+    url = "https://api.sendchamp.com/api/v1/verification/create"
+
     payload = {
         "channel": "sms",
         "sender": "Sendchamp",
@@ -24,10 +25,10 @@ def send_otp(phone_number, otp):
     headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': settings.MY_SENDCHAMP_PUBLIC_KEY
+        'Authorization': os.getenv('SENDCHAMP_KEY')
     }
 
-    response = requests.request("POST", url, data=payload, headers=headers)
+    response = requests.request("POST", url, json=payload, headers=headers)
 
 
 def verify_otp(phone_number, otp):
