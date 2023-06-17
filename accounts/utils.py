@@ -24,7 +24,7 @@ def send_otp(phone_number, otp):
     headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer sendchamp_live_$2a$10$SPoBf4VaLDbsxwk2JzKqj.Fvy1ALyPECJokxL1WLoMUhY.llUH7FS'
+        'Authorization': settings.MY_SENDCHAMP_PUBLIC_KEY
     }
 
     response = requests.request("POST", url, data=payload, headers=headers)
