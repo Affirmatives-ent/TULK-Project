@@ -45,7 +45,7 @@ class UserRegistrationAPIView(generics.CreateAPIView):
         user = serializer.save(is_active=False, otp=otp)
         print(user.id)
 
-        return Response({'message': 'OTP sent successfully'}, status=status.HTTP_201_CREATED)
+        return Response({"user_id": user.id, 'message': 'OTP sent successfully'}, status=status.HTTP_201_CREATED)
 
 
 class VerifyOTPAPIView(generics.GenericAPIView, mixins.UpdateModelMixin):
