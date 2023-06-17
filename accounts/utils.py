@@ -25,7 +25,7 @@ def send_otp(phone_number, otp):
     headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': os.getenv('SENDCHAMP_KEY')
+        'Authorization': f"Bearer {os.getenv('SENDCHAMP_KEY')}"
     }
 
     response = requests.request("POST", url, json=payload, headers=headers)
