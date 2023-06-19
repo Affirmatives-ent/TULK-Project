@@ -101,14 +101,13 @@ MARITAL_STATUS = (
 class UserProfile(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='profile')
-    avatar = models.FileField(
+    avatar = models.ImageField(
         upload_to='user_profile_image_path', blank=True, null=True)
-    background_image = models.FileField(
+    background_image = models.ImageField(
         upload_to='user_profile_image_path', blank=True, null=True)
     marital_status = models.CharField(
         max_length=20, choices=MARITAL_STATUS, blank=True, null=True)
     school = models.CharField(max_length=100, blank=True, null=True)
-
     bio = models.TextField(blank=True, null=True)
     website = models.URLField(blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
