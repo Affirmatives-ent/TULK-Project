@@ -11,7 +11,9 @@ from .views import (
     ResetPasswordAPIView,
     UserProfileListAPIView,
     UserProfileDetailAPIView,
-    WelcomeAPIView
+    WelcomeAPIView,
+    FriendshipDetailView,
+    FriendshipAddView
 )
 
 app_name = 'accounts'
@@ -32,4 +34,11 @@ urlpatterns = [
          name='userprofile-list'),
     path('userprofiles/<int:pk>/', UserProfileDetailAPIView.as_view(),
          name='userprofile-detail'),
+    path('friendships/<int:pk>/', FriendshipDetailView.as_view(),
+         name='friendship-detail'),
+    path('friendships/<int:pk>/accept/',
+         FriendshipDetailView.as_view(), name='friendship-accept'),
+    path('friendships/<int:pk>/decline/',
+         FriendshipDetailView.as_view(), name='friendship-decline'),
+    path('friendships/add/', FriendshipAddView.as_view(), name='friendship-add'),
 ]

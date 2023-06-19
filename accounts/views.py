@@ -238,3 +238,47 @@ class UserProfileDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.UserProfileSerializer
     queryset = models.UserProfile.objects.all()
+
+
+class FriendshipAddView(generics.CreateAPIView):
+    queryset = models.Friendship.objects.all()
+    serializer_class = serializers.FriendshipSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        sender = request.user
+        receiver_id = request.data.get('receiver_id')
+        if sender.id == receiver_id:
+            return Response({'detail': 'You cannot add yourself as a friend.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        existing_friendship = models.Friendship.objects.filter(
+            sender=sender, receiver_id=receiver_id).exists()
+        if existing_friendship:
+            return Response({'detail': 'Friendship request already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        friendship = models.Friendship.objects.create(
+            sender=sender, receiver_id=receiver_id, status='pending')
+        serializer = self.serializer_class(friendship)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class FriendshipDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.Friendship.objects.all()
+    serializer_class = serializers.FriendshipSerializer
+    permission_classes = [IsAuthenticated]
+
+    def accept_friend_request(self, request, *args, **kwargs):
+        friendship = self.get_object()
+        if friendship.receiver == request.user:
+            friendship.status = 'accepted'
+            friendship.save()
+            return Response({'status': 'Friend request accepted.'})
+        return Response({'status': 'You are not authorized to accept this friend request.'}, status=status.HTTP_403_FORBIDDEN)
+
+    def decline_friend_request(self, request, *args, **kwargs):
+        friendship = self.get_object()
+        if friendship.receiver == request.user:
+            friendship.status = 'declined'
+            friendship.save()
+            return Response({'status': 'Friend request declined.'})
+        return Response({'status': 'You are not authorized to decline this friend request.'}, status=status.HTTP_403_FORBIDDEN)

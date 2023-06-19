@@ -114,3 +114,21 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f'{self.user}\'s Profile'
+
+
+class Friendship(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('declined', 'Declined'),
+    ]
+
+    requester = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='friendship_requests_sent')
+    receiver = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='friendship_requests_received')
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default='pending')
+
+    def __str__(self):
+        return f'{self.requester.username} -> {self.receiver.username} ({self.status})'

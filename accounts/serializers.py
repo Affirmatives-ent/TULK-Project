@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, UserProfile
+from .models import User, UserProfile, Friendship
 from django.contrib.auth import authenticate
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -126,3 +126,12 @@ class ResetPasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError("New passwords do not match.")
 
         return data
+
+
+class FriendshipSerializer(serializers.ModelSerializer):
+    requester = UserSerializer(read_only=True)
+    receiver = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Friendship
+        fields = ['id', 'requester', 'receiver', 'status']
