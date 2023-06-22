@@ -240,45 +240,62 @@ class UserProfileDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.UserProfile.objects.all()
 
 
-class FriendshipAddView(generics.CreateAPIView):
-    queryset = models.Friendship.objects.all()
-    serializer_class = serializers.FriendshipSerializer
+class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
+    queryset = models.FriendRequest.objects.all()
+    serializer_class = serializers.FriendRequestSerializer
     permission_classes = [IsAuthenticated]
 
-    def create(self, request, *args, **kwargs):
-        sender = request.user
-        receiver_id = request.data.get('receiver_id')
-        if sender.id == receiver_id:
-            return Response({'detail': 'You cannot add yourself as a friend.'}, status=status.HTTP_400_BAD_REQUEST)
+    def perform_create(self, serializer):
+        friend_request = serializer.save(sender=self.request.user)
 
-        existing_friendship = models.Friendship.objects.filter(
-            sender=sender, receiver_id=receiver_id).exists()
-        if existing_friendship:
-            return Response({'detail': 'Friendship request already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+        # Create a notification for the recipient
+        recipient = friend_request.recipient
+        notification = models.Notification.objects.create(
+            sender=self.request.user,
+            recipient=recipient,
+            message=f'{self.request.user.username} sent you a friend request.'
+        )
+        serializers.NotificationSerializer(notification).data
 
-        friendship = models.Friendship.objects.create(
-            sender=sender, receiver_id=receiver_id, status='pending')
-        serializer = self.serializer_class(friendship)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def get_queryset(self):
+        user = self.request.user
+        return self.queryset.filter(recipient=user)
 
 
-class FriendshipDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = models.Friendship.objects.all()
-    serializer_class = serializers.FriendshipSerializer
+class FriendRequestRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.FriendRequest.objects.all()
+    serializer_class = serializers.FriendRequestSerializer
     permission_classes = [IsAuthenticated]
 
-    def accept_friend_request(self, request, *args, **kwargs):
-        friendship = self.get_object()
-        if friendship.receiver == request.user:
-            friendship.status = 'accepted'
-            friendship.save()
-            return Response({'status': 'Friend request accepted.'})
-        return Response({'status': 'You are not authorized to accept this friend request.'}, status=status.HTTP_403_FORBIDDEN)
+    def update(self, request, *args, **kwargs):
+        friend_request = self.get_object()
+        accepted = request.data.get('accepted', False)
 
-    def decline_friend_request(self, request, *args, **kwargs):
-        friendship = self.get_object()
-        if friendship.receiver == request.user:
-            friendship.status = 'declined'
-            friendship.save()
-            return Response({'status': 'Friend request declined.'})
-        return Response({'status': 'You are not authorized to decline this friend request.'}, status=status.HTTP_403_FORBIDDEN)
+        # Update the friend request status
+        friend_request.accepted = accepted
+        friend_request.save()
+
+        if accepted:
+            # Create a friendship if the request is accepted
+            models.Friendship.objects.create(
+                user1=friend_request.sender, user2=friend_request.recipient)
+
+            # Create a notification for the sender
+            notification = models.Notification.objects.create(
+                sender=friend_request.recipient,
+                recipient=friend_request.sender,
+                message=f'{friend_request.recipient.username} accepted your friend request.'
+            )
+            serializers.NotificationSerializer(notification).data
+
+        return Response(self.get_serializer(friend_request).data)
+
+
+class NotificationListAPIView(generics.ListAPIView):
+    queryset = models.Notification.objects.all()
+    serializer_class = serializers.NotificationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return self.queryset.filter(recipient=user)

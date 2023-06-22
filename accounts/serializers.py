@@ -1,5 +1,6 @@
+from .models import FriendRequest, Friendship
 from rest_framework import serializers
-from .models import User, UserProfile, Friendship
+from .models import User, UserProfile, Friendship, FriendRequest, Notification
 from django.contrib.auth import authenticate
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -128,10 +129,19 @@ class ResetPasswordSerializer(serializers.Serializer):
         return data
 
 
-class FriendshipSerializer(serializers.ModelSerializer):
-    requester = UserSerializer(read_only=True)
-    receiver = UserSerializer(read_only=True)
+class FriendRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FriendRequest
+        fields = '__all__'
 
+
+class FriendshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Friendship
-        fields = ['id', 'requester', 'receiver', 'status']
+        fields = '__all__'
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = '__all__'

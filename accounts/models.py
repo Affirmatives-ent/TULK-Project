@@ -116,19 +116,37 @@ class UserProfile(models.Model):
         return f'{self.user}\'s Profile'
 
 
-class Friendship(models.Model):
-    STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('accepted', 'Accepted'),
-        ('declined', 'Declined'),
-    ]
-
-    requester = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='friendship_requests_sent')
-    receiver = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='friendship_requests_received')
-    status = models.CharField(
-        max_length=20, choices=STATUS_CHOICES, default='pending')
+class FriendRequest(models.Model):
+    sender = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='sent_friend_requests')
+    recipient = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='received_friend_requests')
+    created_at = models.DateTimeField(auto_now_add=True)
+    accepted = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.requester.username} -> {self.receiver.username} ({self.status})'
+        return f'{self.sender.username} -> {self.recipient.username}'
+
+
+class Friendship(models.Model):
+    user1 = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='friendships1')
+    user2 = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='friendships2')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user1.username} - {self.user2.username}'
+
+
+class Notification(models.Model):
+    sender = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='sent_notifications')
+    recipient = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='received_notifications')
+    message = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    viewed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.sender.username} -> {self.recipient.username}: {self.message}'
