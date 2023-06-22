@@ -16,8 +16,8 @@ from .views import (
     FriendRequestRetrieveUpdateDestroyAPIView,
     FriendshipListAPIView,
     FriendshipCreateAPIView,
-    FriendshipDestroyAPIView,
-    NotificationListAPIView
+    NotificationListAPIView,
+    NotificationUpdateAPIView
 )
 
 app_name = 'accounts'
@@ -40,14 +40,14 @@ urlpatterns = [
          name='userprofile-detail'),
     path('friend-requests/', FriendRequestListCreateAPIView.as_view(),
          name='friend-request-list-create'),
-    path('friend-requests/<int:pk>/', FriendRequestRetrieveUpdateDestroyAPIView.as_view(),
-         name='friend-request-retrieve-update-destroy'),
+    path('friend-requests/<int:pk>/',
+         FriendRequestRetrieveUpdateDestroyAPIView.as_view(), name='friend-request-detail'),
     path('friendships/', FriendshipListAPIView.as_view(), name='friendship-list'),
     path('friendships/create/', FriendshipCreateAPIView.as_view(),
          name='friendship-create'),
-    path('friendships/<int:pk>/destroy/',
-         FriendshipDestroyAPIView.as_view(), name='friendship-destroy'),
     path('notifications/', NotificationListAPIView.as_view(),
          name='notification-list'),
+    path('notifications/<int:pk>/', NotificationUpdateAPIView.as_view(),
+         name='notification-update'),
 
 ]

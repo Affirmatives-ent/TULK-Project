@@ -255,7 +255,9 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
             recipient=recipient,
             message=f'{self.request.user.username} sent you a friend request.'
         )
-        serializers.NotificationSerializer(notification).data
+        notification_serializer = serializers.NotificationSerializer(
+            notification)
+        return Response(notification_serializer.data, status=status.HTTP_201_CREATED)
 
     def get_queryset(self):
         user = self.request.user
@@ -286,9 +288,38 @@ class FriendRequestRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAP
                 recipient=friend_request.sender,
                 message=f'{friend_request.recipient.username} accepted your friend request.'
             )
-            serializers.NotificationSerializer(notification).data
+            notification_serializer = serializers.NotificationSerializer(
+                notification)
+            return Response(notification_serializer.data, status=status.HTTP_200_OK)
 
         return Response(self.get_serializer(friend_request).data)
+
+
+class FriendshipListAPIView(generics.ListAPIView):
+    queryset = models.Friendship.objects.all()
+    serializer_class = serializers.FriendshipSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return self.queryset.filter(user1=user) | self.queryset.filter(user2=user)
+
+
+class FriendshipCreateAPIView(generics.CreateAPIView):
+    queryset = models.Friendship.objects.all()
+    serializer_class = serializers.FriendshipSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        user1 = self.request.user
+        user2 = serializer.validated_data['user2']
+
+        # Check if the friendship already exists
+        if models.Friendship.objects.filter(user1=user1, user2=user2).exists() or \
+           models.Friendship.objects.filter(user1=user2, user2=user1).exists():
+            return Response({'detail': 'Friendship already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save(user1=user1)
 
 
 class NotificationListAPIView(generics.ListAPIView):
@@ -299,3 +330,15 @@ class NotificationListAPIView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return self.queryset.filter(recipient=user)
+
+
+class NotificationUpdateAPIView(generics.UpdateAPIView):
+    queryset = models.Notification.objects.all()
+    serializer_class = serializers.NotificationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def update(self, request, *args, **kwargs):
+        notification = self.get_object()
+        notification.read = True
+        notification.save()
+        return Response(self.get_serializer(notification).data, status=status.HTTP_200_OK)
