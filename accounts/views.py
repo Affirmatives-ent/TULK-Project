@@ -322,6 +322,54 @@ class FriendshipCreateAPIView(generics.CreateAPIView):
         serializer.save(user1=user1)
 
 
+class ConversationGroupCreateAPIView(generics.CreateAPIView):
+    queryset = models.ConversationGroup.objects.all()
+    serializer_class = serializers.ConversationGroupSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+
+class GroupInvitationCreateAPIView(generics.CreateAPIView):
+    queryset = models.GroupInvitation.objects.all()
+    serializer_class = serializers.GroupInvitationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        invited_by = self.request.user
+        serializer.save(invited_by=invited_by)
+
+
+class GroupInvitationUpdateAPIView(generics.UpdateAPIView):
+    queryset = models.GroupInvitation.objects.all()
+    serializer_class = serializers.GroupInvitationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def update(self, request, *args, **kwargs):
+        group_invitation = self.get_object()
+        is_accepted = request.data.get('is_accepted', False)
+
+        # Update the group invitation status
+        group_invitation.is_accepted = is_accepted
+        group_invitation.save()
+
+        if is_accepted:
+            # Add the user to the group as a member
+            group = group_invitation.group
+            group.members.add(group_invitation.user)
+
+            # Create a notification for the invited user
+            notification = models.Notification.objects.create(
+                sender=group_invitation.invited_by,
+                recipient=group_invitation.user,
+                message=f'You have been added to the group {group.name}.'
+            )
+            serializers.countNotificationSerializer(notification).data
+
+        return Response(self.get_serializer(group_invitation).data)
+
+
 class NotificationListAPIView(generics.ListAPIView):
     queryset = models.Notification.objects.all()
     serializer_class = serializers.NotificationSerializer

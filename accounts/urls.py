@@ -17,7 +17,10 @@ from .views import (
     FriendshipListAPIView,
     FriendshipCreateAPIView,
     NotificationListAPIView,
-    NotificationUpdateAPIView
+    NotificationUpdateAPIView,
+    ConversationGroupCreateAPIView,
+    GroupInvitationCreateAPIView,
+    GroupInvitationUpdateAPIView
 )
 
 app_name = 'accounts'
@@ -45,6 +48,12 @@ urlpatterns = [
     path('friendships/', FriendshipListAPIView.as_view(), name='friendship-list'),
     path('friendships/create/', FriendshipCreateAPIView.as_view(),
          name='friendship-create'),
+    path('groups/create/', ConversationGroupCreateAPIView.as_view(),
+         name='create-group'),
+    path('groups/invitation/create/',
+         GroupInvitationCreateAPIView.as_view(), name='create-invitation'),
+    path('groups/invitation/update/<int:pk>/',
+         GroupInvitationUpdateAPIView.as_view(), name='update-invitation'),
     path('notifications/', NotificationListAPIView.as_view(),
          name='notification-list'),
     path('notifications/<int:pk>/', NotificationUpdateAPIView.as_view(),
