@@ -1,3 +1,4 @@
+from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
@@ -9,8 +10,11 @@ from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenObtainPairView
 from . import serializers, models, utils
 from django.contrib.auth import get_user_model
+from posts.models import Post
+from articles.models import Article
 from django.utils import timezone
 from django.utils.timezone import make_aware
+from django.db.models import Q
 import datetime
 import random
 from rest_framework.permissions import AllowAny
@@ -370,6 +374,23 @@ class GroupInvitationUpdateAPIView(generics.UpdateAPIView):
         return Response(self.get_serializer(group_invitation).data)
 
 
+class FriendSearchAPIView(generics.ListAPIView):
+    serializer_class = serializers.FriendshipSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        search_query = self.request.query_params.get('search')
+        admin = self.request.user
+
+        # Filter the friends based on the search query
+        friends = models.Friendship.objects.filter(
+            Q(user1=admin, user2__first_name__icontains=search_query) |
+            Q(user1=admin, user2__last_name__icontains=search_query)
+        )
+
+        return friends
+
+
 class NotificationListAPIView(generics.ListAPIView):
     queryset = models.Notification.objects.all()
     serializer_class = serializers.NotificationSerializer
@@ -390,3 +411,45 @@ class NotificationUpdateAPIView(generics.UpdateAPIView):
         notification.read = True
         notification.save()
         return Response(self.get_serializer(notification).data, status=status.HTTP_200_OK)
+
+
+class SearchAPIView(generics.ListAPIView):
+    serializer_class = serializers.SearchSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        search_query = self.request.query_params.get('search')
+
+        # Perform the search query across multiple models and fields
+        results = []
+
+        # Search for users by username, first name, or last name
+        user_results = User.objects.filter(
+            Q(phone_number__icontains=search_query) |
+            Q(first_name__icontains=search_query) |
+            Q(last_name__icontains=search_query)
+        )
+        results.extend(user_results)
+
+        # Search for groups by name or category
+        group_results = models.ConversationGroup.objects.filter(
+            Q(name__icontains=search_query) |
+            Q(category__icontains=search_query)
+        )
+        results.extend(group_results)
+
+        # Search for posts or articles by title or category
+        post_results = Post.objects.filter(
+            Q(title__icontains=search_query) |
+            Q(category__icontains=search_query)
+        )
+        results.extend(post_results)
+
+        # Search for articles by title or category
+        article_results = Article.objects.filter(
+            Q(title__icontains=search_query) |
+            Q(category__icontains=search_query)
+        )
+        results.extend(article_results)
+
+        return results

@@ -20,7 +20,8 @@ from .views import (
     NotificationUpdateAPIView,
     ConversationGroupCreateAPIView,
     GroupInvitationCreateAPIView,
-    GroupInvitationUpdateAPIView
+    GroupInvitationUpdateAPIView,
+    FriendSearchAPIView
 )
 
 app_name = 'accounts'
@@ -58,5 +59,6 @@ urlpatterns = [
          name='notification-list'),
     path('notifications/<int:pk>/', NotificationUpdateAPIView.as_view(),
          name='notification-update'),
+    path('friends/search/', FriendSearchAPIView.as_view(), name='friend-search'),
 
 ]
