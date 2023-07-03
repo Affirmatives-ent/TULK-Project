@@ -86,7 +86,7 @@ class User(PermissionsMixin, AbstractBaseUser):
     email = models.EmailField(
         unique=True, max_length=50, validators=[email_validator])
     phone_number = models.CharField(
-        max_length=13, unique=True, blank=False, null=False, validators=[phone_regex])
+        max_length=30, unique=True, blank=False, null=False, validators=[phone_regex])
     otp = models.CharField(max_length=6, db_index=True)
     reset_password_otp = models.CharField(max_length=6, null=True, blank=True)
     otp_expiry = models.DateTimeField(null=True)
