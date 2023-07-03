@@ -1,11 +1,12 @@
 # views.py
 from rest_framework import permissions, generics
+from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from .models import Article, MediaFile
 from .serializers import ArticleSerializer, MediaFileSerializer
 
 
-class AdminArticleListView(generics.ListAPIView):
+class AdminArticleListView(generics.ListCreateAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAdminUser,)
@@ -33,11 +34,28 @@ class AdminArticleListView(generics.ListAPIView):
         serializer.save()
         return self.update(request, *args, **kwargs)
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        media_files = MediaFile.objects.all()
+        return queryset.union(media_files)
+
 
 class AdminArticleDetailView(generics.RetrieveUpdateAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAdminUser,)
+
+    def get_object(self):
+        article_pk = self.kwargs['pk']
+        try:
+            return self.queryset.get(pk=article_pk)
+        except Article.DoesNotExist:
+            raise NotFound(f"Article with ID {article_pk} does not exist.")
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 
 class AdminMediaFilePublishView(generics.CreateAPIView):

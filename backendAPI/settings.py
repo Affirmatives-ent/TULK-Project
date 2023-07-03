@@ -142,7 +142,7 @@ SPECTACULAR_SETTINGS = {
 
 
 AUTHENTICATION_BACKENDS = [
-    'accounts.authentications.EmailOrPhoneBackend',
+    'accounts.authentications.CustomAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 

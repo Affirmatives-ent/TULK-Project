@@ -1,5 +1,14 @@
 from django.contrib import admin
-from .models import MediaFile, Article
+from .models import Article, MediaFile
 
-admin.site.register(MediaFile)
-admin.site.register(Article)
+
+class MediaFileInline(admin.TabularInline):
+    model = MediaFile
+    extra = 1
+
+
+class ArticleAdmin(admin.ModelAdmin):
+    inlines = [MediaFileInline]
+
+
+admin.site.register(Article, ArticleAdmin)
