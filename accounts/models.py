@@ -36,16 +36,24 @@ user_profile_image_path = GenerateProfileImagePath()
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, phone_number, password=None, **extra_fields):
-        if not phone_number:
-            raise ValueError("The Phone Number field must be set.")
+    def create_user(self, email=None, phone_number=None, password=None, **extra_fields):
+        if not phone_number and not email:
+            raise ValueError(
+                "Either the Phone Number or Email field must be set.")
 
-        user = self.model(phone_number=phone_number, **extra_fields)
+        # Normalize the email and phone number
+        email = self.normalize_email(email) if email else None
+        phone_number = self.normalize_phone_number(
+            phone_number) if phone_number else None
+
+        # Create the user instance
+        user = self.model(
+            email=email, phone_number=phone_number, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, phone_number, password=None, **extra_fields):
+    def create_superuser(self, email=None, phone_number=None, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -54,7 +62,13 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError("Superuser must have is_superuser=True.")
 
-        return self.create_user(phone_number, password, **extra_fields)
+        return self.create_user(email=email, phone_number=phone_number, password=password, **extra_fields)
+
+    def normalize_phone_number(self, phone_number):
+        """
+        Normalize the phone number by removing non-digit characters.
+        """
+        return ''.join(filter(str.isdigit, str(phone_number)))
 
 
 GENDER_CHOICES = (
