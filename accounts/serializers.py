@@ -1,6 +1,6 @@
 from .models import FriendRequest, Friendship
 from rest_framework import serializers
-from .models import User, UserProfile, Friendship, FriendRequest, Notification, ConversationGroup, GroupInvitation
+from .models import User, UserProfile, Friendship, FriendRequest, Notification
 from django.contrib.auth import authenticate
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -141,22 +141,14 @@ class FriendshipSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ConversationGroupSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ConversationGroup
-        fields = '__all__'
-
-
-class GroupInvitationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = GroupInvitation
-        fields = '__all__'
-
-
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = '__all__'
+
+
+class NotificationCountSerializer(serializers.Serializer):
+    count = serializers.IntegerField()
 
 
 class SearchSerializer(serializers.Serializer):

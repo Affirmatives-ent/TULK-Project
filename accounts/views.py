@@ -18,6 +18,7 @@ from django.db.models import Q
 import datetime
 import random
 from rest_framework.permissions import AllowAny
+from accounts.paginations import CustomPagination
 
 User = get_user_model()
 
@@ -223,6 +224,7 @@ class UserListAPIView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = [IsAdminUser]
+    pagination_class = CustomPagination
 
 
 class UserDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -236,6 +238,7 @@ class UserDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 class UserProfileListAPIView(generics.ListAPIView):
     queryset = models.UserProfile.objects.all()
     serializer_class = serializers.UserProfileSerializer
+    pagination_class = CustomPagination
 
 
 class UserProfileDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -248,6 +251,7 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
     queryset = models.FriendRequest.objects.all()
     serializer_class = serializers.FriendRequestSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = CustomPagination
 
     def perform_create(self, serializer):
         friend_request = serializer.save(sender=self.request.user)
@@ -303,6 +307,7 @@ class FriendshipListAPIView(generics.ListAPIView):
     queryset = models.Friendship.objects.all()
     serializer_class = serializers.FriendshipSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = CustomPagination
 
     def get_queryset(self):
         user = self.request.user
@@ -326,69 +331,22 @@ class FriendshipCreateAPIView(generics.CreateAPIView):
         serializer.save(user1=user1)
 
 
-class ConversationGroupCreateAPIView(generics.CreateAPIView):
-    queryset = models.ConversationGroup.objects.all()
-    serializer_class = serializers.ConversationGroupSerializer
-    permission_classes = [IsAuthenticated]
+# class FriendSearchAPIView(generics.ListAPIView):
+#     serializer_class = serializers.FriendshipSerializer
+#     permission_classes = [IsAuthenticated]
+#     pagination_class = CustomPagination
 
-    def perform_create(self, serializer):
-        serializer.save()
+#     def get_queryset(self):
+#         search_query = self.request.query_params.get('search')
+#         admin = self.request.user
 
+#         # Filter the friends based on the search query
+#         friends = models.Friendship.objects.filter(
+#             Q(user1=admin, user2__first_name__icontains=search_query) |
+#             Q(user1=admin, user2__last_name__icontains=search_query)
+#         )
 
-class GroupInvitationCreateAPIView(generics.CreateAPIView):
-    queryset = models.GroupInvitation.objects.all()
-    serializer_class = serializers.GroupInvitationSerializer
-    permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        invited_by = self.request.user
-        serializer.save(invited_by=invited_by)
-
-
-class GroupInvitationUpdateAPIView(generics.UpdateAPIView):
-    queryset = models.GroupInvitation.objects.all()
-    serializer_class = serializers.GroupInvitationSerializer
-    permission_classes = [IsAuthenticated]
-
-    def update(self, request, *args, **kwargs):
-        group_invitation = self.get_object()
-        is_accepted = request.data.get('is_accepted', False)
-
-        # Update the group invitation status
-        group_invitation.is_accepted = is_accepted
-        group_invitation.save()
-
-        if is_accepted:
-            # Add the user to the group as a member
-            group = group_invitation.group
-            group.members.add(group_invitation.user)
-
-            # Create a notification for the invited user
-            notification = models.Notification.objects.create(
-                sender=group_invitation.invited_by,
-                recipient=group_invitation.user,
-                message=f'You have been added to the group {group.name}.'
-            )
-            serializers.countNotificationSerializer(notification).data
-
-        return Response(self.get_serializer(group_invitation).data)
-
-
-class FriendSearchAPIView(generics.ListAPIView):
-    serializer_class = serializers.FriendshipSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        search_query = self.request.query_params.get('search')
-        admin = self.request.user
-
-        # Filter the friends based on the search query
-        friends = models.Friendship.objects.filter(
-            Q(user1=admin, user2__first_name__icontains=search_query) |
-            Q(user1=admin, user2__last_name__icontains=search_query)
-        )
-
-        return friends
+#         return friends
 
 
 class NotificationListAPIView(generics.ListAPIView):
@@ -413,9 +371,22 @@ class NotificationUpdateAPIView(generics.UpdateAPIView):
         return Response(self.get_serializer(notification).data, status=status.HTTP_200_OK)
 
 
+class NotificationCountAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        user = request.user
+        notification_count = models.Notification.objects.filter(
+            recipient=user, read=False).count()
+        serializer = serializers.NotificationCountSerializer(
+            {'count': notification_count})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class SearchAPIView(generics.ListAPIView):
     serializer_class = serializers.SearchSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = CustomPagination
 
     def get_queryset(self):
         search_query = self.request.query_params.get('search')

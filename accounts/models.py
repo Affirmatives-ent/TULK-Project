@@ -153,36 +153,6 @@ class Friendship(models.Model):
         return f'{self.user1.username} - {self.user2.username}'
 
 
-class ConversationGroup(models.Model):
-    name = models.CharField(max_length=255)
-    category = models.CharField(max_length=255)
-    location = models.CharField(max_length=255)
-    slogan = models.CharField(max_length=255)
-    about = models.TextField()
-    admin_phone = models.CharField(max_length=20)
-    admin_email = models.EmailField()
-    admin_website = models.URLField()
-    background_image = models.ImageField(upload_to='group/backgrounds/')
-    avatar = models.ImageField(upload_to='group/avatars/')
-    members = models.ManyToManyField(User, related_name='usergroups')
-
-    def __str__(self):
-        return self.name
-
-
-class GroupInvitation(models.Model):
-    group = models.ForeignKey(
-        ConversationGroup, on_delete=models.CASCADE, related_name='invitations')
-    invited_by = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='sent_invitations')
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='group_invitations')
-    is_accepted = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f'{self.invited_by.username} invited {self.user.username} to {self.group.name}'
-
-
 class Notification(models.Model):
     sender = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='sent_notifications')
