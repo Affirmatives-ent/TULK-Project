@@ -24,7 +24,7 @@ class Post(models.Model):
         ordering = ("-created_at",)
 
     def __str__(self):
-        return f"{self.author}'s Post"
+        return f"{self.body[:20]} by {self.author.first_name}"
 
 
 class Comment(models.Model):
