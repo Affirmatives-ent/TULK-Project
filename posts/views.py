@@ -93,7 +93,7 @@ class CommentListCreateView(generics.ListCreateAPIView):
         user = request.user
 
         try:
-            post = Post.objects.get(id=post_id)
+            post = Post.objects.select_for_update().get(id=post_id)
         except Post.DoesNotExist:
             return Response({'detail': 'Post not found.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -102,8 +102,7 @@ class CommentListCreateView(generics.ListCreateAPIView):
         serializer.save(post=post, author=user)
 
         # Increment the number of comments in the post
-        post.comments = F('comments') + 1
-        post.save(update_fields=['comments'])
+        Post.objects.filter(id=post_id).update(comments=F('comments') + 1)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
