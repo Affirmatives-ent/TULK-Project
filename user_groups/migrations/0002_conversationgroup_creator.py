@@ -3,7 +3,8 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import django.utils.timezone
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class Migration(migrations.Migration):
@@ -14,10 +15,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+
         migrations.AddField(
             model_name='conversationgroup',
             name='creator',
-            field=models.ForeignKey(default=django.utils.timezone.now, on_delete=django.db.models.deletion.CASCADE, related_name='groupcreator', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(default=get_user_model().objects.first(
+            ).pk, on_delete=django.db.models.deletion.CASCADE, related_name='groupcreator', to=settings.AUTH_USER_MODEL),
             preserve_default=False,
-        ),
+        )
     ]
