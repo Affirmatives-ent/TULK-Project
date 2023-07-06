@@ -36,25 +36,14 @@ class GroupInvitation(models.Model):
         return f'{self.invited_by.username} invited {self.user.username} to {self.group.name}'
 
 
-class ConversationTopic(models.Model):
+class GroupChat(models.Model):
     group = models.ForeignKey(
-        ConversationGroup, on_delete=models.CASCADE, related_name='topics')
-    starter = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='started_topics')
-    title = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.title
-
-
-class ConversationMessage(models.Model):
-    topic = models.ForeignKey(
-        ConversationTopic, on_delete=models.CASCADE, related_name='messages')
-    author = models.ForeignKey(
+        'ConversationGroup', on_delete=models.CASCADE, related_name='group_chat')
+    sender = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    content = models.TextField()
+    message = models.TextField()
+    media = models.FileField(upload_to='group/media/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'Message by {self.author.username} in {self.topic.title}'
+        return f'{self.group.name} - {self.sender.username}: {self.message}'

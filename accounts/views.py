@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.decorators import action
 from django.contrib.auth import authenticate, update_session_auth_hash
-from rest_framework import status, generics, mixins
+from rest_framework import status, generics, mixins, pagination
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -18,7 +18,7 @@ from django.db.models import Q
 import datetime
 import random
 from rest_framework.permissions import AllowAny
-from accounts.paginations import CustomPagination
+
 
 User = get_user_model()
 
@@ -224,7 +224,7 @@ class UserListAPIView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = [IsAdminUser]
-    pagination_class = CustomPagination
+    pagination_class = pagination.PageNumberPagination
 
 
 class UserDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -238,7 +238,7 @@ class UserDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 class UserProfileListAPIView(generics.ListAPIView):
     queryset = models.UserProfile.objects.all()
     serializer_class = serializers.UserProfileSerializer
-    pagination_class = CustomPagination
+    pagination_class = pagination.PageNumberPagination
 
 
 class UserProfileDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -251,7 +251,7 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
     queryset = models.FriendRequest.objects.all()
     serializer_class = serializers.FriendRequestSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = CustomPagination
+    pagination_class = pagination.PageNumberPagination
 
     def perform_create(self, serializer):
         friend_request = serializer.save(sender=self.request.user)
@@ -307,7 +307,7 @@ class FriendshipListAPIView(generics.ListAPIView):
     queryset = models.Friendship.objects.all()
     serializer_class = serializers.FriendshipSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = CustomPagination
+    pagination_class = pagination.PageNumberPagination
 
     def get_queryset(self):
         user = self.request.user
@@ -386,7 +386,7 @@ class NotificationCountAPIView(APIView):
 class SearchAPIView(generics.ListAPIView):
     serializer_class = serializers.SearchSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = CustomPagination
+    pagination_class = pagination.PageNumberPagination
 
     def get_queryset(self):
         search_query = self.request.query_params.get('search')
