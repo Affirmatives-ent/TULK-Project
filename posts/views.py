@@ -2,6 +2,7 @@ from rest_framework import generics, status, pagination
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsOwnerOrSuperuserOrReadOnly
+from django.db.models import F
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from .models import Post, Like, Comment, Share
@@ -101,8 +102,8 @@ class CommentListCreateView(generics.ListCreateAPIView):
         serializer.save(post=post, author=user)
 
         # Increment the number of comments in the post
-        post.comments += 1
-        post.save()
+        post.comments = F('comments') + 1
+        post.save(update_fields=['comments'])
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
