@@ -5,16 +5,17 @@ from .views import (
     PostRetrieveUpdateDestroyView,
     LikeView,
     CommentListCreateView,
-    ShareCreateView,
+    ShareView,
 )
 
+app_name = 'posts'
+
 urlpatterns = [
-    path('posts', PostListCreateView.as_view(), name='post-list-create'),
+    path('posts/', PostListCreateView.as_view(), name='post-list-create'),
     path('posts/<int:pk>/', PostRetrieveUpdateDestroyView.as_view(),
          name='post-retrieve-update-destroy'),
     path('posts/<int:post_id>/like/', LikeView.as_view(), name='post-like'),
-    path('posts/<int:post_id>/comment/',
-         CommentListCreateView.as_view(), name='post-comment-create'),
-    path('posts/<int:post_id>/share/',
-         ShareCreateView.as_view(), name='post-share-create'),
+    path('posts/<int:post_id>/comments/', CommentListCreateView.as_view(),
+         name='post-comment-list-create'),
+    path('posts/<int:post_id>/share/', ShareView.as_view(), name='post-share'),
 ]
