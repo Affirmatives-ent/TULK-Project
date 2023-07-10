@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
+    'channels_redis',
     'rest_framework',
     "corsheaders",
     "rest_framework_simplejwt",
@@ -42,7 +44,8 @@ INSTALLED_APPS = [
     'accounts',
     'user_groups',
     'posts',
-    'articles'
+    'articles',
+    'chat'
 
 ]
 
@@ -145,6 +148,15 @@ SPECTACULAR_SETTINGS = {
     # OTHER SETTINGS
 }
 
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('localhost', 6379)],
+        },
+    },
+}
 
 AUTHENTICATION_BACKENDS = [
     'accounts.authentications.CustomAuthBackend',
