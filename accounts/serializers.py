@@ -22,12 +22,13 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['url', 'id', 'first_name', 'last_name', 'date_of_birth', 'gender',
                   'email', 'phone_number', 'is_active', 'is_staff']
 
+
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     user_id = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), source='user')
     user_url = serializers.HyperlinkedIdentityField(
-        view_name='accounts:userprofile-detail', read_only=True, lookup_field='user_id')
+        view_name='accounts:user-detail', read_only=True, lookup_field='user_id')
 
     class Meta:
         model = UserProfile
