@@ -23,50 +23,50 @@ class UserSerializer(serializers.ModelSerializer):
                   'email', 'phone_number', 'is_active', 'is_staff']
 
 
-# class UserProfileSerializer(serializers.ModelSerializer):
-#     user = UserSerializer()
-#     user_id = serializers.PrimaryKeyRelatedField(
-#         queryset=User.objects.all(), source='user')
-#     user_url = serializers.HyperlinkedIdentityField(
-#         view_name='accounts:user-detail', read_only=True, lookup_field='user_id')
-
-#     class Meta:
-#         model = UserProfile
-#         fields = ['id', 'avatar', 'background_image', 'school', 'marital_status',
-#                   'bio', 'website', 'location', 'user', 'user_id', 'user_url']
-
-        # extra_kwargs = {
-        #     'avatar': {'required': False},
-        #     'background_image': {'required': False},
-        # }
-
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    user_id = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), source='user')
     user_url = serializers.HyperlinkedIdentityField(
-        view_name='accounts:user-detail', read_only=True, lookup_field='user')
+        view_name='accounts:user-detail', read_only=True, lookup_field='user_id')
 
     class Meta:
         model = UserProfile
         fields = ['id', 'avatar', 'background_image', 'school', 'marital_status',
-                  'bio', 'website', 'location', 'user', 'user_url']
+                  'bio', 'website', 'location', 'user', 'user_id', 'user_url']
 
-    def update(self, instance, validated_data):
-        user_data = validated_data.pop('user', {})
-        user_serializer = self.fields['user']
-        user_instance = instance.user
+        extra_kwargs = {
+            'avatar': {'required': False},
+            'background_image': {'required': False},
+        }
 
-        # Update the user instance with the validated user data
-        user_instance = user_serializer.update(user_instance, user_data)
+# class UserProfileSerializer(serializers.ModelSerializer):
+#     user = UserSerializer()
+#     user_url = serializers.HyperlinkedIdentityField(
+#         view_name='accounts:user-detail', read_only=True, lookup_field='user')
 
-        # Update the remaining fields in the user profile instance
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
+#     class Meta:
+#         model = UserProfile
+#         fields = ['id', 'avatar', 'background_image', 'school', 'marital_status',
+#                   'bio', 'website', 'location', 'user', 'user_url']
 
-        # Save the updated instances
-        user_instance.save()
-        instance.save()
+#     def update(self, instance, validated_data):
+#         user_data = validated_data.pop('user', {})
+#         user_serializer = self.fields['user']
+#         user_instance = instance.user
 
-        return instance
+#         # Update the user instance with the validated user data
+#         user_instance = user_serializer.update(user_instance, user_data)
+
+#         # Update the remaining fields in the user profile instance
+#         for attr, value in validated_data.items():
+#             setattr(instance, attr, value)
+
+#         # Save the updated instances
+#         user_instance.save()
+#         instance.save()
+
+#         return instance
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
