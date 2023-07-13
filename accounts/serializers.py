@@ -27,7 +27,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     user_id = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), source='user')
-    user_url = serializers.HyperlinkedIdentityField(
+    user_url = serializers.HyperlinkedRelatedField(
         view_name='accounts:user-detail', read_only=True, lookup_field='user_id')
 
     class Meta:
@@ -39,6 +39,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'avatar': {'required': False},
             'background_image': {'required': False},
         }
+
 
 # class UserProfileSerializer(serializers.ModelSerializer):
 #     user = UserSerializer()
