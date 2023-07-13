@@ -24,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializer(read_only=True)
     user_id = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), source='user')
     user_url = serializers.HyperlinkedRelatedField(
@@ -39,6 +39,39 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'avatar': {'required': False},
             'background_image': {'required': False},
         }
+
+
+class UserProfileUpdateSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(required=False)
+    last_name = serializers.CharField(required=False)
+    date_of_birth = serializers.DateField(required=False)
+    gender = serializers.CharField(required=False)
+    email = serializers.EmailField(required=False)
+    phone_number = serializers.CharField(required=False)
+
+    class Meta:
+        model = UserProfile
+        fields = ['first_name', 'last_name', 'date_of_birth', 'gender',
+                  'email', 'phone_number']
+
+    def update(self, instance, validated_data):
+        # Update the user profile fields
+        instance.school = validated_data.get('school', instance.school)
+        instance.marital_status = validated_data.get(
+            'marital_status', instance.marital_status)
+        instance.bio = validated_data.get('bio', instance.bio)
+        instance.website = validated_data.get('website', instance.website)
+        instance.location = validated_data.get('location', instance.location)
+        instance.save()
+
+        # Update the user fields
+        instance.user.first_name = validated_data.get(
+            'first_name', instance.user.first_name)
+        instance.user.last_name = validated_data.get(
+            'last_name', instance.user.last_name)
+        instance.user.save()
+
+        return instance
 
 
 # class UserProfileSerializer(serializers.ModelSerializer):

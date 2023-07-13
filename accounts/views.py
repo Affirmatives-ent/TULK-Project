@@ -241,10 +241,20 @@ class UserProfileListAPIView(generics.ListAPIView):
     pagination_class = pagination.PageNumberPagination
 
 
-class UserProfileDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated]
+class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.UserProfileSerializer
-    queryset = models.UserProfile.objects.all()
+
+    def get_queryset(self):
+        return models.UserProfile.objects.all()
+
+    def get_object(self):
+        user = self.request.user
+        return user.profile
+
+    def get_serializer_class(self):
+        if self.request.method == 'PUT' or self.request.method == 'PATCH':
+            return serializers.UserProfileUpdateSerializer
+        return serializers.UserProfileSerializer
 
 
 class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
