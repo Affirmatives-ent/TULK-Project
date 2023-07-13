@@ -28,7 +28,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     user_id = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), source='user')
     user_url = serializers.HyperlinkedIdentityField(
-        view_name='user-detail', read_only=True, lookup_field="user.pk")
+        view_name='user-detail', read_only=True, lookup_field='user_id')
 
     class Meta:
         model = UserProfile
