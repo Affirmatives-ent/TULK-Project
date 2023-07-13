@@ -43,17 +43,12 @@ class UserSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     user_url = serializers.HyperlinkedIdentityField(
-        view_name='accounts:user-detail', read_only=True, lookup_field='user.id')
+        view_name='accounts:user-detail', read_only=True, lookup_field='user')
 
     class Meta:
         model = UserProfile
         fields = ['id', 'avatar', 'background_image', 'school', 'marital_status',
                   'bio', 'website', 'location', 'user', 'user_url']
-
-        extra_kwargs = {
-            'avatar': {'required': False},
-            'background_image': {'required': False},
-        }
 
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', {})
