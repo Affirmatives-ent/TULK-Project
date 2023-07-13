@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.core.files.storage import default_storage
 
-from django.utils.deconstruct import deconstructible
+# from django.utils.deconstruct import deconstructible
 
 email_validator = EmailValidator()
 
@@ -20,19 +20,19 @@ phone_regex = RegexValidator(
 )
 
 
-@deconstructible
-class GenerateProfileImagePath(object):
-    def __init__(self):
-        pass
+# @deconstructible
+# class GenerateProfileImagePath(object):
+#     def __init__(self):
+#         pass
 
-    def __call__(self, instance, filename):
-        ext = filename.split('.')[-1]
-        path = f'media/users/{instance.user.id}/images/'
-        name = f'profile_image.{ext}'
-        return os.path.join(path, name)
+#     def __call__(self, instance, filename):
+#         ext = filename.split('.')[-1]
+#         path = f'media/users/{instance.user.id}/images/'
+#         name = f'profile_image.{ext}'
+#         return os.path.join(path, name)
 
 
-user_profile_image_path = GenerateProfileImagePath()
+# user_profile_image_path = GenerateProfileImagePath()
 
 
 class UserManager(BaseUserManager):
@@ -116,9 +116,9 @@ class UserProfile(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='profile')
     avatar = models.ImageField(
-        upload_to='user_profile_image_path', blank=True, null=True)
+        upload_to='user_avatar/', blank=True, null=True)
     background_image = models.ImageField(
-        upload_to='user_profile_image_path', blank=True, null=True)
+        upload_to='cover_image/', blank=True, null=True)
     marital_status = models.CharField(
         max_length=20, choices=MARITAL_STATUS, blank=True, null=True)
     school = models.CharField(max_length=100, blank=True, null=True)
