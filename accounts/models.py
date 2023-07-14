@@ -119,7 +119,7 @@ class User(PermissionsMixin, AbstractBaseUser):
     REQUIRED_FIELDS = ['email']
 
     def __str__(self):
-        return f'{self.user}\'s Profile'
+        return f'{self.first_name}\'s Profile'
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
