@@ -42,34 +42,34 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
-    first_name = serializers.CharField(required=False)
-    last_name = serializers.CharField(required=False)
-    date_of_birth = serializers.DateField(required=False)
-    gender = serializers.CharField(required=False)
-    email = serializers.EmailField(required=False)
-    phone_number = serializers.CharField(required=False)
+    user = UserSerializer(required=False)
+    user_id = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), source='user', write_only=True)
 
     class Meta:
         model = UserProfile
-        fields = ['first_name', 'last_name', 'date_of_birth', 'gender',
-                  'email', 'phone_number']
+        fields = ['id', 'avatar', 'background_image', 'school', 'marital_status',
+                  'bio', 'website', 'location', 'user', 'user_id']
+
+        extra_kwargs = {
+            'avatar': {'required': False},
+            'background_image': {'required': False},
+        }
 
     def update(self, instance, validated_data):
-        # Update the user profile fields
-        instance.school = validated_data.get('school', instance.school)
-        instance.marital_status = validated_data.get(
-            'marital_status', instance.marital_status)
-        instance.bio = validated_data.get('bio', instance.bio)
-        instance.website = validated_data.get('website', instance.website)
-        instance.location = validated_data.get('location', instance.location)
-        instance.save()
+        user_data = validated_data.pop('user', {})
+        user_id = validated_data.pop('user_id', None)
 
-        # Update the user fields
-        instance.user.first_name = validated_data.get(
-            'first_name', instance.user.first_name)
-        instance.user.last_name = validated_data.get(
-            'last_name', instance.user.last_name)
-        instance.user.save()
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        if user_id is not None:
+            user = User.objects.get(pk=user_id)
+            for attr, value in user_data.items():
+                setattr(user, attr, value)
+            user.save()
+
+        instance.save()
 
         return instance
 
