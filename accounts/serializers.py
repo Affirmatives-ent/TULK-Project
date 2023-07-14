@@ -43,7 +43,7 @@ User = get_user_model()
 
 class UserProfileSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name='accounts:user-detail',
+        view_name='accounts:userprofile-detail',
         lookup_field='pk'
     )
 
