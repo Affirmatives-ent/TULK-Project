@@ -246,7 +246,7 @@ class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         user = self.request.user
-        return user.profile
+        return user
 
 
 class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
