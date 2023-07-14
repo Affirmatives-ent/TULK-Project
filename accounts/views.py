@@ -31,8 +31,7 @@ class WelcomeAPIView(APIView):
 class UserRegistrationAPIView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny,]
-    serializer_class = serializers.UserRegistrationSerializer
-    user_serializer_class = serializers.UserSerializer  # Add this line
+    serializer_class = serializers.UserRegistrationSerializer  # Add this line
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -220,41 +219,34 @@ class ResetPasswordAPIView(APIView):
         return Response({"message": "Password reset successfully."}, status=status.HTTP_200_OK)
 
 
-class UserListAPIView(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = serializers.UserSerializer
-    permission_classes = [IsAdminUser]
-    pagination_class = pagination.PageNumberPagination
+# class UserListAPIView(generics.ListAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = serializers.UserSerializer
+#     permission_classes = [IsAdminUser]
+#     pagination_class = pagination.PageNumberPagination
 
 
-class UserDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = serializers.UserSerializer
-    permission_classes = [IsAdminUser]
+# class UserDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = serializers.UserSerializer
+#     permission_classes = [IsAdminUser]
 
     # ... other actions such as create, retrieve, update, partial_update, destroy ...
 
 
 class UserProfileListAPIView(generics.ListAPIView):
-    queryset = models.UserProfile.objects.all()
+    queryset = User.objects.all()
     serializer_class = serializers.UserProfileSerializer
     pagination_class = pagination.PageNumberPagination
 
 
 class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
     serializer_class = serializers.UserProfileSerializer
-
-    def get_queryset(self):
-        return models.UserProfile.objects.all()
 
     def get_object(self):
         user = self.request.user
         return user.profile
-
-    def get_serializer_class(self):
-        if self.request.method == 'PUT' or self.request.method == 'PATCH':
-            return serializers.UserProfileUpdateSerializer
-        return serializers.UserProfileSerializer
 
 
 class FriendRequestListCreateAPIView(generics.ListCreateAPIView):

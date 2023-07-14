@@ -1,6 +1,6 @@
 from .models import FriendRequest, Friendship
 from rest_framework import serializers
-from .models import User, UserProfile, Friendship, FriendRequest, Notification
+from .models import User, Friendship, FriendRequest, Notification
 from django.contrib.auth import authenticate
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -11,7 +11,37 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class UserSerializer(serializers.ModelSerializer):
+# class UserSerializer(serializers.ModelSerializer):
+#     url = serializers.HyperlinkedIdentityField(
+#         view_name='accounts:user-detail',
+#         lookup_field='pk'
+#     )
+
+#     class Meta:
+#         model = User
+#         fields = ['url', 'id', 'first_name', 'last_name', 'date_of_birth', 'gender',
+#                   'email', 'phone_number', 'is_active', 'is_staff']
+
+
+# class UserProfileSerializer(serializers.ModelSerializer):
+#     user = UserSerializer(read_only=True)
+#     user_id = serializers.PrimaryKeyRelatedField(
+#         queryset=User.objects.all(), source='user')
+#     user_url = serializers.HyperlinkedRelatedField(
+#         view_name='accounts:user-detail', read_only=True, lookup_field='user_id')
+
+#     class Meta:
+#         model = UserProfile
+#         fields = ['id', 'avatar', 'background_image', 'school', 'marital_status',
+#                   'bio', 'website', 'location', 'user', 'user_id', 'user_url']
+
+#         extra_kwargs = {
+#             'avatar': {'required': False},
+#             'background_image': {'required': False},
+#         }
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(
         view_name='accounts:user-detail',
         lookup_field='pk'
@@ -20,58 +50,30 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['url', 'id', 'first_name', 'last_name', 'date_of_birth', 'gender',
-                  'email', 'phone_number', 'is_active', 'is_staff']
-
-
-class UserProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-    user_id = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(), source='user')
-    user_url = serializers.HyperlinkedRelatedField(
-        view_name='accounts:user-detail', read_only=True, lookup_field='user_id')
-
-    class Meta:
-        model = UserProfile
-        fields = ['id', 'avatar', 'background_image', 'school', 'marital_status',
-                  'bio', 'website', 'location', 'user', 'user_id', 'user_url']
+                  'email', 'phone_number', 'avatar', 'background_image', 'school', 'marital_status',
+                  'bio', 'website', 'location']
 
         extra_kwargs = {
             'avatar': {'required': False},
             'background_image': {'required': False},
         }
 
+    # def update(self, instance, validated_data):
+    #     user_data = validated_data.pop('user', {})
+    #     user_id = validated_data.pop('user_id', None)
 
-class UserProfileUpdateSerializer(serializers.ModelSerializer):
-    user = UserSerializer(required=False)
-    user_id = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(), source='user', write_only=True)
+    #     for attr, value in validated_data.items():
+    #         setattr(instance, attr, value)
 
-    class Meta:
-        model = UserProfile
-        fields = ['id', 'avatar', 'background_image', 'school', 'marital_status',
-                  'bio', 'website', 'location', 'user', 'user_id']
+    #     if user_id is not None:
+    #         user = User.objects.get(pk=user_id)
+    #         for attr, value in user_data.items():
+    #             setattr(user, attr, value)
+    #         user.save()
 
-        extra_kwargs = {
-            'avatar': {'required': False},
-            'background_image': {'required': False},
-        }
+    #     instance.save()
 
-    def update(self, instance, validated_data):
-        user_data = validated_data.pop('user', {})
-        user_id = validated_data.pop('user_id', None)
-
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-
-        if user_id is not None:
-            user = User.objects.get(pk=user_id)
-            for attr, value in user_data.items():
-                setattr(user, attr, value)
-            user.save()
-
-        instance.save()
-
-        return instance
+    #     return instance
 
 
 # class UserProfileSerializer(serializers.ModelSerializer):

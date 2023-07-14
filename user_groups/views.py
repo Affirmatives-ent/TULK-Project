@@ -16,7 +16,7 @@ from django.contrib.auth import get_user_model
 from posts.models import Post
 from articles.models import Article
 from accounts.models import Friendship, Notification
-from accounts.serializers import UserSerializer
+from accounts.serializers import UserProfileSerializer
 from django.utils import timezone
 from django.utils.timezone import make_aware
 from django.db.models import Q
@@ -86,7 +86,7 @@ class FriendSearch(APIView):
             friend_list.append(friend_user)
 
         # Replace with your User serializer
-        serializer = UserSerializer(friend_list, many=True)
+        serializer = UserProfileSerializer(friend_list, many=True)
         return Response(serializer.data)
 
 

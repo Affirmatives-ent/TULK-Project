@@ -77,6 +77,14 @@ GENDER_CHOICES = (
     ('FEMALE', 'Female'),
 )
 
+MARITAL_STATUS = (
+    ('SINGLE', 'Single'),
+    ('MARRIED', 'Married'),
+    ('DIVORCED', 'Divorced'),
+    ('COMPLICATED', 'Complicated'),
+    ("I'D RATHER NOT SAY", "I'd Rather Not Say"),
+)
+
 
 class User(PermissionsMixin, AbstractBaseUser):
     first_name = models.CharField(max_length=30, blank=True)
@@ -94,28 +102,6 @@ class User(PermissionsMixin, AbstractBaseUser):
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     user_register_at = models.DateTimeField(auto_now_add=True)
-
-    objects = UserManager()
-
-    USERNAME_FIELD = 'phone_number'
-    REQUIRED_FIELDS = ['email']
-
-    def __str__(self):
-        return self.first_name
-
-
-MARITAL_STATUS = (
-    ('SINGLE', 'Single'),
-    ('MARRIED', 'Married'),
-    ('DIVORCED', 'Divorced'),
-    ('COMPLICATED', 'Complicated'),
-    ("I'D RATHER NOT SAY", "I'd Rather Not Say"),
-)
-
-
-class UserProfile(models.Model):
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name='profile')
     avatar = models.ImageField(
         upload_to='user_avatar/', blank=True, null=True)
     background_image = models.ImageField(
@@ -126,6 +112,11 @@ class UserProfile(models.Model):
     bio = models.TextField(blank=True, null=True)
     website = models.URLField(blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'phone_number'
+    REQUIRED_FIELDS = ['email']
 
     def __str__(self):
         return f'{self.user}\'s Profile'
@@ -149,6 +140,61 @@ class UserProfile(models.Model):
 
         # Save the resized image back to the same field
         image.save(image_field.path)
+
+    # objects = UserManager()
+
+    # USERNAME_FIELD = 'phone_number'
+    # REQUIRED_FIELDS = ['email']
+
+    # def __str__(self):
+    #     return self.first_name
+
+
+# MARITAL_STATUS = (
+#     ('SINGLE', 'Single'),
+#     ('MARRIED', 'Married'),
+#     ('DIVORCED', 'Divorced'),
+#     ('COMPLICATED', 'Complicated'),
+#     ("I'D RATHER NOT SAY", "I'd Rather Not Say"),
+# )
+
+
+# class UserProfile(models.Model):
+#     user = models.OneToOneField(
+#         User, on_delete=models.CASCADE, related_name='profile')
+    # avatar = models.ImageField(
+    #     upload_to='user_avatar/', blank=True, null=True)
+    # background_image = models.ImageField(
+    #     upload_to='cover_image/', blank=True, null=True)
+    # marital_status = models.CharField(
+    #     max_length=20, choices=MARITAL_STATUS, blank=True, null=True)
+    # school = models.CharField(max_length=100, blank=True, null=True)
+    # bio = models.TextField(blank=True, null=True)
+    # website = models.URLField(blank=True, null=True)
+    # location = models.CharField(max_length=100, blank=True, null=True)
+
+    # def __str__(self):
+    #     return f'{self.user}\'s Profile'
+
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+
+    #     # Resize the avatar image
+    #     if self.avatar:
+    #         self.resize_image(self.avatar, (200, 200))
+
+    #     # Resize the background image
+    #     if self.background_image:
+    #         self.resize_image(self.background_image, (800, 400))
+
+    # def resize_image(self, image_field, size):
+    #     image = Image.open(image_field.path)
+
+    #     # Resize the image while maintaining aspect ratio
+    #     image.thumbnail(size)
+
+    #     # Save the resized image back to the same field
+    #     image.save(image_field.path)
 
 
 class FriendRequest(models.Model):
