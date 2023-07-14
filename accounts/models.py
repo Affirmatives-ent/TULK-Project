@@ -9,6 +9,7 @@ from django.core.validators import EmailValidator
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.core.files.storage import default_storage
+from PIL import Image
 
 # from django.utils.deconstruct import deconstructible
 
@@ -128,6 +129,26 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f'{self.user}\'s Profile'
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        # Resize the avatar image
+        if self.avatar:
+            self.resize_image(self.avatar, (200, 200))
+
+        # Resize the background image
+        if self.background_image:
+            self.resize_image(self.background_image, (800, 400))
+
+    def resize_image(self, image_field, size):
+        image = Image.open(image_field.path)
+
+        # Resize the image while maintaining aspect ratio
+        image.thumbnail(size)
+
+        # Save the resized image back to the same field
+        image.save(image_field.path)
 
 
 class FriendRequest(models.Model):
