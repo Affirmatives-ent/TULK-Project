@@ -7,9 +7,10 @@ User = get_user_model()
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
-    post_media = models.FileField(upload_to='post_media/')
+    post_media = models.FileField(
+        upload_to='post_media/', null=True, blank=True)
     likes = models.ManyToManyField(
-        User, related_name='liked_posts', blank=True)
+        User, related_name='liked_posts', null=True, blank=True)
     comments = models.PositiveIntegerField(default=0)
     shares = models.PositiveIntegerField(default=0)
 
