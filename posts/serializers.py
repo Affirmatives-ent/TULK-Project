@@ -10,8 +10,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     num_likes = serializers.SerializerMethodField(read_only=True)
-    num_comments = serializers.IntegerField(source='comments', read_only=True)
-    num_shares = serializers.IntegerField(source='shares', read_only=True)
+    num_comments = serializers.SerializerMethodField(read_only=True)
+    num_shares = serializers.SerializerMethodField(read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
@@ -23,6 +23,12 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_num_likes(self, instance):
         return instance.likes.count()
+
+    def get_num_comments(self, instance):
+        return instance.comments.count()
+
+    def get_num_shares(self, instance):
+        return instance.shares.count()
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
