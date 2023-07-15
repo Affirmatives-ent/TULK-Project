@@ -87,6 +87,7 @@ MARITAL_STATUS = (
 
 
 class User(PermissionsMixin, AbstractBaseUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     date_of_birth = models.DateField(blank=True, null=True)
@@ -126,7 +127,7 @@ class User(PermissionsMixin, AbstractBaseUser):
 
         # Resize the avatar image
         if self.avatar:
-            self.resize_image(self.avatar, (200, 200))
+            self.resize_image(self.avatar, (250, 250))
 
         # Resize the background image
         if self.background_image:
