@@ -18,7 +18,7 @@ class Media(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name='media', to_field='id')
-    file = models.ImageField(upload_to='post_media/')
+    file = models.FileField(upload_to='post_media/')
 
 
 class Like(models.Model):
