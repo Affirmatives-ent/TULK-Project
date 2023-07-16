@@ -25,12 +25,10 @@ class PostSerializer(serializers.ModelSerializer):
         return instance.likes.count()
 
     def get_num_comments(self, instance):
-        comments = getattr(instance, 'comments', None)
-        if comments is not None:
-            if isinstance(comments, int):
-                return comments
-            return comments.count()
-        return 0
+        try:
+            return instance.comments.count()
+        except AttributeError:
+            return 0
 
     def get_num_shares(self, instance):
         return instance.shares.count()
