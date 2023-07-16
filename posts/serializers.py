@@ -1,45 +1,47 @@
 from rest_framework import serializers
-from .models import Post, Comment
+from .models import Post, Media, Like, Comment, Share
+
+
+class MediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Media
+        fields = '__all__'
 
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['id', 'author', 'content', 'created_at']
+        fields = '__all__'
+
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = '__all__'
+
+
+class ShareSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Share
+        fields = '__all__'
 
 
 class PostSerializer(serializers.ModelSerializer):
-    num_likes = serializers.SerializerMethodField(read_only=True)
-    num_comments = serializers.SerializerMethodField(read_only=True)
-    num_shares = serializers.SerializerMethodField(read_only=True)
-    comments = CommentSerializer(many=True, read_only=True)
+    media = MediaSerializer(many=True, read_only=True)
+    comments_count = serializers.SerializerMethodField()
+    likes_count = serializers.SerializerMethodField()
+    shares_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
-        fields = ['id', 'author', 'content', 'post_media', 'likes',
-                  'num_likes', 'num_comments', 'num_shares', 'comments']
-        read_only_fields = ['author', 'num_likes',
-                            'num_comments', 'num_shares', 'comments']
+        fields = ['id', 'author', 'content', 'created_at', 'media',
+                  'likes_count', 'comments_count', 'shares_count']
 
-    def get_num_likes(self, instance):
-        return instance.likes.count()
+    def get_comments_count(self, obj):
+        return obj.comments.count()
 
-    def get_num_comments(self, instance):
-        try:
-            return instance.comments.count()
-        except AttributeError:
-            return 0
+    def get_likes_count(self, obj):
+        return obj.likes.count()
 
-    def get_num_shares(self, instance):
-        return instance.shares.count()
-
-
-class CommentCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = ['id', 'post', 'author', 'content']
-        read_only_fields = ['id', 'author']
-
-
-class LikeSerializer(serializers.Serializer):
-    post_id = serializers.IntegerField()
+    def get_shares_count(self, obj):
+        return obj.shares.count()
