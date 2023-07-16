@@ -42,14 +42,10 @@ User = get_user_model()
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='accounts:userprofile-detail',
-        lookup_field='pk'
-    )
 
     class Meta:
         model = User
-        fields = ['url', 'id', 'first_name', 'last_name', 'date_of_birth', 'gender',
+        fields = ['id', 'first_name', 'last_name', 'date_of_birth', 'gender',
                   'email', 'phone_number', 'avatar', 'background_image', 'school', 'marital_status',
                   'bio', 'website', 'location']
 
