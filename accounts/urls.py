@@ -1,4 +1,5 @@
 from django.urls import path
+import uuid
 from .views import (
     UserRegistrationAPIView,
     VerifyOTPAPIView,
@@ -28,7 +29,7 @@ app_name = 'accounts'
 urlpatterns = [
     path('', WelcomeAPIView.as_view(), name='welcome'),
     path('register/', UserRegistrationAPIView.as_view(), name='register'),
-    path('verify-otp/<int:pk>/', VerifyOTPAPIView.as_view(), name='verify-otp'),
+    path('verify-otp/<uuid:pk>/', VerifyOTPAPIView.as_view(), name='verify-otp'),
     #     path('users/', UserListAPIView.as_view(), name='user-list'),
     #     path('users/<int:pk>/', UserDetailAPIView.as_view(), name='user-detail'),
     path('logout/', UserLogoutAPIView.as_view(), name='logout'),
@@ -39,18 +40,18 @@ urlpatterns = [
     path('reset-password/', ResetPasswordAPIView.as_view(), name='reset-password'),
     path('userprofiles/', UserProfileListAPIView.as_view(),
          name='userprofile-list'),
-    path('userprofiles/<int:pk>/', UserProfileDetailAPIView.as_view(),
+    path('userprofiles/<uuid:pk>/', UserProfileDetailAPIView.as_view(),
          name='userprofile-detail'),
     path('friend-requests/', FriendRequestListCreateAPIView.as_view(),
          name='friend-request-list-create'),
-    path('friend-requests/<int:pk>/',
+    path('friend-requests/<uuid:pk>/',
          FriendRequestRetrieveUpdateDestroyAPIView.as_view(), name='friend-request-detail'),
     path('friendships/', FriendshipListAPIView.as_view(), name='friendship-list'),
     path('friendships/create/', FriendshipCreateAPIView.as_view(),
          name='friendship-create'),
     path('notifications/', NotificationListAPIView.as_view(),
          name='notification-list'),
-    path('notifications/<int:pk>/', NotificationUpdateAPIView.as_view(),
+    path('notifications/<uuid:pk>/', NotificationUpdateAPIView.as_view(),
          name='notification-update'),
     path('notifications/count/', NotificationCountAPIView.as_view(),
          name='notification-count'),
