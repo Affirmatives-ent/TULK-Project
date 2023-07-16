@@ -31,7 +31,8 @@ class WelcomeAPIView(APIView):
 class UserRegistrationAPIView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny,]
-    serializer_class = serializers.UserRegistrationSerializer  # Add this line
+    serializer_class = serializers.UserRegistrationSerializer
+    user_serializer_class = serializers.UserProfileSerializer
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
