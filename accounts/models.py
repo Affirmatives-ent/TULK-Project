@@ -197,12 +197,14 @@ class User(PermissionsMixin, AbstractBaseUser):
     #     # Save the resized image back to the same field
     #     image.save(image_field.path)
 
-
 class FriendRequest(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     sender = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='sent_friend_requests')
+        User, on_delete=models.CASCADE, related_name='sent_friend_requests', to_field='id'
+    )
     recipient = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='received_friend_requests')
+        User, on_delete=models.CASCADE, related_name='received_friend_requests', to_field='id'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     accepted = models.BooleanField(default=False)
 
@@ -211,10 +213,11 @@ class FriendRequest(models.Model):
 
 
 class Friendship(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user1 = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='friendships1')
+        User, on_delete=models.CASCADE, related_name='friendships1', to_field='id')
     user2 = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='friendships2')
+        User, on_delete=models.CASCADE, related_name='friendships2', to_field='id')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -222,10 +225,11 @@ class Friendship(models.Model):
 
 
 class Notification(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     sender = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='sent_notifications')
+        User, on_delete=models.CASCADE, related_name='sent_notifications', to_field='id')
     recipient = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='received_notifications')
+        User, on_delete=models.CASCADE, related_name='received_notifications', to_field='id')
     message = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     viewed = models.BooleanField(default=False)
