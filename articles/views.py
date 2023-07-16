@@ -40,7 +40,7 @@ class AdminArticleListView(generics.ListCreateAPIView):
         return queryset.union(media_files)
 
 
-class AdminArticleDetailView(generics.RetrieveUpdateAPIView):
+class AdminArticleDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAdminUser,)
