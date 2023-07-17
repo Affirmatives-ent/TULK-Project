@@ -52,52 +52,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'background_image': {'required': False},
         }
 
-    # def update(self, instance, validated_data):
-    #     user_data = validated_data.pop('user', {})
-    #     user_id = validated_data.pop('user_id', None)
-
-    #     for attr, value in validated_data.items():
-    #         setattr(instance, attr, value)
-
-    #     if user_id is not None:
-    #         user = User.objects.get(pk=user_id)
-    #         for attr, value in user_data.items():
-    #             setattr(user, attr, value)
-    #         user.save()
-
-    #     instance.save()
-
-    #     return instance
-
-
-# class UserProfileSerializer(serializers.ModelSerializer):
-#     user = UserSerializer()
-#     user_url = serializers.HyperlinkedIdentityField(
-#         view_name='accounts:user-detail', read_only=True, lookup_field='user')
-
-#     class Meta:
-#         model = UserProfile
-#         fields = ['id', 'avatar', 'background_image', 'school', 'marital_status',
-#                   'bio', 'website', 'location', 'user', 'user_url']
-
-#     def update(self, instance, validated_data):
-#         user_data = validated_data.pop('user', {})
-#         user_serializer = self.fields['user']
-#         user_instance = instance.user
-
-#         # Update the user instance with the validated user data
-#         user_instance = user_serializer.update(user_instance, user_data)
-
-#         # Update the remaining fields in the user profile instance
-#         for attr, value in validated_data.items():
-#             setattr(instance, attr, value)
-
-#         # Save the updated instances
-#         user_instance.save()
-#         instance.save()
-
-#         return instance
-
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
