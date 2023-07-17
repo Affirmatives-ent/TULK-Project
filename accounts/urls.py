@@ -30,7 +30,8 @@ app_name = 'accounts'
 urlpatterns = [
     path('', WelcomeAPIView.as_view(), name='welcome'),
     path('register/', UserRegistrationAPIView.as_view(), name='register'),
-    path('resend-otp/', ResendOTPAPIView.as_view(), name='resend-otp'),
+    path('resend-otp/<uuid:user_id>/',
+         ResendOTPAPIView.as_view(), name='resend-otp'),
     path('verify-otp/<uuid:pk>/', VerifyOTPAPIView.as_view(), name='verify-otp'),
     path('logout/', UserLogoutAPIView.as_view(), name='logout'),
     path('change-password/', ChangePasswordAPIView.as_view(), name='change-password'),
