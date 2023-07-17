@@ -31,9 +31,10 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         if user is not None:
             if user.check_password(password):
-                refresh = RefreshToken.for_user(user)
-                token = str(refresh.access_token)
-                return {'access_token': token}
+                refresh = self.get_token(user)  # Generate refresh token
+                refresh_token = str(refresh)
+                access_token = str(refresh.access_token)
+                return {'access_token': access_token, 'refresh_token': refresh_token}
 
         raise serializers.ValidationError(_('Invalid credentials.'))
 
