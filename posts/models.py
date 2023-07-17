@@ -11,7 +11,9 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='posts', to_field='id')
-    # Add any other fields you need
+
+    def __str__(self):
+        return self.content[:20]
 
 
 class Media(models.Model):
@@ -27,6 +29,9 @@ class Like(models.Model):
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name='likes', to_field='id')
 
+    def __str__(self):
+        return f"{self.user} liked {self.post.author}\'s post"
+
 
 class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -34,6 +39,9 @@ class Comment(models.Model):
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name='comments', to_field='id')
     content = models.TextField()
+
+    def __str__(self):
+        return self.content[:20]
 
 
 class Share(models.Model):
