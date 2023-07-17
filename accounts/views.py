@@ -18,6 +18,8 @@ from django.db.models import Q
 import datetime
 import random
 from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import CustomTokenObtainPairSerializer
 
 
 User = get_user_model()
@@ -26,6 +28,10 @@ User = get_user_model()
 class WelcomeAPIView(APIView):
     def get(self, request):
         return Response({"message": "Welcome to the TULK Social!"})
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 
 class UserRegistrationAPIView(generics.CreateAPIView):

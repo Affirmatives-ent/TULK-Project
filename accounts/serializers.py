@@ -1,3 +1,5 @@
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import FriendRequest, Friendship
 from rest_framework import serializers
 from .models import User, Friendship, FriendRequest, Notification
@@ -7,38 +9,33 @@ from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
 
-# class UserSerializer(serializers.ModelSerializer):
-#     url = serializers.HyperlinkedIdentityField(
-#         view_name='accounts:user-detail',
-#         lookup_field='pk'
-#     )
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        username = attrs.get(self.username_field)
+        password = attrs.get('password')
 
-#     class Meta:
-#         model = User
-#         fields = ['url', 'id', 'first_name', 'last_name', 'date_of_birth', 'gender',
-#                   'email', 'phone_number', 'is_active', 'is_staff']
+        user = None
 
+        try:
+            user = User.objects.get(email=username)
+        except User.DoesNotExist:
+            try:
+                user = User.objects.get(phone_number=username)
+            except User.DoesNotExist:
+                pass
 
-# class UserProfileSerializer(serializers.ModelSerializer):
-#     user = UserSerializer(read_only=True)
-#     user_id = serializers.PrimaryKeyRelatedField(
-#         queryset=User.objects.all(), source='user')
-#     user_url = serializers.HyperlinkedRelatedField(
-#         view_name='accounts:user-detail', read_only=True, lookup_field='user_id')
+        if user is not None:
+            if user.check_password(password):
+                refresh = RefreshToken.for_user(user)
+                token = str(refresh.access_token)
+                return {'access_token': token}
 
-#     class Meta:
-#         model = UserProfile
-#         fields = ['id', 'avatar', 'background_image', 'school', 'marital_status',
-#                   'bio', 'website', 'location', 'user', 'user_id', 'user_url']
-
-#         extra_kwargs = {
-#             'avatar': {'required': False},
-#             'background_image': {'required': False},
-#         }
+        raise serializers.ValidationError(_('Invalid credentials.'))
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
