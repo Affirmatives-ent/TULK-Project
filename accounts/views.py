@@ -20,7 +20,7 @@ import random
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomTokenObtainPairSerializer
-
+from datetime import datetime, timedelta
 
 User = get_user_model()
 
@@ -50,16 +50,17 @@ class UserRegistrationAPIView(generics.CreateAPIView):
         otp = str(random.randint(100000, 999999))
         print(otp)
 
-        # Send the OTP to the user's phone number (implement your send_otp function)
+        # Send the OTP to the user's phone number
         utils.send_otp(phone_number, otp)
 
         # Create the user object and set it to inactive
-        user = serializer.save(is_active=False, otp=otp)
+        user = serializer.save(is_active=False, otp=otp,
+                               otp_expiry=datetime.now() + timedelta(minutes=1))
         print(user.id)
 
         # Serialize the user object using UserSerializer
         user_serializer = self.user_serializer_class(
-            user, context={'request': request})  # Use UserSerializer
+            user, context={'request': request})
 
         # Include the serialized user object in the response
         response_data = {
@@ -69,6 +70,34 @@ class UserRegistrationAPIView(generics.CreateAPIView):
         }
 
         return Response(response_data, status=status.HTTP_201_CREATED)
+
+
+class ResendOTPAPIView(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        user_id = request.data.get('user_id')
+
+        try:
+            user = User.objects.get(id=user_id)
+
+            # Check if the OTP is expired
+            current_time = datetime.datetime.now()
+            if user.otp_expiry and current_time > user.otp_expiry:
+                # Generate a new OTP and update the user's OTP and OTP expiry
+                otp = str(random.randint(100000, 999999))
+                user.otp = otp
+                user.otp_expiry = datetime.now() + timedelta(minutes=1)
+                user.save()
+
+                # Send the new OTP to the user's phone number
+                utils.send_otp(user.phone_number, otp)
+
+                return Response({"message": "New OTP sent successfully"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"message": "OTP has not expired yet"}, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class VerifyOTPAPIView(generics.GenericAPIView, mixins.UpdateModelMixin):

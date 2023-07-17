@@ -20,6 +20,7 @@ from .views import (
     NotificationListAPIView,
     NotificationUpdateAPIView,
     NotificationCountAPIView,
+    ResendOTPAPIView
 
 
 )
@@ -29,9 +30,8 @@ app_name = 'accounts'
 urlpatterns = [
     path('', WelcomeAPIView.as_view(), name='welcome'),
     path('register/', UserRegistrationAPIView.as_view(), name='register'),
+    path('resend-otp/', ResendOTPAPIView.as_view(), name='resend-otp'),
     path('verify-otp/<uuid:pk>/', VerifyOTPAPIView.as_view(), name='verify-otp'),
-    #     path('users/', UserListAPIView.as_view(), name='user-list'),
-    #     path('users/<int:pk>/', UserDetailAPIView.as_view(), name='user-detail'),
     path('logout/', UserLogoutAPIView.as_view(), name='logout'),
     path('change-password/', ChangePasswordAPIView.as_view(), name='change-password'),
     path('forgot-password/', ForgotPasswordAPIView.as_view(), name='forgot-password'),
