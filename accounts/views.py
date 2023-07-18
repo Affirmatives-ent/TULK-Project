@@ -33,16 +33,6 @@ class WelcomeAPIView(APIView):
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-
-        if response.status_code == 200:
-            # Check if the token has expired
-            if 'access' not in response.data:
-                raise TokenExpiredError
-
-        return response
-
 
 class UserRegistrationAPIView(generics.CreateAPIView):
     queryset = User.objects.all()

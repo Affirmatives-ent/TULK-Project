@@ -39,9 +39,10 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 refresh = self.get_token(user)  # Generate refresh token
                 refresh_token = str(refresh)
                 access_token = str(refresh.access_token)
+
                 return {'access_token': access_token, 'refresh_token': refresh_token}
 
-        raise TokenExpiredError
+        raise serializers.ValidationError(_('Invalid credentials.'))
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
