@@ -14,6 +14,11 @@ from django.utils.translation import gettext_lazy as _
 User = get_user_model()
 
 
+class TokenExpiredError(serializers.ValidationError):
+    default_detail = 'Token has expired.'
+    default_code = 407
+
+
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         username = attrs.get(self.username_field)
@@ -36,7 +41,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 access_token = str(refresh.access_token)
                 return {'access_token': access_token, 'refresh_token': refresh_token}
 
-        raise serializers.ValidationError(_('Invalid credentials.'))
+        raise TokenExpiredError
 
 
 class UserProfileSerializer(serializers.ModelSerializer):

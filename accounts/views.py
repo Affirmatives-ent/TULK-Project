@@ -19,7 +19,7 @@ import datetime
 import random
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import CustomTokenObtainPairSerializer
+from .serializers import CustomTokenObtainPairSerializer, TokenExpiredError
 from datetime import datetime, timedelta
 
 User = get_user_model()
@@ -32,6 +32,16 @@ class WelcomeAPIView(APIView):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+
+        if response.status_code == 200:
+            # Check if the token has expired
+            if 'access' not in response.data:
+                raise TokenExpiredError
+
+        return response
 
 
 class UserRegistrationAPIView(generics.CreateAPIView):
