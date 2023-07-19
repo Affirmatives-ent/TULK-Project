@@ -50,8 +50,8 @@ INSTALLED_APPS = [
     'posts',
     'articles',
     'chat',
-    'cloudinary-storage',
-    'cloudinary'
+    'cloudinary_storage',
+    'cloudinary',
 
 
 ]
