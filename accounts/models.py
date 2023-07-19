@@ -105,7 +105,7 @@ class User(PermissionsMixin, AbstractBaseUser):
     REQUIRED_FIELDS = ['email']
 
     def __str__(self):
-        return f'{self.first_name}\'s Profile'
+        return self.first_name
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -140,7 +140,7 @@ class FriendRequest(models.Model):
     accepted = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.sender.username} -> {self.recipient.username}'
+        return f'{self.sender.first_name} -> {self.recipient.first_name}'
 
 
 class Friendship(models.Model):
@@ -152,7 +152,7 @@ class Friendship(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.user1.username} - {self.user2.username}'
+        return f'{self.user1.first_name} - {self.user2.first_name}'
 
 
 class Notification(models.Model):
@@ -166,4 +166,4 @@ class Notification(models.Model):
     viewed = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.sender.username} -> {self.recipient.username}: {self.message}'
+        return f'{self.sender.first_name} -> {self.recipient.first_name}: {self.message}'
