@@ -45,7 +45,10 @@ INSTALLED_APPS = [
     'user_groups',
     'posts',
     'articles',
-    'chat'
+    'chat',
+    'cloudinary-storage',
+    'cloudinary'
+
 
 ]
 
@@ -181,6 +184,12 @@ SIMPLE_JWT = {
     'SIGNING_KEY': SECRET_KEY
 }
 
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'hyklbuwof',
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET')
+}
+
 
 # DJOSER = {
 #     'USER_ID_FIELD': 'phone_number',
@@ -207,6 +216,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIR = (os.path.join(BASE_DIR, "static"),)
 MEDIA_URL = '/media/'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
