@@ -27,7 +27,7 @@ class ShareSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    media = MediaSerializer(many=True, read_only=True)
+    media = MediaSerializer(many=True)
     comments_count = serializers.SerializerMethodField()
     likes_count = serializers.SerializerMethodField()
     shares_count = serializers.SerializerMethodField()
