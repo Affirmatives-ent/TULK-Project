@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.conf import settings
 import uuid
-from cloudinary.models import CloudinaryField
 
 
 class Article(models.Model):
@@ -21,8 +20,9 @@ class Article(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=200)
     content = models.TextField(blank=True)
-    featured_image = CloudinaryField('images/', null=True, blank=True)
-    media = CloudinaryField('media/')
+    featured_image = models.ImageField(
+        upload_to='images/', null=True, blank=True)
+    file = models.FileField(upload_to='media/', null=True, blank=True)
     categories = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, to_field='id')
@@ -54,7 +54,7 @@ class MediaFile(models.Model):
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     caption = models.CharField(max_length=100, null=True, blank=True)
-    file = CloudinaryField('media/')
+    file = models.FileField(upload_to='media/')
     categories = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, to_field='id')

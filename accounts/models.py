@@ -10,8 +10,6 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.core.files.storage import default_storage
 from PIL import Image
-from cloudinary.models import CloudinaryField
-
 
 # from django.utils.deconstruct import deconstructible
 
@@ -90,10 +88,10 @@ class User(PermissionsMixin, AbstractBaseUser):
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     user_register_at = models.DateTimeField(auto_now_add=True)
-    avatar = CloudinaryField(
-        'user_avatar/', blank=True, null=True, default='default_avatar.png')
-    background_image = CloudinaryField(
-        'cover_image/', blank=True, null=True, default='default_cover.png')
+    avatar = models.ImageField(
+        upload_to='user_avatar/', blank=True, null=True)
+    background_image = models.ImageField(
+        upload_to='cover_image/', blank=True, null=True)
     marital_status = models.CharField(
         max_length=20, choices=MARITAL_STATUS, blank=True, null=True)
     school = models.CharField(max_length=100, blank=True, null=True)

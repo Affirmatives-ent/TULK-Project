@@ -2,7 +2,6 @@ from django.db import models
 from django.conf import settings
 from accounts.models import Friendship
 import uuid
-from cloudinary.models import CloudinaryField
 
 
 class ConversationGroup(models.Model):
@@ -17,8 +16,8 @@ class ConversationGroup(models.Model):
     admin_phone = models.CharField(max_length=20)
     admin_email = models.EmailField()
     admin_website = models.URLField()
-    background_image = CloudinaryField('group/backgrounds/')
-    avatar = CloudinaryField('group/avatars/')
+    background_image = models.ImageField(upload_to='group/backgrounds/')
+    avatar = models.ImageField(upload_to='group/avatars/')
     members = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name='usergroups')
 
@@ -47,7 +46,7 @@ class GroupChat(models.Model):
     sender = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, to_field='id')
     message = models.TextField()
-    media = CloudinaryField('group/media/', blank=True, null=True)
+    media = models.FileField(upload_to='group/media/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

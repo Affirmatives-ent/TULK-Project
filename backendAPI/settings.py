@@ -7,10 +7,10 @@ from django.db.models import Q
 from django.contrib.auth import get_user_model
 import django_heroku
 import dj_database_url
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
-from cloudinary_storage.storage import RawMediaCloudinaryStorage
+# import cloudinary
+# import cloudinary.uploader
+# import cloudinary.api
+# from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -185,11 +185,11 @@ SIMPLE_JWT = {
     'SIGNING_KEY': SECRET_KEY
 }
 
-cloudinary.config = {
-    'cloud_name': 'hyklbuwof',
-    'api_key': os.getenv('CLOUDINARY_API_KEY'),
-    'api_secret': os.getenv('CLOUDINARY_API_SECRET')
-}
+# cloudinary.config = {
+#     'cloud_name': 'hyklbuwof',
+#     'api_key': os.getenv('CLOUDINARY_API_KEY'),
+#     'api_secret': os.getenv('CLOUDINARY_API_SECRET')
+# }
 
 
 # DJOSER = {
@@ -213,11 +213,11 @@ MIN_PASSWORD_LENGTH = 8
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'https://res.cloudinary.com/hyklbuwof/raw/upload/'
+# STATIC_URL = 'https://res.cloudinary.com/hyklbuwof/raw/upload/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIR = (os.path.join(BASE_DIR, "static"),)
-MEDIA_URL = 'https://res.cloudinary.com/hyklbuwof/image/upload/'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# MEDIA_URL = 'https://res.cloudinary.com/hyklbuwof/image/upload/'
+# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
