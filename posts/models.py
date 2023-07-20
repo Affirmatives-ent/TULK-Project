@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 import uuid
+from cloudinary.models import CloudinaryField
 
 User = get_user_model()
 
@@ -20,7 +21,7 @@ class Media(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name='media', to_field='id')
-    file = models.FileField(upload_to='post_media/')
+    file = CloudinaryField('media/')
 
 
 class Like(models.Model):

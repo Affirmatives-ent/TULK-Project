@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 import uuid
+from cloudinary.models import CloudinaryField
+
 
 User = get_user_model()
 
@@ -12,7 +14,7 @@ class Message(models.Model):
     recipient = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='received_messages', to_field='id')
     content = models.TextField(null=True, blank=True)
-    media = models.FileField(null=True, blank=True, upload_to='post_media/')
+    file = CloudinaryField('media/')
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
