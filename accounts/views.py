@@ -475,6 +475,8 @@ class NotificationCountAPIView(APIView):
 #         return Response(results)
 
 class SearchAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, format=None):
         results = []
 
