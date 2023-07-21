@@ -11,6 +11,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from . import serializers, models, utils
 from django.contrib.auth import get_user_model
 from posts.models import Post
+from user_groups.models import ConversationGroup
 from articles.models import Article
 from django.utils import timezone
 from django.utils.timezone import make_aware
@@ -441,7 +442,7 @@ class SearchAPIView(generics.ListAPIView):
         results.extend(user_results)
 
         # Search for groups by name or category
-        group_results = models.ConversationGroup.objects.filter(
+        group_results = ConversationGroup.objects.filter(
             Q(name__icontains=search_query) |
             Q(category__icontains=search_query)
         )
