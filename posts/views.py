@@ -2,6 +2,9 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from .models import Post, Comment, Like, Share
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer, ShareSerializer
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class PostListCreateAPIView(generics.ListCreateAPIView):
@@ -12,6 +15,17 @@ class PostListCreateAPIView(generics.ListCreateAPIView):
 class PostRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+
+class UserPostsAPIView(generics.APIView):
+    def get(self, request, user_id, format=None):
+        try:
+            posts = Post.objects.filter(
+                author__id=user_id).order_by('-created_at')
+            serializer = PostSerializer(posts, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({"message": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
 class CommentListCreateAPIView(generics.ListCreateAPIView):
