@@ -173,4 +173,4 @@ class NotificationCountSerializer(serializers.Serializer):
 
 
 class SearchSerializer(serializers.Serializer):
-    search_query = serializers.CharField(max_length=255)
+    search = serializers.CharField(max_length=255)
