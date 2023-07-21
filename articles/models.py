@@ -23,7 +23,7 @@ class Article(models.Model):
     featured_image = models.ImageField(
         upload_to='images/', null=True, blank=True)
     file = models.FileField(upload_to='media/', null=True, blank=True)
-    categories = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, to_field='id')
     status = models.CharField(
@@ -55,7 +55,7 @@ class MediaFile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     caption = models.CharField(max_length=100, null=True, blank=True)
     file = models.FileField(upload_to='media/')
-    categories = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, to_field='id')
     status = models.CharField(
