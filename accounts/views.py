@@ -481,29 +481,35 @@ class SearchAPIView(APIView):
         results = []
 
         if 'search' in self.request.GET:
-            # user_results = User.objects.all()
             search_query = self.request.query_params.get('search')
-            user_results = User.objects.filter(
-                Q(phone_number__icontains=search_query) |
-                Q(first_name__icontains=search_query) |
-                Q(last_name__icontains=search_query)
-            )
+            model = self.request.query_params.get(
+                'model')  # Get the 'model' query parameter
 
-            user_serializer = serializers.UserProfileSerializer(
-                user_results, many=True)
-            results.extend(user_serializer.data)
+            if model == 'users':
+                user_results = User.objects.filter(
+                    Q(phone_number__icontains=search_query) |
+                    Q(first_name__icontains=search_query) |
+                    Q(last_name__icontains=search_query)
+                )
+                user_serializer = serializers.UserProfileSerializer(
+                    user_results, many=True)
+                results.extend(user_serializer.data)
 
-            posts_results = Post.objects.filter(
-                Q(author__first_name__icontains=search_query) | Q(content__icontains=search_query))
-            post_serializer = PostSerializer(posts_results, many=True)
-            results.extend(post_serializer.data)
+            elif model == 'posts':
+                posts_results = Post.objects.filter(
+                    Q(author__first_name__icontains=search_query) | Q(
+                        content__icontains=search_query)
+                )
+                post_serializer = PostSerializer(posts_results, many=True)
+                results.extend(post_serializer.data)
 
-            group_results = ConversationGroup.objects.filter(
-                Q(name__icontains=search_query) |
-                Q(category__icontains=search_query)
-            )
-            group_serializer = ConversationGroupSerializer(
-                group_results, many=True)
-            results.extend(group_serializer.data)
+            elif model == 'groups':
+                group_results = ConversationGroup.objects.filter(
+                    Q(name__icontains=search_query) |
+                    Q(category__icontains=search_query)
+                )
+                group_serializer = ConversationGroupSerializer(
+                    group_results, many=True)
+                results.extend(group_serializer.data)
 
         return Response({"data": results})
