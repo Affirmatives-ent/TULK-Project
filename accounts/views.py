@@ -428,7 +428,7 @@ class SearchAPIView(generics.ListAPIView):
     pagination_class = pagination.PageNumberPagination
 
     def get_queryset(self):
-        search_query = self.request.query_params.get('search')
+        search_query = self.request.query_params.get('search_query')
 
         # Perform the search query across multiple models and fields
         results = []
