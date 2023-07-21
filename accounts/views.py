@@ -13,6 +13,7 @@ from django.contrib.auth import get_user_model
 from posts.models import Post
 from posts.serializers import PostSerializer
 from user_groups.models import ConversationGroup
+from user_groups.serializers import ConversationGroupSerializer
 from articles.models import Article
 from django.utils import timezone
 from django.utils.timezone import make_aware
@@ -494,5 +495,13 @@ class SearchAPIView(APIView):
                 Q(author__first_name__icontains=search_query) | Q(content__icontains=search_query))
             post_serializer = PostSerializer(posts_results, many=True)
             results.extend(post_serializer.data)
+
+            group_results = ConversationGroup.objects.filter(
+                Q(name__icontains=search_query) |
+                Q(category__icontains=search_query)
+            )
+            group_serializer = ConversationGroupSerializer(
+                group_results, many=True)
+            results.extend(group_serializer.data)
 
         return Response({"data": results})
