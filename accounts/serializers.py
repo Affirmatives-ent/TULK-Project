@@ -14,6 +14,20 @@ from django.utils.translation import gettext_lazy as _
 User = get_user_model()
 
 
+class UserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'date_of_birth', 'gender',
+                  'email', 'phone_number', 'avatar', 'background_image', 'school', 'marital_status',
+                  'bio', 'website', 'location']
+
+        extra_kwargs = {
+            'avatar': {'required': False},
+            'background_image': {'required': False},
+        }
+
+
 class TokenExpiredError(serializers.ValidationError):
     default_detail = 'Token has expired.'
     default_code = 407
@@ -40,23 +54,12 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 refresh_token = str(refresh)
                 access_token = str(refresh.access_token)
 
-                return {'access_token': access_token, 'refresh_token': refresh_token, 'user': user}
+                # Serialize the user object using the UserSerializer
+                user_serializer = UserProfileSerializer(user)
+
+                return {'access_token': access_token, 'refresh_token': refresh_token, 'user': user_serializer.data}
 
         raise serializers.ValidationError(_('Invalid credentials.'))
-
-
-class UserProfileSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ['id', 'first_name', 'last_name', 'date_of_birth', 'gender',
-                  'email', 'phone_number', 'avatar', 'background_image', 'school', 'marital_status',
-                  'bio', 'website', 'location']
-
-        extra_kwargs = {
-            'avatar': {'required': False},
-            'background_image': {'required': False},
-        }
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
