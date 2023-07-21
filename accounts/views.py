@@ -456,14 +456,14 @@ class SearchAPIView(generics.ListAPIView):
         results.extend(group_results)
 
         # Search for posts or articles by title or category
-        post_results = models.Post.objects.filter(
+        post_results = Post.objects.filter(
             Q(author__icontains=search_query) |
             Q(content__icontains=search_query)
         )
         results.extend(post_results)
 
         # Search for articles by title or category
-        article_results = models.Article.objects.filter(
+        article_results = Article.objects.filter(
             Q(title__icontains=search_query) |
             Q(category__icontains=search_query)
         )
