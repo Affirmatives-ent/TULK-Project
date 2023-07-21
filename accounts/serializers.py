@@ -40,7 +40,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 refresh_token = str(refresh)
                 access_token = str(refresh.access_token)
 
-                return {'access_token': access_token, 'refresh_token': refresh_token}
+                return {'access_token': access_token, 'refresh_token': refresh_token, 'user': user}
 
         raise serializers.ValidationError(_('Invalid credentials.'))
 

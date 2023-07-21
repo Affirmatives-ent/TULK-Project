@@ -20,9 +20,8 @@ from .views import (
     NotificationListAPIView,
     NotificationUpdateAPIView,
     NotificationCountAPIView,
-    ResendOTPAPIView
-
-
+    ResendOTPAPIView,
+    SearchAPIView
 )
 
 app_name = 'accounts'
@@ -56,6 +55,7 @@ urlpatterns = [
          name='notification-update'),
     path('notifications/count/', NotificationCountAPIView.as_view(),
          name='notification-count'),
+    path('search/', SearchAPIView.as_view(), name='search'),
 
 
 ]
