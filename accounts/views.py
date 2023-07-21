@@ -450,8 +450,8 @@ class SearchAPIView(generics.ListAPIView):
 
         # Search for posts or articles by title or category
         post_results = Post.objects.filter(
-            Q(title__icontains=search_query) |
-            Q(category__icontains=search_query)
+            Q(authur__icontains=search_query) |
+            Q(content__icontains=search_query)
         )
         results.extend(post_results)
 
