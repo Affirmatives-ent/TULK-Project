@@ -442,7 +442,7 @@ class SearchAPIView(generics.ListAPIView):
 
         # Search for users by username, first name, or last name
         user_results = User.objects.filter(
-            Q(phone_number__icontains=search_query) |
+            Q(phone_number__iexact=search_query)|
             Q(first_name__icontains=search_query) |
             Q(last_name__icontains=search_query)
         )
