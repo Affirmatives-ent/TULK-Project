@@ -11,6 +11,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from . import serializers, models, utils
 from django.contrib.auth import get_user_model
 from posts.models import Post
+from posts.serializers import PostSerializer
 from user_groups.models import ConversationGroup
 from articles.models import Article
 from django.utils import timezone
@@ -474,7 +475,7 @@ class NotificationCountAPIView(APIView):
 
 class SearchAPIView(APIView):
     def get(self, request, format=None):
-        list_of_user = []
+        results = []
 
         if 'search' in self.request.GET:
             user_results = User.objects.all()
@@ -485,7 +486,12 @@ class SearchAPIView(APIView):
                 Q(last_name__icontains=search_query)
             )
 
-            list_of_user = serializers.UserProfileSerializer(
+            results = serializers.UserProfileSerializer(
                 user_results, many=True).data
 
-        return Response(list_of_user)
+            posts_results = Post.objects.filter(
+                Q(author__first_name__icontains=search_query) | Q(content__icontains=search_query))
+            posts_results = PostSerializer(posts_results, many=True)
+            results.extend(posts_results)
+
+        return Response(results)
