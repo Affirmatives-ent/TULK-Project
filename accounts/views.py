@@ -442,7 +442,7 @@ class SearchAPIView(generics.ListAPIView):
 
         # Search for users by username, first name, or last name
         user_results = User.objects.filter(
-            Q(phone_number__iexact=search_query)|
+            Q(phone_number__iexact=search_query) |
             Q(first_name__icontains=search_query) |
             Q(last_name__icontains=search_query)
         )
@@ -457,7 +457,8 @@ class SearchAPIView(generics.ListAPIView):
 
         # Search for posts or articles by title or category
         post_results = Post.objects.filter(
-            Q(author__icontains=search_query) |
+            # Use the username field of the User model
+            Q(author__first_name__icontains=search_query) |
             Q(content__icontains=search_query)
         )
         results.extend(post_results)
