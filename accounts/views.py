@@ -494,4 +494,4 @@ class SearchAPIView(APIView):
             posts_results = PostSerializer(posts_results, many=True)
             results.extend(posts_results)
 
-        return Response(results)
+        return Response({"data": results})
