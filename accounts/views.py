@@ -423,47 +423,50 @@ class NotificationCountAPIView(APIView):
 
 
 class SearchAPIView(generics.ListAPIView):
-    # serializer_class = serializers.SearchSerializer
     permission_classes = [AllowAny]
     pagination_class = pagination.PageNumberPagination
 
-    def get_queryset(self):
+    def get_serializer(self, instance, *args, **kwargs):
+        serializer_class = self.get_serializer_class()
+        kwargs["context"] = self.get_serializer_context()
+        return serializer_class(instance, *args, **kwargs)
+
+    def get_serializer_class(self):
+        return None  # Return None to indicate no serializer is needed
+
+    def list(self, request, *args, **kwargs):
         search_query = self.request.query_params.get('search')
-        print("Search query:", search_query)
 
-        if search_query:
-            # Perform the search query across multiple models and fields
-            results = []
+        # Perform the search query across multiple models and fields
+        results = []
 
-            # Search for users by username, first name, or last name
-            user_results = get_user_model().objects.filter(
-                Q(phone_number__iexact=search_query) |
-                Q(first_name__icontains=search_query) |
-                Q(last_name__icontains=search_query)
-            )
-            results.extend(user_results)
+        # Search for users by username, first name, or last name
+        user_results = User.objects.filter(
+            Q(phone_number__icontains=search_query) |
+            Q(first_name__icontains=search_query) |
+            Q(last_name__icontains=search_query)
+        )
+        results.extend(user_results)
 
-            # Search for groups by name or category
-            group_results = ConversationGroup.objects.filter(
-                Q(name__icontains=search_query) |
-                Q(category__icontains=search_query)
-            )
-            results.extend(group_results)
+        # Search for groups by name or category
+        group_results = ConversationGroup.objects.filter(
+            Q(name__icontains=search_query) |
+            Q(category__icontains=search_query)
+        )
+        results.extend(group_results)
 
-            # Search for posts or articles by title or category
-            post_results = Post.objects.filter(
-                Q(author__first_name__icontains=search_query) |
-                Q(author__last_name__icontains=search_query) |
-                Q(content__icontains=search_query)
-            )
-            results.extend(post_results)
+        # Search for posts or articles by title or category
+        post_results = models.Post.objects.filter(
+            Q(author__icontains=search_query) |
+            Q(content__icontains=search_query)
+        )
+        results.extend(post_results)
 
-            # Search for articles by title or category
-            article_results = Article.objects.filter(
-                Q(title__icontains=search_query) |
-                Q(category__icontains=search_query)
-            )
-            results.extend(article_results)
+        # Search for articles by title or category
+        article_results = models.Article.objects.filter(
+            Q(title__icontains=search_query) |
+            Q(category__icontains=search_query)
+        )
+        results.extend(article_results)
 
-            return results
-        return []
+        return Response(results)
