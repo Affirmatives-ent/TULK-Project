@@ -473,7 +473,7 @@ class NotificationCountAPIView(APIView):
 #         return Response(results)
 class SearchAPIView(generics.ListAPIView):
     permission_classes = [AllowAny]
-    pagination_class = pagination.PageNumberPagination
+    # pagination_class = pagination.PageNumberPagination
 
     def get_queryset(self):
         user_results = User.objects.all()
