@@ -34,6 +34,5 @@ urlpatterns = [
         url_name="schema"), name="swagger-ui"),
     path('chat/', include('chat.urls')),
 ]
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL,
+                      document_root=settings.MEDIA_ROOT)
