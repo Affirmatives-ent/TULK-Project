@@ -471,18 +471,22 @@ class NotificationCountAPIView(APIView):
 #         results.extend(article_results)
 
 #         return Response(results)
+class SearchAPIView(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    pagination_class = pagination.PageNumberPagination
 
-def get_queryset(self):
-    user_results = User.objects.all()
+    def get_queryset(self):
+        user_results = User.objects.all()
 
-    if 'search' in self.request.GET:
-        search_query = self.request.query_params.get('search')
-        user_results = user_results.filter(
-            Q(phone_number__icontains=search_query) |
-            Q(first_name__icontains=search_query) |
-            Q(last_name__icontains=search_query)
-        )
+        if 'search' in self.request.GET:
+            search_query = self.request.query_params.get('search')
+            user_results = user_results.filter(
+                Q(phone_number__icontains=search_query) |
+                Q(first_name__icontains=search_query) |
+                Q(last_name__icontains=search_query)
+            )
 
-    list_of_user = serializers.UserProfileSerializer(user_results, many=True)
+        list_of_user = serializers.UserProfileSerializer(
+            user_results, many=True)
 
-    return list_of_user
+        return list_of_user
