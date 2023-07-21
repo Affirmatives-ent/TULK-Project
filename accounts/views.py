@@ -448,17 +448,17 @@ class SearchAPIView(generics.ListAPIView):
         results.extend(group_results)
 
         # Search for posts or articles by title or category
-        post_results = Post.objects.filter(
-            Q(title__icontains=search_query) |
-            Q(category__icontains=search_query)
-        )
-        results.extend(post_results)
+        # post_results = Post.objects.filter(
+        #     Q(title__icontains=search_query) |
+        #     Q(category__icontains=search_query)
+        # )
+        # results.extend(post_results)
 
-        # Search for articles by title or category
-        article_results = Article.objects.filter(
-            Q(title__icontains=search_query) |
-            Q(category__icontains=search_query)
-        )
-        results.extend(article_results)
+        # # Search for articles by title or category
+        # article_results = Article.objects.filter(
+        #     Q(title__icontains=search_query) |
+        #     Q(category__icontains=search_query)
+        # )
+        # results.extend(article_results)
 
-        return results
+        # return results
