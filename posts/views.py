@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from .models import Post, Comment, Like, Share
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer, ShareSerializer
 from django.contrib.auth import get_user_model
+from rest_framework.views import APIView
 
 User = get_user_model()
 
@@ -17,7 +18,7 @@ class PostRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
 
 
-class UserPostsAPIView(generics.APIView):
+class UserPostsAPIView(APIView):
     def get(self, request, user_id, format=None):
         try:
             posts = Post.objects.filter(
