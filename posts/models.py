@@ -8,19 +8,13 @@ User = get_user_model()
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     content = models.TextField(blank=True)
+    file = models.FileField(upload_to='post_media/', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='posts', to_field='id')
 
     def __str__(self):
         return self.content[:20]
-
-
-class Media(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name='media', to_field='id')
-    file = models.FileField(upload_to='post_media/')
 
 
 class Like(models.Model):

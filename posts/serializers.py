@@ -1,11 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Media, Like, Comment, Share
-
-
-class MediaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Media
-        fields = '__all__'
+from .models import Post, Like, Comment, Share
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -27,14 +21,13 @@ class ShareSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    media = MediaSerializer(many=True)
     comments_count = serializers.SerializerMethodField()
     likes_count = serializers.SerializerMethodField()
     shares_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
-        fields = ['id', 'author', 'content', 'created_at', 'media',
+        fields = ['id', 'author', 'content', 'file', 'created_at',
                   'likes_count', 'comments_count', 'shares_count']
 
     def get_comments_count(self, obj):
