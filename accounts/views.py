@@ -478,20 +478,21 @@ class SearchAPIView(APIView):
         results = []
 
         if 'search' in self.request.GET:
-            user_results = User.objects.all()
+            # user_results = User.objects.all()
             search_query = self.request.query_params.get('search')
-            user_results = user_results.filter(
+            user_results = User.objects.filter(
                 Q(phone_number__icontains=search_query) |
                 Q(first_name__icontains=search_query) |
                 Q(last_name__icontains=search_query)
             )
 
-            results = serializers.UserProfileSerializer(
-                user_results, many=True).data
+            user_serializer = serializers.UserProfileSerializer(
+                user_results, many=True)
+            results.extend(user_serializer.data)
 
             posts_results = Post.objects.filter(
                 Q(author__first_name__icontains=search_query) | Q(content__icontains=search_query))
-            posts_results = PostSerializer(posts_results, many=True)
-            results.extend(posts_results)
+            post_serializer = PostSerializer(posts_results, many=True)
+            results.extend(post_serializer.data)
 
         return Response({"data": results})
