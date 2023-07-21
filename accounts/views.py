@@ -423,7 +423,7 @@ class NotificationCountAPIView(APIView):
 
 
 class SearchAPIView(generics.ListAPIView):
-    serializer_class = serializers.SearchSerializer
+    # serializer_class = serializers.SearchSerializer
     permission_classes = [AllowAny]
     pagination_class = pagination.PageNumberPagination
 
