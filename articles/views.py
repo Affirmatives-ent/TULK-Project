@@ -1,12 +1,18 @@
-# views.py
-from rest_framework import permissions, generics
+from rest_framework.generics import (
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+    ListAPIView,
+    RetrieveAPIView,
+)
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
-from .models import Article, MediaFile
-from .serializers import ArticleSerializer, MediaFileSerializer
+from rest_framework import permissions
+
+from .models import Article
+from .serializers import ArticleSerializer
 
 
-class AdminArticleListView(generics.ListCreateAPIView):
+class AdminArticleListView(ListCreateAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAdminUser,)
@@ -32,15 +38,14 @@ class AdminArticleListView(generics.ListCreateAPIView):
             article, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return self.update(request, *args, **kwargs)
+        return Response(serializer.data)
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        media_files = MediaFile.objects.all()
-        return queryset.union(media_files)
+        return queryset
 
 
-class AdminArticleDetailView(generics.RetrieveUpdateDestroyAPIView):
+class AdminArticleDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAdminUser,)
@@ -58,19 +63,13 @@ class AdminArticleDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.data)
 
 
-class AdminMediaFilePublishView(generics.CreateAPIView):
-    queryset = MediaFile.objects.all()
-    serializer_class = MediaFileSerializer
-    permission_classes = (permissions.IsAdminUser,)
-
-
-class UserArticleListView(generics.ListAPIView):
+class UserArticleListView(ListAPIView):
     queryset = Article.objects.filter(status='published')
     serializer_class = ArticleSerializer
     permission_classes = (permissions.AllowAny,)
 
 
-class UserArticleDetailView(generics.RetrieveAPIView):
+class UserArticleDetailView(RetrieveAPIView):
     queryset = Article.objects.filter(status='published')
     serializer_class = ArticleSerializer
     permission_classes = (permissions.AllowAny,)

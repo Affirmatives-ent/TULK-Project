@@ -5,19 +5,13 @@ from .models import Article, MediaFile
 class MediaFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = MediaFile
-        fields = "__all__"
+        fields = ('file', 'uploaded_at')
 
 
 class ArticleSerializer(serializers.ModelSerializer):
+    files = MediaFileSerializer(many=True, read_only=True)
+
     class Meta:
         model = Article
-        fields = "__all__"
-
-    def create(self, validated_data):
-        media_files_data = validated_data.pop('media_files', [])
-        article = Article.objects.create(**validated_data)
-
-        for media_file_data in media_files_data:
-            MediaFile.objects.create(article=article, **media_file_data)
-
-        return article
+        fields = ('id', 'title', 'content', 'featured_image', 'files',
+                  'category', 'author', 'status', 'published_date')
