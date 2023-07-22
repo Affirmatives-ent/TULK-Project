@@ -22,6 +22,7 @@ from django.utils.timezone import make_aware
 from django.db.models import Q
 import datetime
 import random
+from .models import ConversationGroup
 
 User = get_user_model
 
@@ -29,6 +30,24 @@ User = get_user_model
 class CreateConversationGroup(generics.CreateAPIView):
     serializer_class = serializers.ConversationGroupSerializer
     permission_classes = [IsAuthenticated]
+
+
+class ListConversationGroups(generics.ListAPIView):
+    queryset = ConversationGroup.objects.all()
+    serializer_class = serializers.ConversationGroupSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class ConversationGroupDetail(generics.RetrieveAPIView):
+    queryset = ConversationGroup.objects.all()
+    serializer_class = serializers.ConversationGroupSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class ConversationGroupDetailUpdate(generics.RetrieveUpdateAPIView):
+    queryset = ConversationGroup.objects.all()
+    serializer_class = serializers.ConversationGroupSerializer
+    permission_classes = [IsGroupAdmin]
 
 
 class InviteUserToGroup(APIView):
