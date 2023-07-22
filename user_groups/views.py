@@ -46,7 +46,7 @@ class ConversationGroupDetail(generics.RetrieveAPIView):
 
 class ConversationGroupDetailUpdate(generics.RetrieveUpdateAPIView):
     queryset = ConversationGroup.objects.all()
-    serializer_class = serializers.ConversationGroupSerializer
+    serializer_class = serializers.ConversationGroupUpdateSerializer
     permission_classes = [IsGroupAdmin]
 
 

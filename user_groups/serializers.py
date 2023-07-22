@@ -11,6 +11,16 @@ class ConversationGroupSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ConversationGroupUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConversationGroup
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields.pop('members')
+
+
 class GroupChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupChat
