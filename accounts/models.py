@@ -12,6 +12,7 @@ from django.core.files.storage import default_storage
 from PIL import Image
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from django.db.models import Q
 
 # from django.utils.deconstruct import deconstructible
 
@@ -148,6 +149,11 @@ class FriendRequest(models.Model):
         return f'{self.sender.first_name} -> {self.recipient.first_name}'
 
 
+class FriendshipManager(models.Manager):
+    def get_friends_for_user(self, user):
+        return self.filter(Q(user1=user, is_online=True) | Q(user2=user, is_online=True))
+
+
 class Friendship(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user1 = models.ForeignKey(
@@ -156,6 +162,8 @@ class Friendship(models.Model):
         User, on_delete=models.CASCADE, related_name='friendships2', to_field='id')
     created_at = models.DateTimeField(auto_now_add=True)
     is_online = models.BooleanField(default=False)
+
+    objects = FriendshipManager()
 
     class Meta:
         ordering = ["-created_at"]
