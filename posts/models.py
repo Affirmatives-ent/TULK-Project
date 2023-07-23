@@ -8,7 +8,7 @@ User = get_user_model()
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     content = models.TextField(blank=True)
-    file = models.FileField(upload_to='post_media/', blank=True)
+    files = models.ManyToManyField('File', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='posts', to_field='id')
@@ -18,6 +18,18 @@ class Post(models.Model):
 
     def __str__(self):
         return self.content[:20]
+
+
+class File(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    file = models.FileField(upload_to='post_files/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-uploaded_at"]
+
+    def __str__(self):
+        return self.file.author
 
 
 class Like(models.Model):
