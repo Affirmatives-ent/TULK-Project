@@ -302,7 +302,7 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
         notification = models.Notification.objects.create(
             sender=self.request.user,
             recipient=recipient,
-            message=f'{self.request.user.username} sent you a friend request.'
+            message=f'{self.request.user.first_name} sent you a friend request.'
         )
         notification_serializer = serializers.NotificationSerializer(
             notification)
