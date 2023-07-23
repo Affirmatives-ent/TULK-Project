@@ -40,8 +40,11 @@ class Article(models.Model):
 
 class MediaFile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    file = models.FileField(upload_to='media/', null=True, blank=True)
+    file = models.FileField(upload_to='article_media/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-uploaded_at"]
 
     def __str__(self):
         return self.file.name

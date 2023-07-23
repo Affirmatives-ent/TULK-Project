@@ -1,48 +1,46 @@
 from rest_framework.generics import (
-    ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
     ListAPIView,
     RetrieveAPIView,
 )
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from rest_framework import permissions
-
+from rest_framework import status
 from .models import Article
 from .serializers import ArticleSerializer
 
 
-class AdminArticleListView(ListCreateAPIView):
-    queryset = Article.objects.all()
-    serializer_class = ArticleSerializer
-    permission_classes = (permissions.IsAdminUser,)
+class PublishArticleView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
 
-    def delete(self, request, *args, **kwargs):
-        article_pk = kwargs['pk']
-        try:
-            article = Article.objects.get(pk=article_pk)
-        except Article.DoesNotExist:
-            raise NotFound(f"Article with ID {article_pk} does not exist.")
+    def post(self, request, format=None):
+        serializer = ArticleSerializer(data=request.data)
+        if serializer.is_valid():
+            # Save the article with status 'published'
+            article = serializer.save(status='published')
 
-        article.delete()
-        return self.destroy(request, *args, **kwargs)
+            # Process and save multiple media files
+            files_data = request.FILES.getlist('files')
+            for file_data in files_data:
+                article.files.create(file=file_data)
 
-    def put(self, request, *args, **kwargs):
-        article_pk = kwargs['pk']
-        try:
-            article = Article.objects.get(pk=article_pk)
-        except Article.DoesNotExist:
-            raise NotFound(f"Article with ID {article_pk} does not exist.")
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = self.get_serializer(
-            article, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset
+class PublishedArticleListView(APIView):
+    def get(self, request, format=None):
+        # Get both published and draft articles
+        published_articles = Article.objects.filter(status='published')
+        draft_articles = Article.objects.filter(status='draft')
+
+        # Combine the two querysets and serialize the data
+        articles = published_articles | draft_articles
+        serializer = ArticleSerializer(articles, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class AdminArticleDetailView(RetrieveUpdateDestroyAPIView):

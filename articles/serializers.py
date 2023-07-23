@@ -5,7 +5,7 @@ from .models import Article, MediaFile
 class MediaFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = MediaFile
-        fields = ('file', 'uploaded_at')
+        fields = "__all__"
 
 
 class ArticleSerializer(serializers.ModelSerializer):
