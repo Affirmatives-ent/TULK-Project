@@ -372,6 +372,25 @@ class FriendshipCreateAPIView(generics.CreateAPIView):
         serializer.save(user1=user1)
 
 
+class OnlineFriendsListView(APIView):
+
+    def get(self, request, format=None):
+        user = request.user
+        friendships = models.Friendship.objects.get_friends_for_user(user)
+        online_friends = []
+
+        for friendship in friendships:
+            if friendship.user1 == user:
+                friend = friendship.user2
+            else:
+                friend = friendship.user1
+
+            if friend.is_online:
+                online_friends.append(friend.id)
+
+        return Response(online_friends, status=status.HTTP_200_OK)
+
+
 # class FriendSearchAPIView(generics.ListAPIView):
 #     serializer_class = serializers.FriendshipSerializer
 #     permission_classes = [IsAuthenticated]

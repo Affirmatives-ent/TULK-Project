@@ -10,6 +10,8 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.core.files.storage import default_storage
 from PIL import Image
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 
 # from django.utils.deconstruct import deconstructible
 
@@ -150,9 +152,48 @@ class Friendship(models.Model):
     user2 = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='friendships2', to_field='id')
     created_at = models.DateTimeField(auto_now_add=True)
+    is_online = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.user1.first_name} - {self.user2.first_name}'
+
+
+@receiver([post_save, post_delete], sender=Friendship)
+def update_online_status(sender, instance, **kwargs):
+    """
+    Update online status of users in the friendship and broadcast the changes
+    to the OnlineStatusConsumer using channels and WebSockets.
+    """
+    from channels.layers import get_channel_layer
+    from asgiref.sync import async_to_sync
+    import json
+
+    # Get the two users involved in the friendship
+    user1 = instance.user1
+    user2 = instance.user2
+
+    # Determine the online status of each user
+    is_user1_online = user1.is_online
+    is_user2_online = user2.is_online
+
+    # Broadcast the online status changes to OnlineStatusConsumer
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"online_status_user_{user1.id}",
+        {
+            "type": "send_online_status",
+            "user_id": str(user1.id),
+            "is_online": is_user1_online,
+        }
+    )
+    async_to_sync(channel_layer.group_send)(
+        f"online_status_user_{user2.id}",
+        {
+            "type": "send_online_status",
+            "user_id": str(user2.id),
+            "is_online": is_user2_online,
+        }
+    )
 
 
 class Notification(models.Model):

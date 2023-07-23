@@ -21,7 +21,8 @@ from .views import (
     NotificationUpdateAPIView,
     NotificationCountAPIView,
     ResendOTPAPIView,
-    SearchAPIView
+    SearchAPIView,
+    OnlineFriendsListView
 )
 
 app_name = 'accounts'
@@ -49,6 +50,8 @@ urlpatterns = [
     path('friendships/', FriendshipListAPIView.as_view(), name='friendship-list'),
     path('friendships/create/', FriendshipCreateAPIView.as_view(),
          name='friendship-create'),
+    path('online-friends/', OnlineFriendsListView.as_view(),
+         name='online-friends-list'),
     path('notifications/', NotificationListAPIView.as_view(),
          name='notification-list'),
     path('notifications/<uuid:pk>/', NotificationUpdateAPIView.as_view(),
@@ -56,6 +59,5 @@ urlpatterns = [
     path('notifications/count/', NotificationCountAPIView.as_view(),
          name='notification-count'),
     path('search/', SearchAPIView.as_view(), name='search'),
-
 
 ]
