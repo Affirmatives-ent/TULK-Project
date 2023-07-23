@@ -2,7 +2,7 @@
 from django.urls import path
 import uuid
 from .views import (
-    PostListCreateAPIView,
+    PostListCreateView,
     PostRetrieveUpdateDestroyAPIView,
     CommentListCreateAPIView,
     LikeListCreateAPIView,
@@ -13,7 +13,7 @@ from .views import (
 app_name = 'posts'
 
 urlpatterns = [
-    path('posts/', PostListCreateAPIView.as_view(), name='post-list-create'),
+    path('posts/', PostListCreateView.as_view(), name='post-list-create'),
     path('posts/<uuid:pk>/', PostRetrieveUpdateDestroyAPIView.as_view(),
          name='post-retrieve-update-destroy'),
     path('users/<uuid:user_id>/posts/',

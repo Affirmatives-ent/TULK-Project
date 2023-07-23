@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Like, Comment, Share
+from .models import Post, Like, Comment, Share, File
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -20,7 +20,14 @@ class ShareSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class FileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = File
+        fields = '__all__'
+
+
 class PostSerializer(serializers.ModelSerializer):
+    files = FileSerializer(many=True, required=False)
     comments_count = serializers.SerializerMethodField()
     likes_count = serializers.SerializerMethodField()
     shares_count = serializers.SerializerMethodField()

@@ -1,16 +1,35 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
-from .models import Post, Comment, Like, Share
-from .serializers import PostSerializer, CommentSerializer, LikeSerializer, ShareSerializer
+from .models import Post, Comment, Like, Share, File
+from .serializers import PostSerializer, CommentSerializer, LikeSerializer, ShareSerializer, FileSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.generics import ListCreateAPIView
 
 User = get_user_model()
 
 
-class PostListCreateAPIView(generics.ListCreateAPIView):
+class PostListCreateView(ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    parser_classes = [MultiPartParser, FormParser]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            post = serializer.save()
+
+            # Process and save multiple files
+            files_data = request.FILES.getlist('files')
+            for file_data in files_data:
+                file_instance = File(file=file_data)
+                file_instance.save()
+                post.files.add(file_instance)
+
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PostRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
