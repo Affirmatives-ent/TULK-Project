@@ -141,6 +141,9 @@ class FriendRequest(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     accepted = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ["-created_at"]
+
     def __str__(self):
         return f'{self.sender.first_name} -> {self.recipient.first_name}'
 
@@ -153,6 +156,9 @@ class Friendship(models.Model):
         User, on_delete=models.CASCADE, related_name='friendships2', to_field='id')
     created_at = models.DateTimeField(auto_now_add=True)
     is_online = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-created_at"]
 
     def __str__(self):
         return f'{self.user1.first_name} - {self.user2.first_name}'
@@ -205,6 +211,9 @@ class Notification(models.Model):
     message = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     viewed = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-created_at"]
 
     def __str__(self):
         return f'{self.sender.first_name} -> {self.recipient.first_name}: {self.message}'

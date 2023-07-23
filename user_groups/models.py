@@ -34,6 +34,10 @@ class GroupInvitation(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='group_invitations', to_field='id')
     is_accepted = models.BooleanField(default=False)
+    invited_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-invited_at"]
 
     def __str__(self):
         return f'{self.invited_by.username} invited {self.user.username} to {self.group.name}'
@@ -48,6 +52,9 @@ class GroupChat(models.Model):
     message = models.TextField()
     media = models.FileField(upload_to='group/media/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
 
     def __str__(self):
         return f'{self.group.name} - {self.sender.username}: {self.message}'
