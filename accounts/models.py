@@ -90,6 +90,7 @@ class User(PermissionsMixin, AbstractBaseUser):
     otp_expiry = models.DateTimeField(null=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
+    is_online = models.BooleanField(default=False)
     user_register_at = models.DateTimeField(auto_now_add=True)
     avatar = models.ImageField(
         upload_to='user_avatar/', blank=True, null=True)
