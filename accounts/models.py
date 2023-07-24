@@ -153,6 +153,9 @@ class FriendshipManager(models.Manager):
     def get_friends_for_user(self, user):
         return self.filter(Q(user1=user, is_online=True) | Q(user2=user, is_online=True))
 
+    def friendship_exists(self, user1, user2):
+        return self.filter(Q(user1=user1, user2=user2) | Q(user1=user2, user2=user1)).exists()
+
 
 class Friendship(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -170,6 +173,17 @@ class Friendship(models.Model):
 
     def __str__(self):
         return f'{self.user1.first_name} - {self.user2.first_name}'
+
+    @classmethod
+    def create_friendship(cls, user1, user2):
+        # Check if the friendship already exists
+        if cls.objects.friendship_exists(user1, user2):
+            return None
+
+        # Create the friendship
+        friendship = cls(user1=user1, user2=user2)
+        friendship.save()
+        return friendship
 
 
 @receiver([post_save, post_delete], sender=Friendship)
