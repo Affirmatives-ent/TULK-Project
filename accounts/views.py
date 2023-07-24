@@ -313,8 +313,15 @@ class FriendRequestRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAP
 
         if accepted:
             # Create a friendship if the request is accepted
-            models.Friendship.objects.create(
-                user1=friend_request.sender, user2=friend_request.recipient)
+            friendship = models.Friendship.objects.create(
+                user1=friend_request.sender, user2=friend_request.recipient, is_online=False
+            )
+
+            # Optionally, you can also update the is_online status for both users
+            friend_request.sender.is_online = True
+            friend_request.sender.save()
+            friend_request.recipient.is_online = True
+            friend_request.recipient.save()
 
             # Create a notification for the sender
             notification = models.Notification.objects.create(
