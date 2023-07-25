@@ -1,3 +1,4 @@
+from django_redis import get_redis_connection
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -150,12 +151,12 @@ class FriendRequest(models.Model):
         return f'{self.sender.first_name} -> {self.recipient.first_name}'
 
 
-class FriendshipManager(models.Manager):
-    def get_friends_for_user(self, user):
-        return self.filter(Q(user1=user, is_online=True) | Q(user2=user, is_online=True))
+# class FriendshipManager(models.Manager):
+#     def get_friends_for_user(self, user):
+#         return self.filter(Q(user1=user, is_online=True) | Q(user2=user, is_online=True))
 
-    def friendship_exists(self, user1, user2):
-        return self.filter(Q(user1=user1, user2=user2) | Q(user1=user2, user2=user1)).exists()
+    # def friendship_exists(self, user1, user2):
+    #     return self.filter(Q(user1=user1, user2=user2) | Q(user1=user2, user2=user1)).exists()
 
 
 class Friendship(models.Model):
@@ -165,9 +166,9 @@ class Friendship(models.Model):
     user2 = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='friendships2', to_field='id')
     created_at = models.DateTimeField(auto_now_add=True)
-    is_online = models.BooleanField(default=False)
+    # is_online = models.BooleanField(default=False)
 
-    objects = FriendshipManager()
+    # objects = FriendshipManager()
 
     class Meta:
         ordering = ["-created_at"]
@@ -175,54 +176,59 @@ class Friendship(models.Model):
     def __str__(self):
         return f'{self.user1.first_name} - {self.user2.first_name}'
 
-    @classmethod
-    def create_friendship(cls, user1, user2):
-        # Check if the friendship already exists
-        if cls.objects.friendship_exists(user1, user2):
-            return None
+    # @classmethod
+    # def create_friendship(cls, user1, user2):
+    #     # Check if the friendship already exists
+    #     if cls.objects.friendship_exists(user1, user2):
+    #         return None
 
-        # Create the friendship
-        friendship = cls(user1=user1, user2=user2)
-        friendship.save()
-        return friendship
+    #     # Create the friendship
+    #     friendship = cls(user1=user1, user2=user2)
+    #     friendship.save()
+    #     return friendship
 
 
-@receiver([post_save, post_delete], sender=Friendship)
-def update_online_status(sender, instance, **kwargs):
-    """
-    Update online status of users in the friendship and broadcast the changes
-    to the OnlineStatusConsumer using channels and WebSockets.
-    """
-    from channels.layers import get_channel_layer
-    from asgiref.sync import async_to_sync
-    import json
+# @receiver([post_save, post_delete], sender=Friendship)
+# def update_online_status(sender, instance, **kwargs):
+#     """
+#     Update online status of users in the friendship and broadcast the changes
+#     to the OnlineStatusConsumer using channels and WebSockets.
+#     """
+#     from channels.layers import get_channel_layer
+#     from asgiref.sync import async_to_sync
+#     import json
 
-    # Get the two users involved in the friendship
-    user1 = instance.user1
-    user2 = instance.user2
+#     # Get the two users involved in the friendship
+#     user1 = instance.user1
+#     user2 = instance.user2
 
-    # Determine the online status of each user
-    is_user1_online = user1.is_online
-    is_user2_online = user2.is_online
+#     # Determine the online status of each user
+#     connection = get_redis_connection("default")
+#     is_user1_online = connection.get(f"online_status_user_{user1.id}")
+#     is_user2_online = connection.get(f"online_status_user_{user2.id}")
 
-    # Broadcast the online status changes to OnlineStatusConsumer
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-        f"online_status_user_{user1.id}",
-        {
-            "type": "send_online_status",
-            "user_id": str(user1.id),
-            "is_online": is_user1_online,
-        }
-    )
-    async_to_sync(channel_layer.group_send)(
-        f"online_status_user_{user2.id}",
-        {
-            "type": "send_online_status",
-            "user_id": str(user2.id),
-            "is_online": is_user2_online,
-        }
-    )
+#     # Convert the result from Redis to Python bool
+#     is_user1_online = is_user1_online == b"1"
+#     is_user2_online = is_user2_online == b"1"
+
+#     # Broadcast the online status changes to OnlineStatusConsumer
+#     channel_layer = get_channel_layer()
+#     async_to_sync(channel_layer.group_send)(
+#         f"online_status_user_{user1.id}",
+#         {
+#             "type": "send_online_status",
+#             "user_id": str(user1.id),
+#             "is_online": is_user1_online,
+#         }
+#     )
+#     async_to_sync(channel_layer.group_send)(
+#         f"online_status_user_{user2.id}",
+#         {
+#             "type": "send_online_status",
+#             "user_id": str(user2.id),
+#             "is_online": is_user2_online,
+#         }
+#     )
 
 
 class Notification(models.Model):

@@ -170,7 +170,3 @@ class NotificationSerializer(serializers.ModelSerializer):
 
 class NotificationCountSerializer(serializers.Serializer):
     count = serializers.IntegerField()
-
-
-# class SearchSerializer(serializers.Serializer):
-#     search = serializers.CharField(max_length=255)

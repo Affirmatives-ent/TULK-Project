@@ -314,14 +314,14 @@ class FriendRequestRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAP
         if accepted:
             # Create a friendship if the request is accepted
             friendship = models.Friendship.objects.create(
-                user1=friend_request.sender, user2=friend_request.recipient, is_online=False
+                user1=friend_request.sender, user2=friend_request.recipient
             )
 
-            # Optionally, you can also update the is_online status for both users
-            friend_request.sender.is_online = True
-            friend_request.sender.save()
-            friend_request.recipient.is_online = True
-            friend_request.recipient.save()
+            # # Optionally, you can also update the is_online status for both users
+            # friend_request.sender.is_online = True
+            # friend_request.sender.save()
+            # friend_request.recipient.is_online = True
+            # friend_request.recipient.save()
 
             # Create a notification for the sender
             notification = models.Notification.objects.create(
@@ -364,22 +364,22 @@ class FriendshipCreateAPIView(generics.CreateAPIView):
         serializer.save(user1=user1)
 
 
-class OnlineFriendsListView(APIView):
-    def get(self, request, format=None):
-        user = request.user
-        friendships = models.Friendship.objects.get_friends_for_user(user)
-        online_friends = []
+# class OnlineFriendsListView(APIView):
+#     def get(self, request, format=None):
+#         user = request.user
+#         friendships = models.Friendship.objects.get_friends_for_user(user)
+#         online_friends = []
 
-        for friendship in friendships:
-            if friendship.user1 == user:
-                friend = friendship.user2
-            else:
-                friend = friendship.user1
+#         for friendship in friendships:
+#             if friendship.user1 == user:
+#                 friend = friendship.user2
+#             else:
+#                 friend = friendship.user1
 
-            if friend.is_online:
-                online_friends.append(friend.id)
+#             if friend.is_online:
+#                 online_friends.append(friend.id)
 
-        return Response(online_friends, status=status.HTTP_200_OK)
+#         return Response(online_friends, status=status.HTTP_200_OK)
 
 
 class NotificationListAPIView(generics.ListAPIView):
