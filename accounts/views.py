@@ -267,10 +267,30 @@ class UserProfileListAPIView(generics.ListAPIView):
 class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserProfileSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        user = self.request.user
+        # Get the user id from the URL parameter
+        user_id = self.kwargs.get('pk')
+
+        # Retrieve the user by ID
+        user = generics.get_object_or_404(User, pk=user_id)
         return user
+
+    def update(self, request, *args, **kwargs):
+        user_id = self.kwargs.get('pk')
+        user = generics.get_object_or_404(User, pk=user_id)
+
+        if user != request.user:
+            return Response(
+                {'detail': 'You do not have permission to update this user.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        serializer = self.get_serializer(user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
