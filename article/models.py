@@ -47,4 +47,4 @@ class MediaFile(models.Model):
         ordering = ["-uploaded_at"]
 
     def __str__(self):
-        return self.id
+        return "Uploaded"
