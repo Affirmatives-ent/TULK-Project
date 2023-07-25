@@ -29,7 +29,7 @@ class File(models.Model):
         ordering = ["-uploaded_at"]
 
     def __str__(self):
-        return self.file.author
+        return self.id
 
 
 class Like(models.Model):
