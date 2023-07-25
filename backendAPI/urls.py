@@ -19,7 +19,7 @@ urlpatterns = [
     # path('auth/', include('djoser.urls')),
     # path('auth/', include('djoser.urls.jwt')),
     path("", include("accounts.urls", namespace="accounts")),
-    path("", include("articles.urls", namespace="articles")),
+    path("", include("article.urls", namespace="articles")),
     path("", include("user_groups.urls", namespace="user_groups")),
     path('api/token/', CustomTokenObtainPairView.as_view(),
          name='token_obtain_pair'),

@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'accounts',
     'user_groups',
     'posts',
-    'articles',
+    'article',
     'chat',
 
 

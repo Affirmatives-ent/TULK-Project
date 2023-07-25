@@ -14,7 +14,7 @@ from posts.models import Post
 from posts.serializers import PostSerializer
 from user_groups.models import ConversationGroup
 from user_groups.serializers import ConversationGroupSerializer
-from articles.models import Article
+from article.models import Article
 from django.utils import timezone
 from django.utils.timezone import make_aware
 from django.db.models import Q

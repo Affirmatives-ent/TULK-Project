@@ -14,7 +14,7 @@ from . import serializers, models
 from .permissions import IsGroupAdmin
 from django.contrib.auth import get_user_model
 from posts.models import Post
-from articles.models import Article
+from article.models import Article
 from accounts.models import Friendship, Notification
 from accounts.serializers import UserProfileSerializer
 from django.utils import timezone

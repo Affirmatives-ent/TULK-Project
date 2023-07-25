@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import PublishArticleView, PublishedArticleListView, AdminArticleDetailView, UserArticleListView, UserArticleDetailView
 
-app_name = "articles"
+app_name = "article"
 
 urlpatterns = [
 
