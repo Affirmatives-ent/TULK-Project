@@ -30,7 +30,8 @@ class PublishArticleView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PublishedArticleListView(APIView):
+class AdminArticleListView(APIView):
+    permission_classes = [permissions.IsAdminUser]
     def get(self, request, format=None):
         # Get both published and draft articles
         published_articles = Article.objects.filter(status='published')

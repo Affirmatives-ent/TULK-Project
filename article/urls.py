@@ -1,12 +1,12 @@
 from django.urls import path
-from .views import PublishArticleView, PublishedArticleListView, AdminArticleDetailView, UserArticleListView, UserArticleDetailView
+from .views import PublishArticleView, AdminArticleListView, AdminArticleDetailView, UserArticleListView, UserArticleDetailView
 
 app_name = "article"
 
 urlpatterns = [
 
     path('publish-article/', PublishArticleView.as_view(), name='publish-article'),
-    path('published-articles/', PublishedArticleListView.as_view(),
+    path('published-articles/', AdminArticleListView.as_view(),
          name='published-articles'),
 
     path('editor/articles/<uuid:pk>/', AdminArticleDetailView.as_view(),
