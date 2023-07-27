@@ -32,6 +32,7 @@ class PublishArticleView(APIView):
 
 class AdminArticleListView(APIView):
     permission_classes = [permissions.IsAdminUser]
+
     def get(self, request, format=None):
         # Get both published and draft articles
         published_articles = Article.objects.filter(status='published')
@@ -50,11 +51,12 @@ class AdminArticleDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAdminUser,)
 
     def get_object(self):
-        article_pk = self.kwargs['pk']
+        article_slug = self.kwargs['slug']
         try:
-            return self.queryset.get(pk=article_pk)
+            return self.queryset.get(slug=article_slug)
         except Article.DoesNotExist:
-            raise NotFound(f"Article with ID {article_pk} does not exist.")
+            raise NotFound(
+                f"Article with slug '{article_slug}' does not exist.")
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
