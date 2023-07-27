@@ -201,6 +201,7 @@ class ForgotPasswordAPIView(APIView):
         # Add '234' to the beginning of the last 10 digits
         formatted_number = '234' + last_10_digits
         # Send the OTP to the user's phone number (implement your send_otp function)
+        print(formatted_number)
         utils.send_otp(formatted_number, otp)
 
         # Save the OTP in the user's model
