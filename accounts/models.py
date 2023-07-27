@@ -103,22 +103,22 @@ class User(PermissionsMixin, AbstractBaseUser):
     def __str__(self):
         return self.first_name
 
-    def format_phone_number(self, phone_number):
-        # Remove all non-digit characters from the input phone number
-        digits_only = ''.join(filter(str.isdigit, phone_number))
+    # def format_phone_number(self, phone_number):
+    #     # Remove all non-digit characters from the input phone number
+    #     digits_only = ''.join(filter(str.isdigit, phone_number))
 
-        # Extract the last 10 digits from the phone number
-        last_10_digits = digits_only[-10:]
+    #     # Extract the last 10 digits from the phone number
+    #     last_10_digits = digits_only[-10:]
 
-        # Add '234' to the beginning of the last 10 digits
-        formatted_number = '234' + last_10_digits
+    #     # Add '234' to the beginning of the last 10 digits
+    #     formatted_number = '234' + last_10_digits
 
-        return formatted_number
+    #     return formatted_number
 
     def save(self, *args, **kwargs):
-        # Format the phone number before saving
-        if self.phone_number:
-            self.phone_number = self.format_phone_number(self.phone_number)
+        # # Format the phone number before saving
+        # if self.phone_number:
+        #     self.phone_number = self.format_phone_number(self.phone_number)
 
         super().save(*args, **kwargs)
         # Resize the avatar image
