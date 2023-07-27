@@ -7,20 +7,7 @@ import requests
 User = get_user_model()
 
 
-def format_phone_number(phone_number):
-    # Remove all non-digit characters from the input phone number
-    digits_only = ''.join(filter(str.isdigit, phone_number))
-
-    # Extract the last 10 digits from the phone number
-    last_10_digits = digits_only[-10:]
-
-    # Add '234' to the beginning of the last 10 digits
-    formatted_number = '234' + last_10_digits
-
-    return formatted_number
-
-
-def send_otp(formatted_number, otp):
+def send_otp(phone_number, otp):
     url = "https://api.sendchamp.com/api/v1/verification/create"
 
     payload = {
@@ -30,7 +17,7 @@ def send_otp(formatted_number, otp):
         "token_length": 4,
         "expiration_time": 5,
         "customer_email_address": "",
-        "customer_mobile_number": formatted_number,
+        "customer_mobile_number": phone_number,
         "meta_data": {},
         "token": otp
     }
