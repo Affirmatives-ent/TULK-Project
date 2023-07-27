@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.conf import settings
 import uuid
 from django.utils.text import slugify
+from autoslug import AutoSlugField
+
 
 class Article(models.Model):
     STATUS_CHOICES = (
@@ -18,7 +20,7 @@ class Article(models.Model):
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, max_length=200, blank=True)
+    slug = AutoSlugField(unique=True, populate_from='title')
     content = models.TextField(blank=True)
     featured_image = models.ImageField(
         upload_to='images/', null=True, blank=True)
@@ -30,12 +32,11 @@ class Article(models.Model):
         max_length=10, choices=STATUS_CHOICES, default='draft')
     published_date = models.DateTimeField(null=True, blank=True)
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            # Generate the slug from the title
-            self.slug = slugify(self.title)
-        super(Article, self).save(*args, **kwargs)
-
+    # def save(self, *args, **kwargs):
+    #     if not self.slug:
+    #         # Generate the slug from the title
+    #         self.slug = slugify(self.title)
+    #     super(Article, self).save(*args, **kwargs)
 
     def publish(self):
         self.status = 'published'
