@@ -17,6 +17,7 @@ from django.db.models import Q
 
 # from django.utils.deconstruct import deconstructible
 
+
 email_validator = EmailValidator()
 
 phone_regex = RegexValidator(
@@ -112,9 +113,24 @@ class User(PermissionsMixin, AbstractBaseUser):
     def __str__(self):
         return self.first_name
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+    def format_phone_number(self, phone_number):
+        # Remove all non-digit characters from the input phone number
+        digits_only = ''.join(filter(str.isdigit, phone_number))
 
+        # Extract the last 10 digits from the phone number
+        last_10_digits = digits_only[-10:]
+
+        # Add '234' to the beginning of the last 10 digits
+        formatted_number = '234' + last_10_digits
+
+        return formatted_number
+
+    def save(self, *args, **kwargs):
+        # Format the phone number before saving
+        if self.phone_number:
+            self.phone_number = self.format_phone_number(self.phone_number)
+
+        super().save(*args, **kwargs)
         # Resize the avatar image
         if self.avatar:
             self.resize_image(self.avatar, (250, 250))
@@ -131,6 +147,9 @@ class User(PermissionsMixin, AbstractBaseUser):
 
         # Save the resized image back to the same field
         image.save(image_field.path)
+
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
 
 
 class FriendRequest(models.Model):
@@ -151,14 +170,6 @@ class FriendRequest(models.Model):
         return f'{self.sender.first_name} -> {self.recipient.first_name}'
 
 
-# class FriendshipManager(models.Manager):
-#     def get_friends_for_user(self, user):
-#         return self.filter(Q(user1=user, is_online=True) | Q(user2=user, is_online=True))
-
-    # def friendship_exists(self, user1, user2):
-    #     return self.filter(Q(user1=user1, user2=user2) | Q(user1=user2, user2=user1)).exists()
-
-
 class Friendship(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user1 = models.ForeignKey(
@@ -166,69 +177,12 @@ class Friendship(models.Model):
     user2 = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='friendships2', to_field='id')
     created_at = models.DateTimeField(auto_now_add=True)
-    # is_online = models.BooleanField(default=False)
-
-    # objects = FriendshipManager()
 
     class Meta:
         ordering = ["-created_at"]
 
     def __str__(self):
         return f'{self.user1.first_name} - {self.user2.first_name}'
-
-    # @classmethod
-    # def create_friendship(cls, user1, user2):
-    #     # Check if the friendship already exists
-    #     if cls.objects.friendship_exists(user1, user2):
-    #         return None
-
-    #     # Create the friendship
-    #     friendship = cls(user1=user1, user2=user2)
-    #     friendship.save()
-    #     return friendship
-
-
-# @receiver([post_save, post_delete], sender=Friendship)
-# def update_online_status(sender, instance, **kwargs):
-#     """
-#     Update online status of users in the friendship and broadcast the changes
-#     to the OnlineStatusConsumer using channels and WebSockets.
-#     """
-#     from channels.layers import get_channel_layer
-#     from asgiref.sync import async_to_sync
-#     import json
-
-#     # Get the two users involved in the friendship
-#     user1 = instance.user1
-#     user2 = instance.user2
-
-#     # Determine the online status of each user
-#     connection = get_redis_connection("default")
-#     is_user1_online = connection.get(f"online_status_user_{user1.id}")
-#     is_user2_online = connection.get(f"online_status_user_{user2.id}")
-
-#     # Convert the result from Redis to Python bool
-#     is_user1_online = is_user1_online == b"1"
-#     is_user2_online = is_user2_online == b"1"
-
-#     # Broadcast the online status changes to OnlineStatusConsumer
-#     channel_layer = get_channel_layer()
-#     async_to_sync(channel_layer.group_send)(
-#         f"online_status_user_{user1.id}",
-#         {
-#             "type": "send_online_status",
-#             "user_id": str(user1.id),
-#             "is_online": is_user1_online,
-#         }
-#     )
-#     async_to_sync(channel_layer.group_send)(
-#         f"online_status_user_{user2.id}",
-#         {
-#             "type": "send_online_status",
-#             "user_id": str(user2.id),
-#             "is_online": is_user2_online,
-#         }
-#     )
 
 
 class Notification(models.Model):
