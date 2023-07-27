@@ -1,28 +1,33 @@
-
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-import os
-import uuid
-from django.conf import settings
-from django.core.validators import RegexValidator
-from django.core.validators import EmailValidator
-from django.utils.translation import gettext_lazy as _
-from django.conf import settings
+from django.core.validators import RegexValidator, EmailValidator
 from django.core.files.storage import default_storage
-from PIL import Image
-from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.db.models import Q
-
-# from django.utils.deconstruct import deconstructible
-
+from PIL import Image
+from django.utils.translation import gettext_lazy as _
+from django.conf import settings
+from django.conf import settings
+import os
+import uuid
 
 email_validator = EmailValidator()
 
 phone_regex = RegexValidator(
     regex=r"^\d{10}", message="Phone number must be 13 digits only!"
+)
 
+GENDER_CHOICES = (
+    ('MALE', 'Male'),
+    ('FEMALE', 'Female'),
+)
+
+MARITAL_STATUS = (
+    ('SINGLE', 'Single'),
+    ('MARRIED', 'Married'),
+    ('DIVORCED', 'Divorced'),
+    ('COMPLICATED', 'Complicated'),
+    ("I'D RATHER NOT SAY", "I'd Rather Not Say"),
 )
 
 
@@ -62,20 +67,6 @@ class UserManager(BaseUserManager):
         return ''.join(filter(str.isdigit, str(phone_number)))
 
 
-GENDER_CHOICES = (
-    ('MALE', 'Male'),
-    ('FEMALE', 'Female'),
-)
-
-MARITAL_STATUS = (
-    ('SINGLE', 'Single'),
-    ('MARRIED', 'Married'),
-    ('DIVORCED', 'Divorced'),
-    ('COMPLICATED', 'Complicated'),
-    ("I'D RATHER NOT SAY", "I'd Rather Not Say"),
-)
-
-
 class User(PermissionsMixin, AbstractBaseUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     first_name = models.CharField(max_length=30, blank=True)
@@ -94,8 +85,7 @@ class User(PermissionsMixin, AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_online = models.BooleanField(default=False)
     user_register_at = models.DateTimeField(auto_now_add=True)
-    avatar = models.ImageField(
-        upload_to='user_avatar/', blank=True, null=True)
+    avatar = models.ImageField(upload_to='user_avatar/', blank=True, null=True)
     background_image = models.ImageField(
         upload_to='cover_image/', blank=True, null=True)
     marital_status = models.CharField(
