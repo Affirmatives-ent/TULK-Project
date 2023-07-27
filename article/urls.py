@@ -16,10 +16,10 @@ urlpatterns = [
          PublishArticleView.as_view(), name='publish-article'),
     path('editor/articles/', AdminArticleListView.as_view(),
          name='admin-article-list'),
-    path('editor/articles/<slug:slug>/',
+    path('editor/articles/<uuid:pk>/',
          AdminArticleDetailView.as_view(), name='admin-article-detail'),
     # URLs for all users
     path('articles/', UserArticleListView.as_view(), name='user-article-list'),
-    path('articles/<slug:slug>/', UserArticleDetailView.as_view(),
+    path('articles/<uuid:pk>/', UserArticleDetailView.as_view(),
          name='user-article-detail'),
 ]

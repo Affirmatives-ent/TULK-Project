@@ -51,12 +51,11 @@ class AdminArticleDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAdminUser,)
 
     def get_object(self):
-        article_slug = self.kwargs['slug']
+        article_pk = self.kwargs['pk']
         try:
-            return self.queryset.get(slug=article_slug)
+            return self.queryset.get(pk=article_pk)
         except Article.DoesNotExist:
-            raise NotFound(
-                f"Article with slug '{article_slug}' does not exist.")
+            raise NotFound(f"Article with ID {article_pk} does not exist.")
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
