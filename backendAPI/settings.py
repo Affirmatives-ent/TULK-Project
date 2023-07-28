@@ -8,6 +8,9 @@ from django.contrib.auth import get_user_model
 import django_heroku
 import dj_database_url
 
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -107,7 +110,14 @@ DATABASES = {
 
 # MY_SENDCHAMP_PUBLIC_KEY = os.getenv('SENDCHAMP_KEY')
 SENDCHAMP_KEY = os.getenv('SENDCHAMP_KEY')
-print("SENDCHAMP_KEY:", SENDCHAMP_KEY)
+# print("SENDCHAMP_KEY:", SENDCHAMP_KEY)
+
+
+cloudinary.config(
+    cloud_name="hyklbuwof",
+    api_key=os.getenv('CLOUDINARY_API_KEY'),
+    api_secret=os.getenv('CLOUDINARY_API_SECRET'),
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -216,13 +226,17 @@ else:
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 WHITENOISE_KEEP_ONLY_HASHED_FILES = True
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+# settings.py
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
