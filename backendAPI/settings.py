@@ -114,11 +114,17 @@ SENDCHAMP_KEY = os.getenv('SENDCHAMP_KEY')
 # print("SENDCHAMP_KEY:", SENDCHAMP_KEY)
 
 
-cloudinary.config(
-    cloud_name="hyklbuwof",
-    api_key=os.getenv('CLOUDINARY_API_KEY'),
-    api_secret=os.getenv('CLOUDINARY_API_SECRET'),
-)
+# cloudinary.config(
+#     cloud_name="hyklbuwof",
+#     api_key=os.getenv('CLOUDINARY_API_KEY'),
+#     api_secret=os.getenv('CLOUDINARY_API_SECRET'),
+# )
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': "hyklbuwof",
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
