@@ -368,7 +368,7 @@ class FriendshipListAPIView(generics.ListAPIView):
     queryset = models.Friendship.objects.all()
     serializer_class = serializers.FriendshipSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = pagination.PageNumberPagination
+    # pagination_class = pagination.PageNumberPagination
 
     def get_queryset(self):
         user = self.request.user
