@@ -57,7 +57,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 # Serialize the user object using the UserSerializer
                 user_serializer = UserProfileSerializer(user)
 
-                return {'access_token': access_token, 'refresh_token': refresh_token, 'user': user_serializer.data}
+                return {'access': access_token, 'refresh': refresh_token, 'user': user_serializer.data}
 
         raise serializers.ValidationError(_('Invalid credentials.'))
 
