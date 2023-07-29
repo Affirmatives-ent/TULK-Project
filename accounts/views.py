@@ -305,7 +305,7 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
     queryset = models.FriendRequest.objects.all()
     serializer_class = serializers.FriendRequestSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = pagination.PageNumberPagination
+    # pagination_class = pagination.PageNumberPagination
 
     def perform_create(self, serializer):
         friend_request = serializer.save(sender=self.request.user)
@@ -424,6 +424,15 @@ class NotificationCountAPIView(APIView):
         serializer = serializers.NotificationCountSerializer(
             {'count': notification_count})
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserNotificationListView(generics.ListAPIView):
+    serializer_class = serializers.NotificationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return models.Notification.objects.filter(recipient=user)
 
 
 class SearchAPIView(APIView):
