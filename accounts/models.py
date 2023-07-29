@@ -10,6 +10,7 @@ from django.conf import settings
 from django.conf import settings
 import os
 import uuid
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
 email_validator = EmailValidator()
 
@@ -85,9 +86,12 @@ class User(PermissionsMixin, AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_online = models.BooleanField(default=False)
     user_register_at = models.DateTimeField(auto_now_add=True)
-    avatar = models.ImageField(upload_to='user_avatar/', blank=True, null=True)
+    avatar = models.ImageField(
+        upload_to='user_avatar/', blank=True, null=True, storage=RawMediaCloudinaryStorage()
+    )
     background_image = models.ImageField(
-        upload_to='cover_image/', blank=True, null=True)
+        upload_to='cover_image/', blank=True, null=True, storage=RawMediaCloudinaryStorage()
+    )
     marital_status = models.CharField(
         max_length=20, choices=MARITAL_STATUS, blank=True, null=True)
     school = models.CharField(max_length=100, blank=True, null=True)
@@ -103,43 +107,46 @@ class User(PermissionsMixin, AbstractBaseUser):
     def __str__(self):
         return self.first_name
 
-    # def format_phone_number(self, phone_number):
-    #     # Remove all non-digit characters from the input phone number
-    #     digits_only = ''.join(filter(str.isdigit, phone_number))
-
-    #     # Extract the last 10 digits from the phone number
-    #     last_10_digits = digits_only[-10:]
-
-    #     # Add '234' to the beginning of the last 10 digits
-    #     formatted_number = '234' + last_10_digits
-
-    #     return formatted_number
-
     def save(self, *args, **kwargs):
-        # # Format the phone number before saving
-        # if self.phone_number:
-        #     self.phone_number = self.format_phone_number(self.phone_number)
-
         super().save(*args, **kwargs)
-        # Resize the avatar image
-        if self.avatar:
-            self.resize_image(self.avatar, (250, 250))
 
-        # Resize the background image
-        if self.background_image:
-            self.resize_image(self.background_image, (800, 400))
+    # # def format_phone_number(self, phone_number):
+    # #     # Remove all non-digit characters from the input phone number
+    # #     digits_only = ''.join(filter(str.isdigit, phone_number))
 
-    def resize_image(self, image_field, size):
-        image = Image.open(image_field.path)
+    # #     # Extract the last 10 digits from the phone number
+    # #     last_10_digits = digits_only[-10:]
 
-        # Resize the image while maintaining aspect ratio
-        image.thumbnail(size)
+    # #     # Add '234' to the beginning of the last 10 digits
+    # #     formatted_number = '234' + last_10_digits
 
-        # Save the resized image back to the same field
-        image.save(image_field.path)
+    # #     return formatted_number
 
     # def save(self, *args, **kwargs):
+    #     # # Format the phone number before saving
+    #     # if self.phone_number:
+    #     #     self.phone_number = self.format_phone_number(self.phone_number)
+
     #     super().save(*args, **kwargs)
+    #     # Resize the avatar image
+    #     if self.avatar:
+    #         self.resize_image(self.avatar, (250, 250))
+
+    #     # Resize the background image
+    #     if self.background_image:
+    #         self.resize_image(self.background_image, (800, 400))
+
+    # def resize_image(self, image_field, size):
+    #     image = Image.open(image_field.path)
+
+    #     # Resize the image while maintaining aspect ratio
+    #     image.thumbnail(size)
+
+    #     # Save the resized image back to the same field
+    #     image.save(image_field.path)
+
+    # # def save(self, *args, **kwargs):
+    # #     super().save(*args, **kwargs)
 
 
 class FriendRequest(models.Model):
