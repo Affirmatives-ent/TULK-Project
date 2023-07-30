@@ -23,13 +23,15 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='file',
             name='post',
-            field=models.ForeignKey(default=django.utils.timezone.now, on_delete=django.db.models.deletion.CASCADE, related_name='files', to='posts.post'),
+            field=models.ForeignKey(
+                default="Very occupied", on_delete=django.db.models.deletion.CASCADE, related_name='files', to='posts.post'),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='share',
             name='shared_at',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            field=models.DateTimeField(
+                auto_now_add=True, default=django.utils.timezone.now),
             preserve_default=False,
         ),
     ]
