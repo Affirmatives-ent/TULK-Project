@@ -34,6 +34,7 @@ from .views import (
     UserPostsAPIView,
     CommentListCreateAPIView,
     LikeToggleAPIView,
+    LikeListAPIView,
     ShareListCreateAPIView,
 )
 
@@ -47,6 +48,8 @@ urlpatterns = [
          CommentListCreateAPIView.as_view(), name='comment-list-create'),
     path('posts/<uuid:post_id>/like/',
          LikeToggleAPIView.as_view(), name='like-list-create'),
+    path('posts/<uuid:post_id>/likes/',
+         LikeListAPIView.as_view(), name='like-list'),
     path('posts/<uuid:post_id>/share/',
          ShareListCreateAPIView.as_view(), name='share-list-create'),
 ]
