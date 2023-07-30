@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
             model_name='file',
             name='post',
             field=models.ForeignKey(
-                default="518b96c3-0ec9-4959-9fe8-aafb05cf572c", on_delete=django.db.models.deletion.CASCADE, related_name='files', to='posts.post'),
+                 on_delete=django.db.models.deletion.CASCADE, related_name='files', to='posts.post'),
             preserve_default=False,
         ),
         migrations.AddField(

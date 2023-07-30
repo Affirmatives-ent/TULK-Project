@@ -91,7 +91,7 @@ class Post(models.Model):
 
 
 class File(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, editable=False)
     file = models.FileField(upload_to='post_files/')
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name='files')
