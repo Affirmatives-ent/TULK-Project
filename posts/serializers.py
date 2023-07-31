@@ -82,11 +82,11 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id', 'author', 'content', 'files', 'created_at']
 
-    def create(self, validated_data):
-        files_data = validated_data.pop('files', None)
-        post = Post.objects.create(**validated_data)
-        if files_data:
-            for file_data in files_data:
-                file_instance = File.objects.create(file=file_data)
-                post.files.add(file_instance)
-        return post
+    # def create(self, validated_data):
+    #     files_data = validated_data.pop('files', None)
+    #     post = Post.objects.create(**validated_data)
+    #     if files_data:
+    #         for file_data in files_data:
+    #             file_instance = File.objects.create(file=file_data)
+    #             post.files.add(file_instance)
+    #     return post
