@@ -168,6 +168,14 @@ class LikeToggleAPIView(APIView):
             return Response({'detail': 'Like added successfully.'}, status=status.HTTP_201_CREATED)
 
 
+class LikeListAPIView(generics.ListAPIView):
+    serializer_class = LikeSerializer
+
+    def get_queryset(self):
+        post_id = self.kwargs['post_id']
+        return Like.objects.filter(post_id=post_id)
+
+
 class ShareListCreateAPIView(generics.ListCreateAPIView):
     queryset = Share.objects.all()
     serializer_class = ShareSerializer
