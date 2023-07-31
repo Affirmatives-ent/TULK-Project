@@ -100,21 +100,30 @@ class PostListCreateView(ListCreateAPIView):
     serializer_class = PostSerializer
     parser_classes = [MultiPartParser, FormParser]
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            post = serializer.save()
+    def perform_create(self, serializer):
+        # Set the author field to the current authenticated user
+        serializer.save(author=self.request.user)
 
-            # Process and save multiple files
-            files_data = request.FILES.getlist('files')
-            for file_data in files_data:
-                file_instance = File(file=file_data)
-                file_instance.save()
-                post.files.add(file_instance)
+# class PostListCreateView(ListCreateAPIView):
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer
+#     parser_classes = [MultiPartParser, FormParser]
 
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def create(self, request, *args, **kwargs):
+#         serializer = self.get_serializer(data=request.data)
+#         if serializer.is_valid():
+#             post = serializer.save()
+
+#             # Process and save multiple files
+#             files_data = request.FILES.getlist('files')
+#             for file_data in files_data:
+#                 file_instance = File(file=file_data)
+#                 file_instance.save()
+#                 post.files.add(file_instance)
+
+#             headers = self.get_success_headers(serializer.data)
+#             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PostRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -157,14 +166,6 @@ class LikeToggleAPIView(APIView):
             # If the like does not exist, create it
             like = Like.objects.create(user=user, post=post)
             return Response({'detail': 'Like added successfully.'}, status=status.HTTP_201_CREATED)
-
-
-class LikeListAPIView(generics.ListAPIView):
-    serializer_class = LikeSerializer
-
-    def get_queryset(self):
-        post_id = self.kwargs['post_id']
-        return Like.objects.filter(post_id=post_id)
 
 
 class ShareListCreateAPIView(generics.ListCreateAPIView):
