@@ -2,6 +2,7 @@
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer, ShareSerializer, FileSerializer
 from .models import Post, Comment, Like, Share, File
@@ -14,6 +15,7 @@ class PostListCreateView(ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     parser_classes = [MultiPartParser, FormParser]
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -35,6 +37,7 @@ class PostListCreateView(ListCreateAPIView):
 class PostRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class UserPostsAPIView(APIView):
@@ -49,6 +52,7 @@ class UserPostsAPIView(APIView):
 
 
 class CommentListCreateAPIView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
@@ -75,6 +79,7 @@ class LikeToggleAPIView(APIView):
 
 
 class LikeListAPIView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = LikeSerializer
 
     def get_queryset(self):
@@ -83,5 +88,6 @@ class LikeListAPIView(generics.ListAPIView):
 
 
 class ShareListCreateAPIView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Share.objects.all()
     serializer_class = ShareSerializer
