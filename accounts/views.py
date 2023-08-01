@@ -15,6 +15,7 @@ from posts.serializers import PostSerializer
 from user_groups.models import ConversationGroup
 from user_groups.serializers import ConversationGroupSerializer
 from article.models import Article
+from article.serializers import ArticleSerializer
 from django.utils import timezone
 from django.utils.timezone import make_aware
 from django.db.models import Q
@@ -472,5 +473,15 @@ class SearchAPIView(APIView):
                 group_serializer = ConversationGroupSerializer(
                     group_results, many=True)
                 results.extend(group_serializer.data)
+
+            elif model == 'articles':
+                articles_results = Article.objects.filter(
+                    Q(title__icontains=search_query) |
+                    Q(category__icontains=search_query) |
+                    Q(author__icontains=search_query)
+                )
+                article_serializer = ArticleSerializer(
+                    articles_results, many=True)
+                results.extend(article_serializer.data)
 
         return Response({"data": results})
