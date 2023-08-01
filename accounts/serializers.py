@@ -20,7 +20,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'first_name', 'last_name', 'date_of_birth', 'gender',
                   'email', 'phone_number', 'avatar', 'background_image', 'school', 'marital_status',
-                  'bio', 'website', 'location']
+                  'bio', 'website', 'location', 'is_staff']
 
         extra_kwargs = {
             'avatar': {'required': False},

@@ -79,6 +79,7 @@ User = get_user_model()
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     content = models.TextField(blank=True)
+    files = models.ManyToManyField('File', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='posts', to_field='id')
@@ -93,8 +94,8 @@ class Post(models.Model):
 class File(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     file = models.FileField(upload_to='post_files/')
-    post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name='files')
+    # post = models.ForeignKey(
+    #     Post, on_delete=models.CASCADE, related_name='files')
 
     uploaded_at = models.DateTimeField(auto_now_add=True)
 

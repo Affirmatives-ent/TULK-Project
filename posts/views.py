@@ -1,5 +1,5 @@
 
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, CreateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -12,14 +12,21 @@ from rest_framework import generics, status
 User = get_user_model()
 
 
-class PostListCreateView(ListCreateAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
-    parser_classes = [MultiPartParser, FormParser]
+class PostListCreateView(APIView):
+    # Add the IsAuthenticated permission class
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+    def get(self, request, format=None):
+        # Fetch all posts from the database
+        posts = Post.objects.all()
+        # Serialize the posts and convert them to JSON data
+        serializer = PostSerializer(posts, many=True)
+        # Get the JSON data
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, format=None):
+        serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
             post = serializer.save()
 
@@ -30,8 +37,7 @@ class PostListCreateView(ListCreateAPIView):
                 file_instance.save()
                 post.files.add(file_instance)
 
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
