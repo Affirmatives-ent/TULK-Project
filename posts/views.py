@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer, ShareSerializer, FileSerializer
 from .models import Post, Comment, Like, Share, File
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 User = get_user_model()
 
@@ -53,8 +54,16 @@ class UserPostsAPIView(APIView):
 
 class CommentListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        # Get the post ID from the URL parameter
+        post_id = self.kwargs.get('post_id')
+        # Get the post object based on the post ID
+        post = get_object_or_404(Post, id=post_id)
+        # Filter the comments queryset based on the post object
+        queryset = Comment.objects.filter(post=post)
+        return queryset
 
 
 class LikeToggleAPIView(APIView):
