@@ -32,7 +32,7 @@ class Article(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     status = models.CharField(
         max_length=10, choices=STATUS_CHOICES, default='draft')
-    published_date = models.DateTimeField(null=True, blank=True)
+    published_date = models.DateTimeField(auto_now_add=True)
 
     # def save(self, *args, **kwargs):
     #     if not self.slug:
