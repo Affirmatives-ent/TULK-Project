@@ -74,6 +74,7 @@ class FileSerializer(serializers.ModelSerializer):
         model = File
         fields = '__all__'
 
+
 class PostSerializer(serializers.ModelSerializer):
     files = FileSerializer(many=True, required=False)
 
@@ -81,12 +82,10 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id', 'author', 'content', 'files', 'created_at']
 
-    def create(self, validated_data):
-        files_data = validated_data.pop('files', None)
-        post = Post.objects.create(**validated_data)
-        if files_data:
-            for file_data in files_data:
-                File.objects.create(post=post, **file_data)
-        return post
-
-    
+    # def create(self, validated_data):
+    #     files_data = validated_data.pop('files', None)
+    #     post = Post.objects.create(**validated_data)
+    #     if files_data:
+    #         for file_data in files_data:
+    #             File.objects.create(post=post, **file_data)
+    #     return post
