@@ -16,9 +16,9 @@ class Article(models.Model):
         ('sport', 'Sport'),
         ('entertainment', 'Entertainment'),
         ('metro', 'Metro'),
-        ('more', 'More'),
         ('education', 'EDUCATION'),
-        ('gossip', 'GOSSIP')
+        ('gossip', 'GOSSIP'),
+        ('more', 'More')
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=200)
