@@ -10,6 +10,7 @@ from rest_framework import permissions
 from rest_framework import status
 from .models import Article
 from .serializers import ArticleSerializer
+from .pagination import CustomPageNumberPagination
 
 
 class PublishArticleView(APIView):
@@ -32,6 +33,7 @@ class PublishArticleView(APIView):
 
 class AdminArticleListView(APIView):
     permission_classes = [permissions.IsAdminUser]
+    pagination_class = CustomPageNumberPagination
 
     def get(self, request, format=None):
         # Get both published and draft articles
@@ -67,6 +69,7 @@ class UserArticleListView(ListAPIView):
     queryset = Article.objects.filter(status='published')
     serializer_class = ArticleSerializer
     permission_classes = (permissions.AllowAny,)
+    pagination_class = CustomPageNumberPagination
 
 
 class UserArticleDetailView(RetrieveAPIView):

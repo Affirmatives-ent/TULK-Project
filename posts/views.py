@@ -3,6 +3,7 @@ from rest_framework.generics import ListCreateAPIView, CreateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 from django.contrib.auth import get_user_model
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer, ShareSerializer, FileSerializer
 from .models import Post, Comment, Like, Share, File
@@ -16,6 +17,7 @@ class PostListCreateView(APIView):
     # Add the IsAuthenticated permission class
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
+    pagination_class = PageNumberPagination
 
     def get(self, request, format=None):
         # Fetch all posts from the database
