@@ -11,7 +11,7 @@ class ConversationGroup(models.Model):
     location = models.CharField(max_length=255)
     slogan = models.CharField(max_length=255)
     about = models.TextField()
-    creator = models.ForeignKey(
+    admin = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='groupcreator', to_field='id')
     admin_phone = models.CharField(max_length=20)
     admin_email = models.EmailField()
