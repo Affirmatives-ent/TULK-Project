@@ -369,28 +369,28 @@ class FriendshipListAPIView(generics.ListAPIView):
     queryset = models.Friendship.objects.all()
     serializer_class = serializers.FriendshipSerializer
     permission_classes = [IsAuthenticated]
-    # pagination_class = pagination.PageNumberPagination
+    pagination_class = pagination.PageNumberPagination
 
     def get_queryset(self):
         user = self.request.user
         return self.queryset.filter(user1=user) | self.queryset.filter(user2=user)
 
 
-class FriendshipCreateAPIView(generics.CreateAPIView):
-    queryset = models.Friendship.objects.all()
-    serializer_class = serializers.FriendshipSerializer
-    permission_classes = [IsAuthenticated]
+# class FriendshipCreateAPIView(generics.CreateAPIView):
+#     queryset = models.Friendship.objects.all()
+#     serializer_class = serializers.FriendshipSerializer
+#     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        user1 = self.request.user
-        user2 = serializer.validated_data['user2']
+#     def perform_create(self, serializer):
+#         user1 = self.request.user
+#         user2 = serializer.validated_data['user2']
 
-        # Check if the friendship already exists
-        if models.Friendship.objects.filter(user1=user1, user2=user2).exists() or \
-           models.Friendship.objects.filter(user1=user2, user2=user1).exists():
-            return Response({'detail': 'Friendship already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+#         # Check if the friendship already exists
+#         if models.Friendship.objects.filter(user1=user1, user2=user2).exists() or \
+#            models.Friendship.objects.filter(user1=user2, user2=user1).exists():
+#             return Response({'detail': 'Friendship already exists.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer.save(user1=user1)
+#         serializer.save(user1=user1)
 
 
 class NotificationListAPIView(generics.ListAPIView):

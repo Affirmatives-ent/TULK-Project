@@ -157,9 +157,13 @@ class FriendRequestSerializer(serializers.ModelSerializer):
 
 
 class FriendshipSerializer(serializers.ModelSerializer):
+    user1_data = UserProfileSerializer(source='user1', read_only=True)
+    user2_data = UserProfileSerializer(source='user2', read_only=True)
+
     class Meta:
         model = Friendship
-        fields = '__all__'
+        fields = ['id', 'user1', 'user2',
+                  'user1_data', 'user2_data', 'created_at']
 
 
 class NotificationSerializer(serializers.ModelSerializer):
