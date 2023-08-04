@@ -110,44 +110,6 @@ class User(PermissionsMixin, AbstractBaseUser):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
-    # # def format_phone_number(self, phone_number):
-    # #     # Remove all non-digit characters from the input phone number
-    # #     digits_only = ''.join(filter(str.isdigit, phone_number))
-
-    # #     # Extract the last 10 digits from the phone number
-    # #     last_10_digits = digits_only[-10:]
-
-    # #     # Add '234' to the beginning of the last 10 digits
-    # #     formatted_number = '234' + last_10_digits
-
-    # #     return formatted_number
-
-    # def save(self, *args, **kwargs):
-    #     # # Format the phone number before saving
-    #     # if self.phone_number:
-    #     #     self.phone_number = self.format_phone_number(self.phone_number)
-
-    #     super().save(*args, **kwargs)
-    #     # Resize the avatar image
-    #     if self.avatar:
-    #         self.resize_image(self.avatar, (250, 250))
-
-    #     # Resize the background image
-    #     if self.background_image:
-    #         self.resize_image(self.background_image, (800, 400))
-
-    # def resize_image(self, image_field, size):
-    #     image = Image.open(image_field.path)
-
-    #     # Resize the image while maintaining aspect ratio
-    #     image.thumbnail(size)
-
-    #     # Save the resized image back to the same field
-    #     image.save(image_field.path)
-
-    # # def save(self, *args, **kwargs):
-    # #     super().save(*args, **kwargs)
-
 
 class FriendRequest(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
