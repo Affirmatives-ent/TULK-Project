@@ -22,8 +22,9 @@ class PostListCreateView(APIView):
         # Fetch all posts from the database
         posts = Post.objects.all()
         # Serialize the posts and convert them to JSON data
-        serializer = PostSerializer(posts, many=True)
-        pagination_class = PageNumberPagination
+        paginator = PageNumberPagination()
+        result_page = paginator.paginate_queryset(posts, request)
+        serializer = PostSerializer(result_page, many=True)
         # Get the JSON data
         return Response(serializer.data, status=status.HTTP_200_OK)
 
