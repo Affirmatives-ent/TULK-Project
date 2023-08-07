@@ -4,6 +4,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
+from django.core.paginator import Paginator
 from django.contrib.auth import get_user_model
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer, ShareSerializer, FileSerializer
 from .models import Post, Comment, Like, Share, File
@@ -17,12 +18,15 @@ class PostListCreateView(APIView):
     # Add the IsAuthenticated permission class
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
+    # Add the PageNumberPagination class and specify the page size
+    pagination_class = PageNumberPagination
+    page_size = 10  # Set the desired number of items per page
 
     def get(self, request, format=None):
         # Fetch all posts from the database
         posts = Post.objects.all()
         # Serialize the posts and convert them to JSON data
-        paginator = PageNumberPagination()
+        paginator = self.pagination_class()
         result_page = paginator.paginate_queryset(posts, request)
         serializer = PostSerializer(result_page, many=True)
         # Get the JSON data
