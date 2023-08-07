@@ -17,13 +17,13 @@ class PostListCreateView(APIView):
     # Add the IsAuthenticated permission class
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
-    pagination_class = PageNumberPagination
 
     def get(self, request, format=None):
         # Fetch all posts from the database
         posts = Post.objects.all()
         # Serialize the posts and convert them to JSON data
         serializer = PostSerializer(posts, many=True)
+        pagination_class = PageNumberPagination
         # Get the JSON data
         return Response(serializer.data, status=status.HTTP_200_OK)
 

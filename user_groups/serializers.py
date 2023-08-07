@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ConversationGroup, GroupChat
+from .models import ConversationGroup, GroupPost, GroupMedia, Like, Comment
 
 
 from rest_framework import serializers
@@ -21,7 +21,27 @@ class ConversationGroupUpdateSerializer(serializers.ModelSerializer):
         self.fields.pop('members')
 
 
-class GroupChatSerializer(serializers.ModelSerializer):
+class CommentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = GroupChat
+        model = Comment
         fields = '__all__'
+
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = '__all__'
+
+
+class GroupMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GroupMedia
+        fields = '__all__'
+
+
+class PostSerializer(serializers.ModelSerializer):
+    files = GroupMediaSerializer(many=True, required=False)
+
+    class Meta:
+        model = GroupPost
+        fields = ['id', 'author', 'group', 'content', 'files', 'created_at']

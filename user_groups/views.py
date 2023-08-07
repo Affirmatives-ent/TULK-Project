@@ -22,7 +22,7 @@ from django.utils.timezone import make_aware
 from django.db.models import Q
 import datetime
 import random
-from .models import ConversationGroup
+from .models import ConversationGroup, Comment, Like, GroupMedia, GroupPost
 
 User = get_user_model
 
@@ -151,28 +151,28 @@ class AcceptOrRejectInvitation(APIView):
             return Response(status=404)
 
 
-class GroupChatList(generics.ListCreateAPIView):
-    serializer_class = serializers.GroupChatSerializer
-    permission_classes = [IsAuthenticated]
+# class GroupChatList(generics.ListCreateAPIView):
+#     serializer_class = serializers.GroupChatSerializer
+#     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        group_id = self.kwargs['group_id']
-        group = models.ConversationGroup.objects.get(id=group_id)
+#     def perform_create(self, serializer):
+#         group_id = self.kwargs['group_id']
+#         group = models.ConversationGroup.objects.get(id=group_id)
 
-        # Create the chat message
-        chat_message = serializer.save(group=group, sender=self.request.user)
+#         # Create the chat message
+#         chat_message = serializer.save(group=group, sender=self.request.user)
 
-        # Send notification to all group members except the sender
-        for member in group.members.all():
-            if member != self.request.user:
-                notification = Notification(
-                    user=member,
-                    message=f'New chat message in {group.name} from {self.request.user.username}'
-                )
-                notification.save()
+#         # Send notification to all group members except the sender
+#         for member in group.members.all():
+#             if member != self.request.user:
+#                 notification = Notification(
+#                     user=member,
+#                     message=f'New chat message in {group.name} from {self.request.user.username}'
+#                 )
+#                 notification.save()
 
-        return chat_message
+#         return chat_message
 
-    def get_queryset(self):
-        group_id = self.kwargs['group_id']
-        return models.GroupChat.objects.filter(group_id=group_id)
+#     def get_queryset(self):
+#         group_id = self.kwargs['group_id']
+#         return models.GroupChat.objects.filter(group_id=group_id)
