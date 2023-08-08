@@ -13,7 +13,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from . import serializers, models
 from .permissions import IsGroupAdmin
 from django.contrib.auth import get_user_model
-from posts.models import Post
 from article.models import Article
 from accounts.models import Friendship, Notification
 from accounts.serializers import UserProfileSerializer
@@ -26,8 +25,7 @@ from django.db.models import Q
 import datetime
 import random
 from .models import ConversationGroup, Comment, Like, GroupMedia, GroupPost
-from .serializers import GroupPostSerializer, CommentSerializer, LikeSerializer, GrouoMediaSerializer
-from .models import Post, Comment, Like, Share, File
+from .serializers import GroupPostSerializer, CommentSerializer, LikeSerializer, GroupMediaSerializer
 
 User = get_user_model
 
@@ -182,7 +180,7 @@ class GroupPostListCreateView(APIView):
             # Process and save multiple files
             files_data = request.FILES.getlist('files')
             for file_data in files_data:
-                file_instance = File(file=file_data)
+                file_instance = GroupMedia(file=file_data)
                 file_instance.save()
                 post.files.add(file_instance)
 
@@ -227,7 +225,7 @@ class LikeToggleAPIView(APIView):
 
         try:
             post = GroupPost.objects.get(id=post_id)
-        except Post.DoesNotExist:
+        except GroupPost.DoesNotExist:
             return Response({'detail': 'Post not found.'}, status=status.HTTP_404_NOT_FOUND)
 
         # Check if the user already liked the post
