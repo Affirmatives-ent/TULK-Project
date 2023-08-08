@@ -177,9 +177,23 @@ class ResetPasswordSerializer(serializers.Serializer):
 
 
 class FriendRequestSerializer(serializers.ModelSerializer):
+    sender_name = serializers.SerializerMethodField()
+    sender_id = serializers.SerializerMethodField()
+    sender_avatar = serializers.SerializerMethodField()
+
     class Meta:
         model = FriendRequest
-        fields = '__all__'
+        fields = '__all__'  # You can replace '__all__' with a list of fields if needed
+
+    def get_sender_name(self, obj):
+        return obj.sender.first_name
+
+    def get_sender_id(self, obj):
+        return obj.sender.id
+
+    def get_sender_avatar(self, obj):
+        # Assuming you have an 'avatar' field in the User model
+        return obj.sender.avatar.url if obj.sender.avatar else None
 
 
 class FriendshipSerializer(serializers.ModelSerializer):
