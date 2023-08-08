@@ -39,7 +39,7 @@ class GroupMediaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class PostSerializer(serializers.ModelSerializer):
+class GroupPostSerializer(serializers.ModelSerializer):
     files = GroupMediaSerializer(many=True, required=False)
 
     class Meta:

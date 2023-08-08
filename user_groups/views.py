@@ -19,10 +19,15 @@ from accounts.models import Friendship, Notification
 from accounts.serializers import UserProfileSerializer
 from django.utils import timezone
 from django.utils.timezone import make_aware
+from django.core.paginator import Paginator
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.db.models import Q
 import datetime
 import random
 from .models import ConversationGroup, Comment, Like, GroupMedia, GroupPost
+from .serializers import GroupPostSerializer, CommentSerializer, LikeSerializer, GrouoMediaSerializer
+from .models import Post, Comment, Like, Share, File
 
 User = get_user_model
 
@@ -151,28 +156,96 @@ class AcceptOrRejectInvitation(APIView):
             return Response(status=404)
 
 
-# class GroupChatList(generics.ListCreateAPIView):
-#     serializer_class = serializers.GroupChatSerializer
-#     permission_classes = [IsAuthenticated]
+class GroupPostListCreateView(APIView):
+    # Add the IsAuthenticated permission class
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+    # Add the PageNumberPagination class and specify the page size
+    pagination_class = PageNumberPagination
+    page_size = 10  # Set the desired number of items per page
 
-#     def perform_create(self, serializer):
-#         group_id = self.kwargs['group_id']
-#         group = models.ConversationGroup.objects.get(id=group_id)
+    def get(self, request, format=None):
+        # Fetch all posts from the database
+        posts = GroupPost.objects.all()
+        # Serialize the posts and convert them to JSON data
+        paginator = self.pagination_class()
+        result_page = paginator.paginate_queryset(posts, request)
+        serializer = GroupPostSerializer(result_page, many=True)
+        # Get the JSON data
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-#         # Create the chat message
-#         chat_message = serializer.save(group=group, sender=self.request.user)
+    def post(self, request, format=None):
+        serializer = GroupPostSerializer(data=request.data)
+        if serializer.is_valid():
+            post = serializer.save()
 
-#         # Send notification to all group members except the sender
-#         for member in group.members.all():
-#             if member != self.request.user:
-#                 notification = Notification(
-#                     user=member,
-#                     message=f'New chat message in {group.name} from {self.request.user.username}'
-#                 )
-#                 notification.save()
+            # Process and save multiple files
+            files_data = request.FILES.getlist('files')
+            for file_data in files_data:
+                file_instance = File(file=file_data)
+                file_instance.save()
+                post.files.add(file_instance)
 
-#         return chat_message
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#     def get_queryset(self):
-#         group_id = self.kwargs['group_id']
-#         return models.GroupChat.objects.filter(group_id=group_id)
+
+class PostRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = GroupPost.objects.all()
+    serializer_class = GroupPostSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class UserPostsAPIView(APIView):
+    def get(self, request, group_id, format=None):
+        try:
+            posts = GroupPost.objects.filter(
+                group__id=group_id).order_by('-created_at')
+            serializer = GroupPostSerializer(posts, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({"message": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+
+class CommentListCreateAPIView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        # Get the post ID from the URL parameter
+        post_id = self.kwargs.get('post_id')
+        # Get the post object based on the post ID
+        post = get_object_or_404(GroupPost, id=post_id)
+        # Filter the comments queryset based on the post object
+        queryset = Comment.objects.filter(post=post)
+        return queryset
+
+
+class LikeToggleAPIView(APIView):
+    def post(self, request, post_id, format=None):
+        user = request.user
+
+        try:
+            post = GroupPost.objects.get(id=post_id)
+        except Post.DoesNotExist:
+            return Response({'detail': 'Post not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Check if the user already liked the post
+        try:
+            like = Like.objects.get(user=user, post=post)
+            # If the like already exists, remove it
+            like.delete()
+            return Response({'detail': 'Like removed successfully.'}, status=status.HTTP_200_OK)
+        except Like.DoesNotExist:
+            # If the like does not exist, create it
+            like = Like.objects.create(user=user, post=post)
+            return Response({'detail': 'Like added successfully.'}, status=status.HTTP_201_CREATED)
+
+
+class LikeListAPIView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = LikeSerializer
+
+    def get_queryset(self):
+        post_id = self.kwargs['post_id']
+        return Like.objects.filter(post_id=post_id)
