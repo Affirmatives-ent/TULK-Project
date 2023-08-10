@@ -15,7 +15,7 @@ User = get_user_model()
 
 class UserFriendsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Friendship
+        model = User
         fields = ['id', 'first_name', 'last_name']
 
 
