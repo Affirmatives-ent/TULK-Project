@@ -302,6 +302,8 @@ class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
         user = self.get_object()
         serializer = self.get_serializer(user)
 
+        print("Before processing friends")
+
         # Fetch and add the list of friends to the serialized data
         friendships1 = models.Friendship.objects.filter(user1=user)
         friendships2 = models.Friendship.objects.filter(user2=user)
@@ -309,7 +311,9 @@ class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
         friends = set(friendship.user2 for friendship in friendships1)
         friends |= set(friendship.user1 for friendship in friendships2)
 
+        print("After processing friends")
         # Ensure friends are unique and exclude the user themselves
+        print(friends)
         friends.discard(user)
 
         user_friends_data = serializers.UserFriendsSerializer(
