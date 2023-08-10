@@ -318,8 +318,9 @@ class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
 
         user_friends_data = serializers.UserFriendsSerializer(
             friends, many=True).data
+        print(user_friends_data)
         serializer.data['user_friends'] = user_friends_data
-        print(serializer.data)
+        # print(serializer.data)
 
         return Response(serializer.data)
 
