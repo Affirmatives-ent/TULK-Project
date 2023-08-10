@@ -214,6 +214,12 @@ class FriendRequestSerializer(serializers.ModelSerializer):
 
         return data
 
+    def validate_accepted(self, value):
+        if self.instance and self.instance.accepted:
+            raise serializers.ValidationError(
+                "This friend request has already been accepted.")
+        return value
+
 
 class FriendshipSerializer(serializers.ModelSerializer):
     user1_data = UserProfileSerializer(source='user1', read_only=True)
