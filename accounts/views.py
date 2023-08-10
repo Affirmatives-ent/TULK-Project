@@ -305,8 +305,10 @@ class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
         # Fetch and add the list of friends to the serialized data
         friendships1 = models.Friendship.objects.filter(user1=user)
         friendships2 = models.Friendship.objects.filter(user2=user)
-        friends = (friendship.user2 for friendship in friendships1) | (
-            friendship.user1 for friendship in friendships2)
+
+        friends = set(friendship.user2 for friendship in friendships1)
+        friends |= set(friendship.user1 for friendship in friendships2)
+
         user_friends_data = serializers.UserFriendsSerializer(
             friends, many=True).data
         serializer.data['user_friends'] = user_friends_data
