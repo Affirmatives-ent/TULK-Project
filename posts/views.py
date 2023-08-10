@@ -14,13 +14,16 @@ from rest_framework import generics, status
 User = get_user_model()
 
 
+class CustomPagination(PageNumberPagination):
+    page_size = 10  # Adjust the page size as needed
+
+
 class PostListCreateView(APIView):
     # Add the IsAuthenticated permission class
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
-    # Add the PageNumberPagination class and specify the page size
-    pagination_class = PageNumberPagination
-    page_size = 10  # Set the desired number of items per page
+    # Use the custom pagination class
+    pagination_class = CustomPagination
 
     def get(self, request, format=None):
         # Fetch all posts from the database
@@ -29,8 +32,15 @@ class PostListCreateView(APIView):
         paginator = self.pagination_class()
         result_page = paginator.paginate_queryset(posts, request)
         serializer = PostSerializer(result_page, many=True)
-        # Get the JSON data
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        # Create a response data dictionary including pagination metadata
+        response_data = {
+            'count': paginator.page.paginator.count,
+            'previous': paginator.get_previous_link(),
+            'next': paginator.get_next_link(),
+            'results': serializer.data
+        }
+        # Return the response data
+        return Response(response_data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
         serializer = PostSerializer(data=request.data)
