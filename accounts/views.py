@@ -361,17 +361,25 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
     # pagination_class = pagination.PageNumberPagination
 
     def perform_create(self, serializer):
-        friend_request = serializer.save(sender=self.request.user)
+        sender = self.request.user
+        recipient = serializer.validated_data['recipient']
+
+        # Check if a friend request already exists between sender and recipient
+        if models.FriendRequest.objects.filter(sender=sender, recipient=recipient, accepted=False).exists():
+            raise serializers.ValidationError(
+                "A friend request already exists for this recipient.")
+
+        friend_request = serializer.save(sender=sender)
 
         # Create a notification for the recipient
-        recipient = friend_request.recipient
         notification = models.Notification.objects.create(
-            sender=self.request.user,
+            sender=sender,
             recipient=recipient,
-            message=f'{self.request.user.first_name} sent you a friend request.'
+            message=f'{sender.first_name} sent you a friend request.'
         )
         notification_serializer = serializers.NotificationSerializer(
             notification)
+
         return Response(notification_serializer.data, status=status.HTTP_201_CREATED)
 
     def get_queryset(self):

@@ -192,7 +192,7 @@ class FriendRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FriendRequest
-        fields = '__all__'  # You can replace '__all__' with a list of fields if needed
+        fields = '__all__'
 
     def get_sender_name(self, obj):
         return obj.sender.first_name
@@ -201,8 +201,18 @@ class FriendRequestSerializer(serializers.ModelSerializer):
         return obj.sender.id
 
     def get_sender_avatar(self, obj):
-        # Assuming you have an 'avatar' field in the User model
         return obj.sender.avatar.url if obj.sender.avatar else None
+
+    def validate(self, data):
+        sender = self.context['request'].user
+        recipient = data['recipient']
+
+        # Check if a friend request already exists between sender and recipient
+        if FriendRequest.objects.filter(sender=sender, recipient=recipient, accepted=False).exists():
+            raise serializers.ValidationError(
+                "A friend request already exists for this recipient.")
+
+        return data
 
 
 class FriendshipSerializer(serializers.ModelSerializer):
