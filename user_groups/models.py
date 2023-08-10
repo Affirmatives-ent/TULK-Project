@@ -61,7 +61,7 @@ class GroupPost(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f'{self.group.name} - {self.sender.first_name}: {self.content}'
+        return f'{self.group.name} - {self.author.first_name}: {self.content}'
 
 
 class GroupMedia(models.Model):
