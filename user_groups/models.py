@@ -10,18 +10,20 @@ class ConversationGroup(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     category = models.CharField(max_length=255)
-    location = models.CharField(max_length=255)
-    slogan = models.CharField(max_length=255)
-    about = models.TextField()
+    location = models.CharField(max_length=255, blank=True, null=True)
+    slogan = models.CharField(max_length=255, blank=True, null=True)
+    about = models.TextField(blank=True, null=True)
     admin = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='groupcreator', to_field='id')
-    admin_phone = models.CharField(max_length=20)
-    admin_email = models.EmailField()
-    admin_website = models.URLField()
-    background_image = models.ImageField(upload_to='group/backgrounds/')
-    avatar = models.ImageField(upload_to='group/avatars/')
+    admin_phone = models.CharField(max_length=20, blank=True, null=True)
+    admin_email = models.EmailField(blank=True, null=True)
+    admin_website = models.URLField(blank=True, null=True)
+    background_image = models.ImageField(
+        upload_to='group/backgrounds/', blank=True, null=True)
+    avatar = models.ImageField(
+        upload_to='group/avatars/', blank=True, null=True)
     members = models.ManyToManyField(
-        User, related_name='usergroups')
+        User, related_name='usergroups', blank=True, null=True)
 
     def __str__(self):
         return self.name
