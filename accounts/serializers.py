@@ -13,7 +13,14 @@ from django.db.models import Q
 User = get_user_model()
 
 
+class UserFriendsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Friendship
+        fields = ['id', 'first_name', 'last_name']
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
+    user_friends = UserFriendsSerializer(read_only=True)
 
     class Meta:
         model = User

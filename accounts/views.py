@@ -279,16 +279,13 @@ class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        # Get the user id from the URL parameter
         user_id = self.kwargs.get('pk')
-
-        # Retrieve the user by ID
-        user = generics.get_object_or_404(User, pk=user_id)
+        user = get_object_or_404(User, pk=user_id)
         return user
 
     def update(self, request, *args, **kwargs):
         user_id = self.kwargs.get('pk')
-        user = generics.get_object_or_404(User, pk=user_id)
+        user = get_object_or_404(User, pk=user_id)
 
         if user != request.user:
             return Response(
@@ -300,6 +297,50 @@ class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = self.get_serializer(user)
+
+        # Fetch and add the list of friends to the serialized data
+        friendships1 = models.Friendship.objects.filter(user1=user)
+        friendships2 = models.Friendship.objects.filter(user2=user)
+        friends = (friendship.user2 for friendship in friendships1) | (
+            friendship.user1 for friendship in friendships2)
+        user_friends_data = serializers.UserFriendsSerializer(
+            friends, many=True).data
+        serializer.data['user_friends'] = user_friends_data
+
+        return Response(serializer.data)
+
+
+# class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = serializers.UserProfileSerializer
+#     permission_classes = [IsAuthenticated]
+
+#     def get_object(self):
+#         # Get the user id from the URL parameter
+#         user_id = self.kwargs.get('pk')
+
+#         # Retrieve the user by ID
+#         user = generics.get_object_or_404(User, pk=user_id)
+#         return user
+
+#     def update(self, request, *args, **kwargs):
+#         user_id = self.kwargs.get('pk')
+#         user = generics.get_object_or_404(User, pk=user_id)
+
+#         if user != request.user:
+#             return Response(
+#                 {'detail': 'You do not have permission to update this user.'},
+#                 status=status.HTTP_403_FORBIDDEN
+#             )
+
+#         serializer = self.get_serializer(user, data=request.data, partial=True)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
