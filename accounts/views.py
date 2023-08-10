@@ -309,6 +309,9 @@ class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
         friends = set(friendship.user2 for friendship in friendships1)
         friends |= set(friendship.user1 for friendship in friendships2)
 
+        # Ensure friends are unique and exclude the user themselves
+        friends.discard(user)
+
         user_friends_data = serializers.UserFriendsSerializer(
             friends, many=True).data
         serializer.data['user_friends'] = user_friends_data
