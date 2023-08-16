@@ -77,19 +77,6 @@ class UserPostsAPIView(APIView):
             return Response({"message": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
-# class CommentListCreateAPIView(generics.ListCreateAPIView):
-#     permission_classes = [IsAuthenticated]
-#     serializer_class = CommentSerializer
-
-#     def get_queryset(self):
-#         # Get the post ID from the URL parameter
-#         post_id = self.kwargs.get('post_id')
-#         # Get the post object based on the post ID
-#         post = get_object_or_404(Post, id=post_id)
-#         # Filter the comments queryset based on the post object
-#         queryset = Comment.objects.filter(post=post)
-#         return queryset
-
 class CommentListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = CommentSerializer
@@ -117,6 +104,26 @@ class CommentListCreateAPIView(generics.ListCreateAPIView):
         return comment
 
 
+# class LikeToggleAPIView(APIView):
+#     def post(self, request, post_id, format=None):
+#         user = request.user
+
+#         try:
+#             post = Post.objects.get(id=post_id)
+#         except Post.DoesNotExist:
+#             return Response({'detail': 'Post not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+#         # Check if the user already liked the post
+#         try:
+#             like = Like.objects.get(user=user, post=post)
+#             # If the like already exists, remove it
+#             like.delete()
+#             return Response({'detail': 'Like removed successfully.'}, status=status.HTTP_200_OK)
+#         except Like.DoesNotExist:
+#             # If the like does not exist, create it
+#             like = Like.objects.create(user=user, post=post)
+#             return Response({'detail': 'Like added successfully.'}, status=status.HTTP_201_CREATED)
+
 class LikeToggleAPIView(APIView):
     def post(self, request, post_id, format=None):
         user = request.user
@@ -131,10 +138,25 @@ class LikeToggleAPIView(APIView):
             like = Like.objects.get(user=user, post=post)
             # If the like already exists, remove it
             like.delete()
+
+            # Also, remove the corresponding notification if it exists
+            try:
+                notification = Notification.objects.get(
+                    sender=user, recipient=post.owner, message=f'{user.username} liked your post')
+                notification.delete()
+            except Notification.DoesNotExist:
+                pass
+
             return Response({'detail': 'Like removed successfully.'}, status=status.HTTP_200_OK)
         except Like.DoesNotExist:
             # If the like does not exist, create it
             like = Like.objects.create(user=user, post=post)
+
+            # Create a notification for the post owner
+            notification_message = f'{user.username} liked your post'
+            Notification.objects.create(
+                sender=user, recipient=post.owner, message=notification_message)
+
             return Response({'detail': 'Like added successfully.'}, status=status.HTTP_201_CREATED)
 
 
