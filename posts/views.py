@@ -142,7 +142,7 @@ class LikeToggleAPIView(APIView):
             # Also, remove the corresponding notification if it exists
             try:
                 notification = Notification.objects.get(
-                    sender=user, recipient=post.owner, message=f'{user.username} liked your post')
+                    sender=user, recipient=post.owner, message=f'{user.first_name} Unliked your post')
                 notification.delete()
             except Notification.DoesNotExist:
                 pass
@@ -153,7 +153,7 @@ class LikeToggleAPIView(APIView):
             like = Like.objects.create(user=user, post=post)
 
             # Create a notification for the post owner
-            notification_message = f'{user.username} liked your post'
+            notification_message = f'{user.first_name} liked your post'
             Notification.objects.create(
                 sender=user, recipient=post.owner, message=notification_message)
 
