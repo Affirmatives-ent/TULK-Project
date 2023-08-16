@@ -29,7 +29,7 @@ class PublishArticleView(APIView):
                 for file_data in files_data:
                     file_instance = MediaFile(file=file_data)
                     file_instance.save()
-                    article.files.create(file=file_data)
+                    article.files.add(file_instance)
             except Exception as e:
                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
