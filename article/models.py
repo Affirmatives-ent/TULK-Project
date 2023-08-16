@@ -46,7 +46,7 @@ class Article(models.Model):
         self.save()
 
     class Meta:
-        ordering = ["-uploaded_at"]
+        ordering = ["-published_date"]
 
     def __str__(self):
         return self.title[:30]
