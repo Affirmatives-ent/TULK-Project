@@ -8,6 +8,8 @@ from django.core.paginator import Paginator
 from django.contrib.auth import get_user_model
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer, ShareSerializer, FileSerializer
 from .models import Post, Comment, Like, Share, File
+from accounts.models import Notification
+from accounts.serializers import NotificationSerializer
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
@@ -75,18 +77,44 @@ class UserPostsAPIView(APIView):
             return Response({"message": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
+# class CommentListCreateAPIView(generics.ListCreateAPIView):
+#     permission_classes = [IsAuthenticated]
+#     serializer_class = CommentSerializer
+
+#     def get_queryset(self):
+#         # Get the post ID from the URL parameter
+#         post_id = self.kwargs.get('post_id')
+#         # Get the post object based on the post ID
+#         post = get_object_or_404(Post, id=post_id)
+#         # Filter the comments queryset based on the post object
+#         queryset = Comment.objects.filter(post=post)
+#         return queryset
+
 class CommentListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = CommentSerializer
 
     def get_queryset(self):
+        post_id = self.kwargs.get('post_id')
+        post = get_object_or_404(Post, id=post_id)
+        queryset = Comment.objects.filter(post=post)
+        return queryset
+
+    def perform_create(self, serializer):
         # Get the post ID from the URL parameter
         post_id = self.kwargs.get('post_id')
         # Get the post object based on the post ID
         post = get_object_or_404(Post, id=post_id)
-        # Filter the comments queryset based on the post object
-        queryset = Comment.objects.filter(post=post)
-        return queryset
+
+        # Create the comment
+        comment = serializer.save(post=post, user=self.request.user)
+
+        # Create a notification for the post owner
+        notification_message = f'{self.request.user.first_name} commented on your post'
+        Notification.objects.create(
+            sender=self.request.user, recipient=post.author, message=notification_message)
+
+        return comment
 
 
 class LikeToggleAPIView(APIView):
