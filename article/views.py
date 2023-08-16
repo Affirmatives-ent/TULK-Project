@@ -8,13 +8,15 @@ from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from rest_framework import permissions
 from rest_framework import status
-from .models import Article
+from .models import Article, MediaFile
 from .serializers import ArticleSerializer
 from .pagination import CustomPageNumberPagination
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 class PublishArticleView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+    parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request, format=None):
         serializer = ArticleSerializer(data=request.data)
@@ -25,6 +27,8 @@ class PublishArticleView(APIView):
             # Process and save multiple media files
             files_data = request.FILES.getlist('files')
             for file_data in files_data:
+                file_instance = MediaFile(file=file_data)
+                file_instance.save()
                 article.files.create(file=file_data)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)

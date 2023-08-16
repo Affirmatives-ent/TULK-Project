@@ -104,26 +104,6 @@ class CommentListCreateAPIView(generics.ListCreateAPIView):
         return comment
 
 
-# class LikeToggleAPIView(APIView):
-#     def post(self, request, post_id, format=None):
-#         user = request.user
-
-#         try:
-#             post = Post.objects.get(id=post_id)
-#         except Post.DoesNotExist:
-#             return Response({'detail': 'Post not found.'}, status=status.HTTP_404_NOT_FOUND)
-
-#         # Check if the user already liked the post
-#         try:
-#             like = Like.objects.get(user=user, post=post)
-#             # If the like already exists, remove it
-#             like.delete()
-#             return Response({'detail': 'Like removed successfully.'}, status=status.HTTP_200_OK)
-#         except Like.DoesNotExist:
-#             # If the like does not exist, create it
-#             like = Like.objects.create(user=user, post=post)
-#             return Response({'detail': 'Like added successfully.'}, status=status.HTTP_201_CREATED)
-
 class LikeToggleAPIView(APIView):
     def post(self, request, post_id, format=None):
         user = request.user
