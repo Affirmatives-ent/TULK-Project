@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'user_groups',
     'posts',
     'article',
-    'chat',
+    # 'chat',
 
 
 ]
