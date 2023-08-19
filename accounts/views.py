@@ -416,7 +416,7 @@ class FriendRequestRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAP
             notification = models.Notification.objects.create(
                 sender=friend_request.recipient,
                 recipient=friend_request.sender,
-                message=f'{friend_request.recipient.username} accepted your friend request.'
+                message=f'{friend_request.recipient.first_name} accepted your friend request.'
             )
             notification_serializer = serializers.NotificationSerializer(
                 notification)

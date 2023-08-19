@@ -34,12 +34,6 @@ class Article(models.Model):
         max_length=10, choices=STATUS_CHOICES, default='draft')
     published_date = models.DateTimeField(auto_now_add=True)
 
-    # def save(self, *args, **kwargs):
-    #     if not self.slug:
-    #         # Generate the slug from the title
-    #         self.slug = slugify(self.title)
-    #     super(Article, self).save(*args, **kwargs)
-
     def publish(self):
         self.status = 'published'
         self.published_date = timezone.now()
