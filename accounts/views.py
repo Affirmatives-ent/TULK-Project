@@ -425,8 +425,25 @@ class FriendRequestRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAP
         return Response(self.get_serializer(friend_request).data)
 
 
+# class FriendshipListAPIView(generics.ListAPIView):
+#     serializer_class = serializers.FriendshipSerializer
+#     permission_classes = [IsAuthenticated]
+#     pagination_class = pagination.PageNumberPagination
+
+#     def get_queryset(self):
+#         user = self.request.user
+
+#         # Retrieve friendships where the user is involved as either user1 or user2
+#         friendships = models.Friendship.objects.filter(
+#             Q(user1=user) | Q(user2=user)
+#         )
+
+#         return friendships
+
+
 class FriendshipListAPIView(generics.ListAPIView):
-    serializer_class = serializers.FriendshipSerializer
+    # Use a serializer for user data
+    serializer_class = serializers.FriendshipUserSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = pagination.PageNumberPagination
 
@@ -438,7 +455,18 @@ class FriendshipListAPIView(generics.ListAPIView):
             Q(user1=user) | Q(user2=user)
         )
 
-        return friendships
+        friend_ids = []
+        for friendship in friendships:
+            # Determine the friend's ID based on the authenticated user's role in the friendship
+            if user == friendship.user1:
+                friend_ids.append(friendship.user2_id)
+            elif user == friendship.user2:
+                friend_ids.append(friendship.user1_id)
+
+        # Fetch user data for the friends using the determined friend IDs
+        friends_data = models.User.objects.filter(id__in=friend_ids)
+
+        return friends_data
 
 
 # class FriendshipCreateAPIView(generics.CreateAPIView):
