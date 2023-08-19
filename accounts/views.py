@@ -443,7 +443,7 @@ class FriendRequestRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAP
 
 class FriendshipListAPIView(generics.ListAPIView):
     # Use a serializer for user data
-    serializer_class = serializers.FriendshipUserSerializer
+    serializer_class = serializers.FriendshipSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = pagination.PageNumberPagination
 
