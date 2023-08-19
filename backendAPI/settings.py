@@ -89,7 +89,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backendAPI.wsgi.application'
-ASGI_APPLICATION = "backendAPI.asgi.application"
+# ASGI_APPLICATION = "backendAPI.asgi.application"
 
 load_dotenv()
 # Database
