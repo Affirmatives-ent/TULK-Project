@@ -433,12 +433,28 @@ class FriendshipListAPIView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
 
-        # Retrieve friendships where the user is involved as either user1 or user2
-        friendships = models.Friendship.objects.filter(
-            Q(user1=user) | Q(user2=user)
-        )
+        friendships1 = models.Friendship.objects.filter(user1=user)
+        friendships2 = models.Friendship.objects.filter(user2=user)
 
-        return friendships
+        friends = set(friendship.user2 for friendship in friendships1)
+        friends |= set(friendship.user1 for friendship in friendships2)
+
+        print("After processing friends")
+        # Ensure friends are unique and exclude the user themselves
+        print(friends)
+        friends.discard(user)
+
+        friend_serializer = serializers.UserFriendsSerializer(
+            friends, many=True)
+
+        return Response(friend_serializer.data, status=status.HTTP_200_OK)
+
+        # # Retrieve friendships where the user is involved as either user1 or user2
+        # friendships = models.Friendship.objects.filter(
+        #     Q(user1=user) | Q(user2=user)
+        # )
+
+        # return friendships
 
 
 # class FriendshipListAPIView(generics.ListAPIView):
