@@ -439,15 +439,10 @@ class FriendshipListAPIView(generics.ListAPIView):
         friends = set(friendship.user2 for friendship in friendships1)
         friends |= set(friendship.user1 for friendship in friendships2)
 
-        print("After processing friends")
         # Ensure friends are unique and exclude the user themselves
-        print(friends)
         friends.discard(user)
 
-        friend_serializer = serializers.UserFriendsSerializer(
-            friends, many=True)
-
-        return Response(friend_serializer.data, status=status.HTTP_200_OK)
+        return friends
 
         # # Retrieve friendships where the user is involved as either user1 or user2
         # friendships = models.Friendship.objects.filter(
