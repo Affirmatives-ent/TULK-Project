@@ -428,7 +428,7 @@ class FriendRequestRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAP
 class FriendshipListAPIView(generics.ListAPIView):
     serializer_class = serializers.FriendshipSerializer
     permission_classes = [IsAuthenticated]
-    # pagination_class = pagination.PageNumberPagination
+    pagination_class = pagination.PageNumberPagination
 
     def get_queryset(self):
         user = self.request.user
@@ -442,8 +442,12 @@ class FriendshipListAPIView(generics.ListAPIView):
         # Ensure friends are unique and exclude the user themselves
         friends.discard(user)
 
-        return friends
+        # Convert friends set to a list of user IDs
+        friend_user_ids = [friend.id for friend in friends]
 
+        # Get a queryset of friend objects
+        friend_queryset = models.User.objects.filter(id__in=friend_user_ids)
+        return friend_queryset
         # # Retrieve friendships where the user is involved as either user1 or user2
         # friendships = models.Friendship.objects.filter(
         #     Q(user1=user) | Q(user2=user)
