@@ -428,7 +428,7 @@ class FriendRequestRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAP
 class FriendshipListAPIView(generics.ListAPIView):
     serializer_class = serializers.FriendshipSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = pagination.PageNumberPagination
+    # pagination_class = pagination.PageNumberPagination
 
     def get_queryset(self):
         user = self.request.user
