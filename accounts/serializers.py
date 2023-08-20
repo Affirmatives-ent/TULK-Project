@@ -222,8 +222,8 @@ class FriendRequestSerializer(serializers.ModelSerializer):
 
 
 class FriendshipSerializer(serializers.ModelSerializer):
-    user1_data = UserProfileSerializer(source='user1', read_only=True)
-    user2_data = UserProfileSerializer(source='user2', read_only=True)
+    user1_data = UserProfileSerializer(source='friendships1', read_only=True)
+    user2_data = UserProfileSerializer(source='friendships2', read_only=True)
 
     class Meta:
         model = Friendship
