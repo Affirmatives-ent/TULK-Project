@@ -20,14 +20,14 @@ class UserFriendsSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    user_friends = UserFriendsSerializer(
-        many=True, read_only=True)  # Include this line
+    # user_friends = UserFriendsSerializer(
+    #     many=True, read_only=True)  # Include this line
 
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'date_of_birth', 'gender',
                   'email', 'phone_number', 'avatar', 'background_image', 'school', 'marital_status',
-                  'bio', 'website', 'location', 'is_staff', 'user_friends']
+                  'bio', 'website', 'location', 'is_staff']
 
         extra_kwargs = {
             'avatar': {'required': False},
