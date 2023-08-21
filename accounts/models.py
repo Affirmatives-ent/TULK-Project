@@ -156,7 +156,7 @@ class Notification(models.Model):
         ('friend_request', 'Friend Request'),
         ('accept_friend_request', 'Accept Friend Request'),
         ('group_request', 'Group Request'),
-        ('group_request_accept', 'Accept Group Request')
+        ('group_request_accept', 'Accept Group Request'),
         ('post_comment', 'Post Comment'),
         ('post_like', 'Post Like'),
         ('post_share', 'Post Share'),
