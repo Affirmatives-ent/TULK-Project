@@ -441,9 +441,9 @@ class FriendsListAPIView(generics.ListAPIView):
         friend_ids = []
         for friendship in friendships:
             # Determine the friend's ID based on the authenticated user's role in the friendship
-            if user_id == friendship.user1:
+            if str(user_id) == str(friendship.user1):
                 friend_ids.append(friendship.user2_id)
-            elif user_id == friendship.user2:
+            elif str(user_id) == str(friendship.user2):
                 friend_ids.append(friendship.user1_id)
 
         print(friend_ids)
