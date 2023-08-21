@@ -433,8 +433,6 @@ class FriendsListAPIView(generics.ListAPIView):
         user_id = self.kwargs['user_id']
         friendships = models.Friendship.objects.filter(
             Q(user1=user_id) | Q(user2=user_id)
-        ).exclude(
-            Q(user1=user_id) & Q(user2=user_id)
         )
 
         friend_ids = []
