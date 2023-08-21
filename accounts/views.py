@@ -425,7 +425,7 @@ class FriendRequestRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAP
         return Response(self.get_serializer(friend_request).data)
 
 
-class FriendsListView(generics.ListAPIView):
+class FriendsListAPIView(generics.ListAPIView):
     serializer_class = serializers.FriendshipSerializer
 
     def get_queryset(self):
