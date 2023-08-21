@@ -152,6 +152,15 @@ class AcceptOrRejectInvitation(APIView):
             return Response(serializer.data)
         except models.ConversationGroup.DoesNotExist:
             return Response(status=404)
+        
+class UserGroupsAPIView(generics.ListAPIView):
+    serializer_class = serializers.ConversationGroupSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return ConversationGroup.objects.filter(members=user) | ConversationGroup.objects.filter(admin=user)
+
 
 
 class GroupPostListCreateView(APIView):

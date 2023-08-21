@@ -8,6 +8,7 @@ from .views import (
     CommentListCreateAPIView,
     LikeToggleAPIView,
     LikeListAPIView,
+    UserGroupsAPIView
 )
 
 app_name = "user_groups"
@@ -36,4 +37,5 @@ urlpatterns = [
          views.ConversationGroupDetail.as_view(), name='group-detail'),
     path('groups/<uuid:pk>/', views.ConversationGroupDetailUpdate.as_view(),
          name='group-detail-update'),
+    path('user-groups/', UserGroupsAPIView.as_view(), name='user-groups'),
 ]
