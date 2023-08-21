@@ -325,35 +325,6 @@ class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
         return Response(serializer.data)
 
 
-# class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = serializers.UserProfileSerializer
-#     permission_classes = [IsAuthenticated]
-
-#     def get_object(self):
-#         # Get the user id from the URL parameter
-#         user_id = self.kwargs.get('pk')
-
-#         # Retrieve the user by ID
-#         user = generics.get_object_or_404(User, pk=user_id)
-#         return user
-
-#     def update(self, request, *args, **kwargs):
-#         user_id = self.kwargs.get('pk')
-#         user = generics.get_object_or_404(User, pk=user_id)
-
-#         if user != request.user:
-#             return Response(
-#                 {'detail': 'You do not have permission to update this user.'},
-#                 status=status.HTTP_403_FORBIDDEN
-#             )
-
-#         serializer = self.get_serializer(user, data=request.data, partial=True)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
 class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
     queryset = models.FriendRequest.objects.all()
     serializer_class = serializers.FriendRequestSerializer
@@ -368,6 +339,14 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
         if models.FriendRequest.objects.filter(sender=sender, recipient=recipient, accepted=False).exists():
             raise serializers.ValidationError(
                 "A friend request already exists for this recipient.")
+
+        # Check if the users are already friends
+        if models.Friendship.objects.filter(
+                (Q(user1=sender, user2=recipient) |
+                 Q(user1=recipient, user2=sender))
+        ).exists():
+            raise serializers.ValidationError(
+                "You are already friends with this user.")
 
         friend_request = serializer.save(sender=sender)
 
@@ -452,63 +431,6 @@ class FriendsListAPIView(generics.ListAPIView):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
-# class FriendsListAPIView(APIView):
-#     def get(self, request, user_id):
-#         # Fetch the user's friends from the Friendship model
-#         friends = models.Friendship.objects.filter(
-#             user1=user_id) | models.Friendship.objects.filter(user2=user_id)
-
-#         # Serialize the list of friends using FriendshipSerializer
-#         serializer = serializers.FriendshipSerializer(friends, many=True)
-
-#         # Return the serialized data
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-# class FriendshipListAPIView(generics.ListAPIView):
-#     # Use a serializer for user data
-#     serializer_class = serializers.FriendshipSerializer
-#     permission_classes = [IsAuthenticated]
-#     pagination_class = pagination.PageNumberPagination
-
-#     def get_queryset(self):
-#         user = self.request.user
-
-#         # Retrieve friendships where the user is involved as either user1 or user2
-#         friendships = models.Friendship.objects.filter(
-#             Q(user1=user) | Q(user2=user)
-#         )
-
-#         friend_ids = []
-#         for friendship in friendships:
-#             # Determine the friend's ID based on the authenticated user's role in the friendship
-#             if user == friendship.user1:
-#                 friend_ids.append(friendship.user2_id)
-#             elif user == friendship.user2:
-#                 friend_ids.append(friendship.user1_id)
-
-#         # Fetch user data for the friends using the determined friend IDs
-#         friends_data = models.User.objects.filter(id__in=friend_ids)
-
-#         return friends_data
-
-
-# class FriendshipCreateAPIView(generics.CreateAPIView):
-#     queryset = models.Friendship.objects.all()
-#     serializer_class = serializers.FriendshipSerializer
-#     permission_classes = [IsAuthenticated]
-
-#     def perform_create(self, serializer):
-#         user1 = self.request.user
-#         user2 = serializer.validated_data['user2']
-
-#         # Check if the friendship already exists
-#         if models.Friendship.objects.filter(user1=user1, user2=user2).exists() or \
-#            models.Friendship.objects.filter(user1=user2, user2=user1).exists():
-#             return Response({'detail': 'Friendship already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-
-#         serializer.save(user1=user1)
 
 
 class NotificationListAPIView(generics.ListAPIView):
