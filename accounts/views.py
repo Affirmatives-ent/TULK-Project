@@ -425,7 +425,7 @@ class FriendRequestRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAP
         return Response(self.get_serializer(friend_request).data)
 
 
-class FriendListAPIView(APIView):
+class FriendsListAPIView(APIView):
     def get(self, request, user_id):
         # Fetch the user's friends from the Friendship model
         friends = models.Friendship.objects.filter(
