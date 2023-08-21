@@ -425,17 +425,31 @@ class FriendRequestRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAP
         return Response(self.get_serializer(friend_request).data)
 
 
-class FriendsListAPIView(APIView):
-    def get(self, request, user_id):
-        # Fetch the user's friends from the Friendship model
+class FriendsListAPIView(generics.ListAPIView):
+    serializer_class = serializers.FriendshipSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user_id = self.request.user.id
         friends = models.Friendship.objects.filter(
-            user1=user_id) | models.Friendship.objects.filter(user2=user_id)
+            Q(user1=user_id) | Q(user2=user_id)
+        ).exclude(
+            Q(user1=user_id) & Q(user2=user_id)
+        )
+        return friends
 
-        # Serialize the list of friends using FriendshipSerializer
-        serializer = serializers.FriendshipSerializer(friends, many=True)
 
-        # Return the serialized data
-        return Response(serializer.data, status=status.HTTP_200_OK)
+# class FriendsListAPIView(APIView):
+#     def get(self, request, user_id):
+#         # Fetch the user's friends from the Friendship model
+#         friends = models.Friendship.objects.filter(
+#             user1=user_id) | models.Friendship.objects.filter(user2=user_id)
+
+#         # Serialize the list of friends using FriendshipSerializer
+#         serializer = serializers.FriendshipSerializer(friends, many=True)
+
+#         # Return the serialized data
+#         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # class FriendshipListAPIView(generics.ListAPIView):
