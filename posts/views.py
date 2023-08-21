@@ -99,7 +99,7 @@ class CommentListCreateAPIView(generics.ListCreateAPIView):
         # Create a notification for the post owner
         notification_message = f'{self.request.user.first_name} commented on your post'
         Notification.objects.create(
-            sender=self.request.user, recipient=post.author, message=notification_message)
+            sender=self.request.user, recipient=post.author, message=notification_message, type=type.post_comment)
 
         return comment
 
@@ -135,7 +135,7 @@ class LikeToggleAPIView(APIView):
             # Create a notification for the post owner
             notification_message = f'{user.first_name} liked your post'
             Notification.objects.create(
-                sender=user, recipient=post.author, message=notification_message)
+                sender=user, recipient=post.author, message=notification_message, type=type.post_like)
 
             return Response({'detail': 'Like added successfully.'}, status=status.HTTP_201_CREATED)
 

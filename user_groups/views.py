@@ -81,7 +81,7 @@ class InviteUserToGroup(APIView):
 
             # Create a notification for the invited user
             notification = Notification(
-                user=user, message='You have a new group invitation.')
+                sender=group.admin, recipient=user, type=type.group_request, message='You have a new group invitation.')
             notification.save()
 
             serializer = serializers.ConversationGroupSerializer(group)
@@ -152,7 +152,8 @@ class AcceptOrRejectInvitation(APIView):
             return Response(serializer.data)
         except models.ConversationGroup.DoesNotExist:
             return Response(status=404)
-        
+
+
 class UserGroupsAPIView(generics.ListAPIView):
     serializer_class = serializers.ConversationGroupSerializer
     permission_classes = [IsAuthenticated]
@@ -160,7 +161,6 @@ class UserGroupsAPIView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return ConversationGroup.objects.filter(members=user) | ConversationGroup.objects.filter(admin=user)
-
 
 
 class GroupPostListCreateView(APIView):

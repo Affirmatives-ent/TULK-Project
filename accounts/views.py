@@ -355,7 +355,8 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
         notification = models.Notification.objects.create(
             sender=sender,
             recipient=recipient,
-            message=f'{sender.first_name} sent you a friend request.'
+            message=f'{sender.first_name} sent you a friend request.',
+            type=type.friend_request
         )
         notification_serializer = serializers.NotificationSerializer(
             notification)
@@ -397,7 +398,7 @@ class FriendRequestRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAP
                 sender=friend_request.recipient,
                 recipient=friend_request.sender,
                 message=f'{friend_request.recipient.first_name} accepted your friend request.',
-                type=friend_request.type.friend_request
+                type=friend_request.type.accept_friend_request
             )
             notification_serializer = serializers.NotificationSerializer(
                 notification)
