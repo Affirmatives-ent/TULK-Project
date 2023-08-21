@@ -31,6 +31,12 @@ MARITAL_STATUS = (
     ("I'D RATHER NOT SAY", "I'd Rather Not Say"),
 )
 
+NOTIFICATION_CHOICES = (
+    ('FRIEND REQUEST', 'Friend Request'),
+    ('MESSAGE', 'Message'),
+    ('')
+)
+
 
 class UserManager(BaseUserManager):
     def create_user(self, email=None, phone_number=None, password=None, **extra_fields):
@@ -145,11 +151,23 @@ class Friendship(models.Model):
 
 
 class Notification(models.Model):
+
+    NOTIFICATION_TYPES = [
+        ('friend_request', 'Friend Request'),
+        ('accept_friend_request', 'Accept Friend Request'),
+        ('group_request', 'Group Request'),
+        ('post_comment', 'Post Comment'),
+        ('post_like', 'Post Like'),
+        ('post_share', 'Post Share'),
+    ]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     sender = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='sent_notifications', to_field='id')
     recipient = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='received_notifications', to_field='id')
+    type = models.CharField(
+        max_length=30, choices=NOTIFICATION_TYPES, default="friend_request")
     message = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     viewed = models.BooleanField(default=False)
