@@ -442,6 +442,8 @@ class FriendsListAPIView(generics.ListAPIView):
             elif user_id == friendship.user2:
                 friend_ids.append(friendship.user1_id)
 
+        print(friend_ids)
+
         friends_data = models.User.objects.filter(id__in=friend_ids)
         print(friends_data)
         return friends_data
