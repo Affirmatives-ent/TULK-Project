@@ -18,6 +18,7 @@ from article.models import Article
 from article.serializers import ArticleSerializer
 from django.utils import timezone
 from django.utils.timezone import make_aware
+from rest_framework.exceptions import ValidationError
 from django.db.models import Q
 import datetime
 import random
@@ -337,7 +338,7 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
 
         # Check if a friend request already exists between sender and recipient
         if models.FriendRequest.objects.filter(sender=sender, recipient=recipient, accepted=False).exists():
-            raise serializers.ValidationError(
+            raise ValidationError(
                 "A friend request already exists for this recipient.")
 
         # Check if the users are already friends
@@ -345,7 +346,7 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
                 (Q(user1=sender, user2=recipient) |
                  Q(user1=recipient, user2=sender))
         ).exists():
-            raise serializers.ValidationError(
+            raise ValidationError(
                 "You are already friends with this user.")
 
         friend_request = serializer.save(sender=sender)
