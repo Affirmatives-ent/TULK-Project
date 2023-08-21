@@ -431,12 +431,25 @@ class FriendsListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         user_id = self.request.user.id
-        friends = models.Friendship.objects.filter(
+        friendships = models.Friendship.objects.filter(
             Q(user1=user_id) | Q(user2=user_id)
         ).exclude(
             Q(user1=user_id) & Q(user2=user_id)
         )
-        return friends
+        # return friends
+
+        friend_ids = []
+        for friendship in friendships:
+            # Determine the friend's ID based on the authenticated user's role in the friendship
+            if user_id == friendship.user1:
+                friend_ids.append(friendship.user2_id)
+            elif user_id == friendship.user2:
+                friend_ids.append(friendship.user1_id)
+
+        # Fetch user data for the friends using the determined friend IDs
+        friends_data = models.User.objects.filter(id__in=friend_ids)
+
+        return friends_data
 
 
 # class FriendsListAPIView(APIView):
