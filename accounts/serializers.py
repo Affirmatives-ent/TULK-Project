@@ -221,14 +221,20 @@ class FriendRequestSerializer(serializers.ModelSerializer):
         return value
 
 
-class FriendshipSerializer(serializers.ModelSerializer):
-    user1_data = UserProfileSerializer(source='user1', read_only=True)
-    user2_data = UserProfileSerializer(source='user2', read_only=True)
+# class FriendshipSerializer(serializers.ModelSerializer):
+#     user1_data = UserProfileSerializer(source='user1', read_only=True)
+#     user2_data = UserProfileSerializer(source='user2', read_only=True)
 
+#     class Meta:
+#         model = Friendship
+#         fields = ['id', 'user1', 'user2',
+#                   'user1_data', 'user2_data', 'created_at']
+
+
+class FriendshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Friendship
-        fields = ['id', 'user1', 'user2',
-                  'user1_data', 'user2_data', 'created_at']
+        fields = ['user1', 'user2']
 
 
 class NotificationSerializer(serializers.ModelSerializer):
