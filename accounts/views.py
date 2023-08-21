@@ -437,10 +437,10 @@ class FriendsListAPIView(generics.ListAPIView):
         print(friendships)
         friend_ids = []
         for friendship in friendships:
-            if user_id == friendship.user1:
-                friend_ids.append(friendship.user2_id)
-            elif user_id == friendship.user2:
-                friend_ids.append(friendship.user1_id)
+            if user_id == friendship.user1.id:
+                friend_ids.append(friendship.user2.id)
+            elif user_id == friendship.user2.id:
+                friend_ids.append(friendship.user1.id)
 
         print(friend_ids)
 
