@@ -434,7 +434,7 @@ class FriendsListAPIView(generics.ListAPIView):
         friendships = models.Friendship.objects.filter(
             Q(user1=user_id) | Q(user2=user_id)
         )
-
+        print(friendships)
         friend_ids = []
         for friendship in friendships:
             if user_id == friendship.user1:
@@ -443,6 +443,7 @@ class FriendsListAPIView(generics.ListAPIView):
                 friend_ids.append(friendship.user1_id)
 
         friends_data = models.User.objects.filter(id__in=friend_ids)
+        print(friends_data)
         return friends_data
 
     def list(self, request, *args, **kwargs):
