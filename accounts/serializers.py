@@ -19,18 +19,6 @@ class UserFriendsSerializer(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name']
 
 
-class FriendshipSerializer(serializers.ModelSerializer):
-    user1_data = serializers.SlugRelatedField(
-        slug_field='id', queryset=User.objects.all())
-    user2_data = serializers.SlugRelatedField(
-        slug_field='id', queryset=User.objects.all())
-
-    class Meta:
-        model = Friendship
-        fields = ['id', 'user1', 'user2',
-                  'user1_data', 'user2_data', 'created_at']
-
-
 class UserProfileSerializer(serializers.ModelSerializer):
     # user_friends = UserFriendsSerializer(
     #     many=True, read_only=True)  # Include this line
@@ -233,14 +221,14 @@ class FriendRequestSerializer(serializers.ModelSerializer):
         return value
 
 
-# class FriendshipSerializer(serializers.ModelSerializer):
-#     user1_data = UserProfileSerializer(source='friendships1', read_only=True)
-#     user2_data = UserProfileSerializer(source='friendships2', read_only=True)
+class FriendshipSerializer(serializers.ModelSerializer):
+    user1_data = UserProfileSerializer(source='user1', read_only=True)
+    user2_data = UserProfileSerializer(source='user2', read_only=True)
 
-#     class Meta:
-#         model = Friendship
-#         fields = ['id', 'user1', 'user2',
-#                   'user1_data', 'user2_data', 'created_at']
+    class Meta:
+        model = Friendship
+        fields = ['id', 'user1', 'user2',
+                  'user1_data', 'user2_data', 'created_at']
 
 
 class NotificationSerializer(serializers.ModelSerializer):
