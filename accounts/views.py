@@ -570,7 +570,7 @@ class UserMediaFilesView(generics.ListAPIView):
         # Retrieve the user based on user_id
         user = get_object_or_404(User, id=user_id)
 
-        print(user)
+        print(user.id)
 
         # List to store media files
         media_files = []
