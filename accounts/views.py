@@ -356,7 +356,7 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
             sender=sender,
             recipient=recipient,
             message=f'{sender.first_name} sent you a friend request.',
-            type=type.friend_request
+            type='friend_request'
         )
         notification_serializer = serializers.NotificationSerializer(
             notification)
