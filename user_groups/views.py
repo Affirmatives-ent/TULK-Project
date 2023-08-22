@@ -26,7 +26,6 @@ import datetime
 import random
 from .models import ConversationGroup, Comment, Like, GroupMedia, GroupPost
 from .serializers import GroupPostSerializer, CommentSerializer, LikeSerializer, GroupMediaSerializer
-from django.contrib.contenttypes.models import ContentType
 
 User = get_user_model
 
