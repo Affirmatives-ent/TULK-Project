@@ -584,19 +584,20 @@ class UserMediaFilesView(generics.ListAPIView):
             media_files.append(user.background_image)
 
         # Add media files from articles
-        articles = Article.objects.filter(author=user.id)
-        print(f'This is the article id: {articles}')
-        for article in articles:
-            if article.featured_image:
-                media_files.append(article.featured_image)
-                print(
-                    f'This is the list of all the article files: {article.files.all()}')
-            # Add other media files associated with the article
-            media_files.extend(article.files.all())
-            print(f'This is the whole media files list: {media_files}')
+        # articles = Article.objects.filter(author=user.id)
+        # print(f'This is the article id: {articles}')
+        # for article in articles:
+        #     if article.featured_image:
+        #         media_files.append(article.featured_image)
+        #         print(
+        #             f'This is the list of all the article files: {article.files.all()}')
+        #     # Add other media files associated with the article
+        #     media_files.extend(article.files.all())
+        #     print(f'This is the whole media files list: {media_files}')
 
         # Add media files from posts
         posts = Post.objects.filter(author=user.id)
+        print(f'This is the post: {posts}')
         for post in posts:
             # Add other media files associated with the post
             media_files.extend(post.files.all())
