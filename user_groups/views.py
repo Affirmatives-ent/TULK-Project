@@ -168,21 +168,23 @@ class UserGroupsAPIView(generics.ListAPIView):
 
 
 class GroupPostListCreateView(APIView):
-    # Add the IsAuthenticated permission class
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
-    # Add the PageNumberPagination class and specify the page size
     pagination_class = PageNumberPagination
-    page_size = 10  # Set the desired number of items per page
+    page_size = 10
 
     def get(self, request, format=None):
-        # Fetch all posts from the database
-        posts = GroupPost.objects.all()
-        # Serialize the posts and convert them to JSON data
+        # Get the group ID from the request data (you may need to adjust how you get this)
+        # Adjust this based on your API design
+        group_id = request.GET.get('group_id')
+
+        # Fetch posts associated with the specific group
+        posts = GroupPost.objects.filter(
+            group_id=group_id)  # Filter based on group ID
+
         paginator = self.pagination_class()
         result_page = paginator.paginate_queryset(posts, request)
         serializer = GroupPostSerializer(result_page, many=True)
-        # Get the JSON data
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
