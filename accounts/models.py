@@ -176,9 +176,8 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     viewed = models.BooleanField(default=False)
     content_type = models.ForeignKey(
-        ContentType, on_delete=models.CASCADE, default=FriendRequest)
-    object_id = models.UUIDField(
-        default='153c93e1-14ef-4460-a098-d1e38c6d5f82')
+        ContentType, on_delete=models.CASCADE)
+    object_id = models.UUIDField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta:
