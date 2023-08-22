@@ -528,3 +528,32 @@ class SearchAPIView(APIView):
                 results.extend(article_serializer.data)
 
         return Response({"data": results})
+
+
+class UserMediaFilesView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, user_id):
+        # Query media files from different models and filter by user_id
+        article_files = Article.objects.filter(
+            author_id=user_id).values_list('files', flat=True)
+        post_files = Post.objects.filter(
+            author_id=user_id).values_list('files', flat=True)
+        user_profile_files = User.objects.filter(
+            user_id=user_id).values_list('profile_image', flat=True)
+
+        # Serialize the media files from each model using the appropriate serializers
+        article_serializer = ArticleSerializer(
+            Article.objects.filter(files__in=article_files), many=True)
+        post_serializer = PostSerializer(
+            Post.objects.filter(files__in=post_files), many=True)
+        user_profile_serializer = serializers.UserProfileSerializer(
+            User.objects.filter(profile_image__in=user_profile_files), many=True)
+
+        serialized_data = {
+            'article_files': article_serializer.data,
+            'post_files': post_serializer.data,
+            'user_profile_files': user_profile_serializer.data,
+        }
+
+        return Response(serialized_data)
