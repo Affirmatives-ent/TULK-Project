@@ -583,6 +583,7 @@ class UserMediaFilesView(generics.ListAPIView):
 
         # Add media files from articles
         articles = Article.objects.filter(author=user.id)
+        print(articles)
         for article in articles:
             if article.featured_image:
                 media_files.append(article.featured_image)
