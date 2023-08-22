@@ -576,13 +576,13 @@ class UserMediaFilesView(generics.ListAPIView):
         media_files = []
 
         # Add user profile media if available
-        if user.id.avatar:
-            media_files.append(user.id.avatar)
-        if user.id.background_image:
-            media_files.append(user.id.background_image)
+        if user.avatar:
+            media_files.append(user.avatar)
+        if user.background_image:
+            media_files.append(user.background_image)
 
         # Add media files from articles
-        articles = Article.objects.filter(author=user)
+        articles = Article.objects.filter(author=user.id)
         for article in articles:
             if article.featured_image:
                 media_files.append(article.featured_image)
@@ -590,7 +590,7 @@ class UserMediaFilesView(generics.ListAPIView):
             media_files.extend(article.files.all())
 
         # Add media files from posts
-        posts = Post.objects.filter(author=user)
+        posts = Post.objects.filter(author=user.id)
         for post in posts:
             # Add other media files associated with the post
             media_files.extend(post.files.all())
