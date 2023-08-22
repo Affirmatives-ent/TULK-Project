@@ -24,7 +24,7 @@ import datetime
 import random
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import CustomTokenObtainPairSerializer, TokenExpiredError
+from .serializers import CustomTokenObtainPairSerializer, TokenExpiredError, UserProfileMediaSerializer, PostMediaSerializer, ArticleMediaSerializer
 from datetime import datetime, timedelta
 
 User = get_user_model()
@@ -530,30 +530,24 @@ class SearchAPIView(APIView):
         return Response({"data": results})
 
 
-class UserMediaFilesView(APIView):
-    permission_classes = [IsAuthenticated]
+class UserMediaFilesView(generics.RetrieveAPIView):
+    serializer_class = UserProfileMediaSerializer  # Default serializer
+    queryset = User.objects.all()
 
-    def get(self, request, user_id):
-        # Query media files from different models and filter by user_id
-        article_files = Article.objects.filter(
-            author_id=user_id).values_list('files', flat=True)
-        post_files = Post.objects.filter(
-            author_id=user_id).values_list('files', flat=True)
-        user_profile_files = User.objects.filter(
-            id=user_id).values_list('avatar', flat=True)
+    def get_serializer_class(self):
+        user_id = self.kwargs['user_id']
 
-        # Serialize the media files from each model using the appropriate serializers
-        article_serializer = ArticleSerializer(
-            Article.objects.filter(files__in=article_files), many=True)
-        post_serializer = PostSerializer(
-            Post.objects.filter(files__in=post_files), many=True)
-        user_profile_serializer = serializers.UserProfileSerializer(
-            User.objects.filter(avatar__in=user_profile_files), many=True)
+        # Determine which serializer to use based on the model associated with the user
+        if User.objects.filter(id=user_id).exists():
+            return UserProfileMediaSerializer
+        elif Post.objects.filter(author_id=user_id).exists():
+            return PostMediaSerializer
+        elif Article.objects.filter(author_id=user_id).exists():
+            return ArticleMediaSerializer
 
-        serialized_data = {
-            'article_files': article_serializer.data,
-            'post_files': post_serializer.data,
-            'user_profile_files': user_profile_serializer.data,
-        }
+        # Default to UserProfileMediaSerializer if no match is found
+        return UserProfileMediaSerializer
 
-        return Response(serialized_data)
+    def get_object(self):
+        user_id = self.kwargs['user_id']
+        return User.objects.get(id=user_id)

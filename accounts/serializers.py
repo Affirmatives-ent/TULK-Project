@@ -11,7 +11,8 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
-from posts.models import Like
+from posts.models import Like, Post
+from article.models import Article
 User = get_user_model()
 
 
@@ -239,3 +240,22 @@ class NotificationSerializer(serializers.ModelSerializer):
 
 class NotificationCountSerializer(serializers.Serializer):
     count = serializers.IntegerField()
+
+
+class UserProfileMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        # Add other relevant fields for UserProfile
+        fields = ('avatar', 'background_image')
+
+
+class PostMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ('files',)  # Add other relevant fields for Post
+
+
+class ArticleMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article
+        fields = ('featured_image', 'files')
