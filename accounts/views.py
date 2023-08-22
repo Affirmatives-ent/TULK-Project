@@ -540,7 +540,7 @@ class UserMediaFilesView(APIView):
         post_files = Post.objects.filter(
             author_id=user_id).values_list('files', flat=True)
         user_profile_files = User.objects.filter(
-            user_id=user_id).values_list('profile_image', flat=True)
+            user_id=user_id).values_list('avatar', flat=True)
 
         # Serialize the media files from each model using the appropriate serializers
         article_serializer = ArticleSerializer(
