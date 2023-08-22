@@ -26,6 +26,7 @@ import datetime
 import random
 from .models import ConversationGroup, Comment, Like, GroupMedia, GroupPost
 from .serializers import GroupPostSerializer, CommentSerializer, LikeSerializer, GroupMediaSerializer
+from django.contrib.contenttypes.models import ContentType
 
 User = get_user_model
 
@@ -81,7 +82,14 @@ class InviteUserToGroup(APIView):
 
             # Create a notification for the invited user
             notification = Notification(
-                sender=group.admin, recipient=user, type=type.group_request, message='You have a new group invitation.')
+                sender=group.admin,
+                recipient=user,
+                type=Notification.NOTIFICATION_TYPES.group_request,
+                message='You have a new group invitation.',
+                content_type=ContentType.objects.get_for_model(
+                    models.ConversationGroup),
+                object_id=group.id
+            )
             notification.save()
 
             serializer = serializers.ConversationGroupSerializer(group)

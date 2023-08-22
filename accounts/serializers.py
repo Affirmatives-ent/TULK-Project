@@ -238,9 +238,13 @@ class FriendshipSerializer(serializers.ModelSerializer):
 
 
 class NotificationSerializer(serializers.ModelSerializer):
+    content_type = serializers.CharField()
+    object_id = serializers.UUIDField()
+
     class Meta:
         model = Notification
-        fields = '__all__'
+        fields = ('id', 'sender', 'recipient', 'type', 'message',
+                  'created_at', 'viewed', 'content_type', 'object_id')
 
 
 class NotificationCountSerializer(serializers.Serializer):
