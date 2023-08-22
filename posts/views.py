@@ -100,7 +100,9 @@ class CommentListCreateAPIView(generics.ListCreateAPIView):
         # Create a notification for the post owner
         notification_message = f'{self.request.user.first_name} commented on your post'
         Notification.objects.create(
-            sender=self.request.user, recipient=post.author, message=notification_message, type=type.post_comment)
+            sender=self.request.user, recipient=post.author, message=notification_message,
+            type='post_comment', content_type=ContentType.objects.get_for_model(Post),
+            object_id=post.id)
 
         return comment
 
