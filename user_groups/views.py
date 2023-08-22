@@ -177,6 +177,8 @@ class GroupPostListCreateView(APIView):
         # Fetch posts associated with the specific group
         posts = GroupPost.objects.filter(group_id=group_id)
 
+        print(f'This is the post object: {posts}')
+
         paginator = self.pagination_class()
         result_page = paginator.paginate_queryset(posts, request)
         serializer = GroupPostSerializer(result_page, many=True)
