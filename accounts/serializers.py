@@ -242,20 +242,46 @@ class NotificationCountSerializer(serializers.Serializer):
     count = serializers.IntegerField()
 
 
-class UserProfileMediaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        # Add other relevant fields for UserProfile
-        fields = ('avatar', 'background_image')
+# class UserProfileMediaSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         # Add other relevant fields for UserProfile
+#         fields = ('avatar', 'background_image')
 
 
-class PostMediaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Post
-        fields = ('files',)  # Add other relevant fields for Post
+# class PostMediaSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Post
+#         fields = ('files',)  # Add other relevant fields for Post
 
 
-class ArticleMediaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Article
-        fields = ('featured_image', 'files')
+# class ArticleMediaSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Article
+#         fields = ('featured_image', 'files')
+
+class UserMediaSerializer(serializers.Serializer):
+    # Define fields that can represent media files from different models
+    avatar = serializers.ImageField(read_only=True)
+    background_image = serializers.ImageField(read_only=True)
+    featured_image = serializers.ImageField(read_only=True)
+    files = serializers.ListField(
+        child=serializers.ImageField(), read_only=True)
+
+    def to_representation(self, instance):
+        # Create a dictionary that maps model field names to serializer fields
+        field_mapping = {
+            User: ['avatar', 'background_image'],
+            Article: ['featured_image', 'files'],
+            Post: ['featured_image', 'files'],
+            # Add more models and their fields here
+        }
+
+        data = {}
+        for model, fields in field_mapping.items():
+            if isinstance(instance, model):
+                for field in fields:
+                    if hasattr(instance, field):
+                        data[field] = getattr(instance, field)
+
+        return data
