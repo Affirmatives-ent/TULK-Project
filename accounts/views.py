@@ -550,4 +550,14 @@ class UserMediaFilesView(generics.RetrieveAPIView):
 
     def get_object(self):
         user_id = self.kwargs['user_id']
+
+        # Determine which model to use based on the user's associated model
+        if User.objects.filter(id=user_id).exists():
+            return User.objects.get(id=user_id)
+        elif Post.objects.filter(author_id=user_id).exists():
+            return Post.objects.filter(author_id=user_id)
+        elif Article.objects.filter(author_id=user_id).exists():
+            return Article.objects.filter(author_id=user_id)
+
+        # Default to UserProfile if no match is found
         return User.objects.get(id=user_id)
