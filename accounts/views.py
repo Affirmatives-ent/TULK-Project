@@ -588,6 +588,7 @@ class UserMediaFilesView(generics.ListAPIView):
                 media_files.append(article.featured_image)
             # Add other media files associated with the article
             media_files.extend(article.files.all())
+            print(media_files)
 
         # Add media files from posts
         posts = Post.objects.filter(author=user.id)
