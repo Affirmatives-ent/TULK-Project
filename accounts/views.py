@@ -570,15 +570,29 @@ class UserMediaFilesView(generics.ListAPIView):
         # Retrieve the user based on user_id
         user = get_object_or_404(User, id=user_id)
 
-        # Retrieve media files from UserProfile
-        user_profile_media = User.objects.filter(id=user_id).first()
+        # List to store media files
+        media_files = []
 
-        # Retrieve media files from Article and Post
-        article_media = Article.objects.filter(author=user)
-        post_media = Post.objects.filter(author=user)
+        # Add user profile media if available
+        if user.avatar:
+            media_files.append(user.avatar)
+        if user.background_image:
+            media_files.append(user.background_image)
 
-        # Combine all media files
-        media_files = [user_profile_media] + \
-            list(article_media) + list(post_media)
+        # Add media files from articles
+        articles = Article.objects.filter(author=user)
+        for article in articles:
+            if article.featured_image:
+                media_files.append(article.featured_image)
+            # Add other media files associated with the article
+            media_files.extend(article.files.all())
+
+        # Add media files from posts
+        posts = Post.objects.filter(author=user)
+        for post in posts:
+            if post.featured_image:
+                media_files.append(post.featured_image)
+            # Add other media files associated with the post
+            media_files.extend(post.files.all())
 
         return media_files
