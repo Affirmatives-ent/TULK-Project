@@ -21,7 +21,7 @@ class PublishArticleView(APIView):
     def post(self, request, format=None):
         serializer = ArticleSerializer(data=request.data)
         if serializer.is_valid():
-            article = serializer.save(status=status)
+            article = serializer.save(status='published')
 
             try:
                 # Process and save multiple media files
