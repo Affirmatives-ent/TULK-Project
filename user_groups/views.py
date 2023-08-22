@@ -173,14 +173,9 @@ class GroupPostListCreateView(APIView):
     pagination_class = PageNumberPagination
     page_size = 10
 
-    def get(self, request, format=None):
-        # Get the group ID from the request data (you may need to adjust how you get this)
-        # Adjust this based on your API design
-        group_id = request.GET.get('group_id')
-
+    def get(self, request, group_id, format=None):  # Extract the group_id from the URL
         # Fetch posts associated with the specific group
-        posts = GroupPost.objects.filter(
-            group_id=group_id)  # Filter based on group ID
+        posts = GroupPost.objects.filter(group_id=group_id)
 
         paginator = self.pagination_class()
         result_page = paginator.paginate_queryset(posts, request)
