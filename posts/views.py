@@ -142,7 +142,7 @@ class LikeToggleAPIView(APIView):
                 sender=user,
                 recipient=post.author,
                 message=notification_message,
-                type=type.post_like,
+                type='post_like',
                 content_type=ContentType.objects.get_for_model(Post),
                 object_id=post.id
             )
