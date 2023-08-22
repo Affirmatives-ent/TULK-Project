@@ -14,6 +14,28 @@ from .pagination import CustomPageNumberPagination
 from rest_framework.parsers import MultiPartParser, FormParser
 
 
+# class PublishArticleView(APIView):
+#     permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+#     parser_classes = [MultiPartParser, FormParser]
+
+#     def post(self, request, format=None):
+#         serializer = ArticleSerializer(data=request.data)
+#         if serializer.is_valid():
+#             article = serializer.save(status='published')
+
+#             try:
+#                 # Process and save multiple media files
+#                 files_data = request.FILES.getlist('files')
+#                 for file_data in files_data:
+#                     file_instance = MediaFile(file=file_data)
+#                     file_instance.save()
+#                     article.files.add(file_instance)
+#             except Exception as e:
+#                 return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class PublishArticleView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
     parser_classes = [MultiPartParser, FormParser]
@@ -21,7 +43,7 @@ class PublishArticleView(APIView):
     def post(self, request, format=None):
         serializer = ArticleSerializer(data=request.data)
         if serializer.is_valid():
-            article = serializer.save(status='published')
+            article = serializer.save()
 
             try:
                 # Process and save multiple media files
@@ -35,22 +57,6 @@ class PublishArticleView(APIView):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # def post(self, request, format=None):
-    #     serializer = ArticleSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         # Save the article with status 'published'
-    #         article = serializer.save(status='published')
-
-    #         # Process and save multiple media files
-    #         files_data = request.FILES.getlist('files')
-    #         for file_data in files_data:
-    #             file_instance = MediaFile(file=file_data)
-    #             file_instance.save()
-    #             article.files.create(file=file_data)
-
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AdminArticleListView(APIView):
