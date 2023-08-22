@@ -570,5 +570,15 @@ class UserMediaFilesView(generics.ListAPIView):
         # Retrieve the user based on user_id
         user = get_object_or_404(User, id=user_id)
 
-        # Return a list containing the user and other related objects
-        return [user] + list(user.articles.all()) + list(user.posts.all())
+        # Retrieve media files from UserProfile
+        user_profile_media = User.objects.filter(user=user).first()
+
+        # Retrieve media files from Article and Post
+        article_media = Article.objects.filter(author=user)
+        post_media = Post.objects.filter(author=user)
+
+        # Combine all media files
+        media_files = [user_profile_media] + \
+            list(article_media) + list(post_media)
+
+        return media_files

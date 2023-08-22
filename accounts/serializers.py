@@ -266,14 +266,14 @@ class UserMediaSerializer(serializers.Serializer):
     background_image = serializers.ImageField(read_only=True)
     featured_image = serializers.ImageField(read_only=True)
     files = serializers.ListField(
-        child=serializers.ImageField(), read_only=True)
+        child=serializers.FileField(), read_only=True)
 
     def to_representation(self, instance):
         # Create a dictionary that maps model field names to serializer fields
         field_mapping = {
             User: ['avatar', 'background_image'],
             Article: ['featured_image', 'files'],
-            Post: ['featured_image', 'files'],
+            Post: ['files'],
             # Add more models and their fields here
         }
 
