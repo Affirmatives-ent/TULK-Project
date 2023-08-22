@@ -175,10 +175,10 @@ class Notification(models.Model):
     message = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     viewed = models.BooleanField(default=False)
-    content_type = models.ForeignKey(
-        ContentType, on_delete=models.CASCADE)
-    object_id = models.UUIDField()
-    content_object = GenericForeignKey('content_type', 'object_id')
+    # content_type = models.ForeignKey(
+    #     ContentType, on_delete=models.CASCADE)
+    # object_id = models.UUIDField()
+    # content_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta:
         ordering = ["-created_at"]

@@ -86,9 +86,6 @@ class InviteUserToGroup(APIView):
                 recipient=user,
                 type=Notification.NOTIFICATION_TYPES.group_request,
                 message='You have a new group invitation.',
-                content_type=ContentType.objects.get_for_model(
-                    models.ConversationGroup),
-                object_id=group.id
             )
             notification.save()
 
