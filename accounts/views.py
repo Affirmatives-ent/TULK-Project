@@ -548,7 +548,7 @@ class UserMediaFilesView(APIView):
         post_serializer = PostSerializer(
             Post.objects.filter(files__in=post_files), many=True)
         user_profile_serializer = serializers.UserProfileSerializer(
-            User.objects.filter(profile_image__in=user_profile_files), many=True)
+            User.objects.filter(avatar__in=user_profile_files), many=True)
 
         serialized_data = {
             'article_files': article_serializer.data,
