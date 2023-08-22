@@ -10,6 +10,8 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
+from django.contrib.contenttypes.models import ContentType
+from posts.models import Like
 User = get_user_model()
 
 
@@ -33,34 +35,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'avatar': {'required': False},
             'background_image': {'required': False},
         }
-
-
-# class UserProfileSerializer(serializers.ModelSerializer):
-#     # Define the serializer method field to include friends' ids
-#     friends_ids = serializers.SerializerMethodField()
-
-#     class Meta:
-#         model = User
-#         fields = ['id', 'first_name', 'last_name', 'date_of_birth', 'gender',
-#                   'email', 'phone_number', 'avatar', 'background_image', 'school', 'marital_status',
-#                   'bio', 'website', 'location', 'is_staff', 'friends_ids']  # Include 'friends_ids' in the fields
-
-#         extra_kwargs = {
-#             'avatar': {'required': False},
-#             'background_image': {'required': False},
-#         }
-
-#     def get_friends_ids(self, obj):
-#         # Fetch all Friendship objects where the user is either user1 or user2
-#         friendships = Friendship.objects.filter(
-#             models.Q(user1=obj) | models.Q(user2=obj)
-#         ).values_list('user1_id', 'user2_id')
-
-#         # Flatten the friendships list and exclude the current user's id
-#         all_friend_ids = [friend for friendship in friendships for friend in friendship if friend != obj.id]
-
-#         # Deduplicate the ids in case the user is in both user1 and user2
-#         return list(set(all_friend_ids))
 
 
 class TokenExpiredError(serializers.ValidationError):
@@ -237,11 +211,30 @@ class FriendshipSerializer(serializers.ModelSerializer):
         fields = ['user1', 'user2']
 
 
-class NotificationSerializer(serializers.ModelSerializer):
+# class NotificationSerializer(serializers.ModelSerializer):
 
+#     class Meta:
+#         model = Notification
+#         fields = "__all__"
+
+class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = "__all__"
+
+    def create(self, validated_data):
+        # Check if the notification type is 'post_like'
+        notification_type = validated_data.get('type')
+        if notification_type == 'post_like':
+            # Extract the post ID from the request data (if available)
+            post_id = self.context.get('post_id')
+            if post_id:
+                # Add content_type and object_id based on the post ID
+                validated_data['content_type'] = ContentType.objects.get_for_model(
+                    Like)
+                validated_data['object_id'] = post_id
+
+        return super().create(validated_data)
 
 
 class NotificationCountSerializer(serializers.Serializer):

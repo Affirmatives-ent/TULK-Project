@@ -11,6 +11,7 @@ from django.conf import settings
 import os
 import uuid
 from cloudinary_storage.storage import RawMediaCloudinaryStorage
+from django.contrib.contenttypes.models import ContentType
 
 
 email_validator = EmailValidator()
@@ -167,6 +168,12 @@ class Notification(models.Model):
     message = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     viewed = models.BooleanField(default=False)
+    content_type = models.ForeignKey(
+        ContentType,
+        on_delete=models.CASCADE,
+        blank=True, null=True
+    )
+    object_id = models.UUIDField(blank=True, null=True)
 
     class Meta:
         ordering = ["-created_at"]

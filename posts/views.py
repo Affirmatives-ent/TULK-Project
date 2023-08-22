@@ -13,6 +13,7 @@ from accounts.serializers import NotificationSerializer
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
+from django.contrib.contenttypes.models import ContentType
 User = get_user_model()
 
 
@@ -105,6 +106,8 @@ class CommentListCreateAPIView(generics.ListCreateAPIView):
 
 
 class LikeToggleAPIView(APIView):
+    # ...
+
     def post(self, request, post_id, format=None):
         user = request.user
 
@@ -113,13 +116,10 @@ class LikeToggleAPIView(APIView):
         except Post.DoesNotExist:
             return Response({'detail': 'Post not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-        # Check if the user already liked the post
         try:
             like = Like.objects.get(user=user, post=post)
-            # If the like already exists, remove it
             like.delete()
 
-            # Also, remove the corresponding notification if it exists
             try:
                 notification = Notification.objects.get(
                     sender=user, recipient=post.author, message=f'{user.first_name} Unliked your post')
@@ -129,13 +129,23 @@ class LikeToggleAPIView(APIView):
 
             return Response({'detail': 'Like removed successfully.'}, status=status.HTTP_200_OK)
         except Like.DoesNotExist:
-            # If the like does not exist, create it
             like = Like.objects.create(user=user, post=post)
+
+            # Pass the post_id to the serializer context
+            serializer_context = {
+                'post_id': post_id,
+            }
 
             # Create a notification for the post owner
             notification_message = f'{user.first_name} liked your post'
             Notification.objects.create(
-                sender=user, recipient=post.author, message=notification_message, type=type.post_like)
+                sender=user,
+                recipient=post.author,
+                message=notification_message,
+                type=type.post_like,
+                content_type=ContentType.objects.get_for_model(Post),
+                object_id=post.id
+            )
 
             return Response({'detail': 'Like added successfully.'}, status=status.HTTP_201_CREATED)
 
