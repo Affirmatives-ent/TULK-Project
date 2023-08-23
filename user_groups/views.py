@@ -184,7 +184,7 @@ class GroupPostListCreateView(APIView):
         serializer = GroupPostSerializer(result_page, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request, format=None):
+    def post(self, request, group_id, format=None):
         serializer = GroupPostSerializer(data=request.data)
         if serializer.is_valid():
             post = serializer.save()
