@@ -54,7 +54,7 @@ class GroupPost(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, to_field='id')
     content = models.TextField(blank=True)
-    media = models.ManyToManyField('GroupMedia', blank=True)
+    files = models.ManyToManyField('GroupMedia', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
