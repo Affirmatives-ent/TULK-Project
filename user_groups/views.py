@@ -190,7 +190,7 @@ class GroupPostListCreateView(APIView):
             post = serializer.save()
 
             # Process and save multiple files
-            files_data = request.FILES.getlist('media')
+            files_data = request.FILES.getlist('files')
             for file_data in files_data:
                 file_instance = GroupMedia(file=file_data)
                 file_instance.save()
