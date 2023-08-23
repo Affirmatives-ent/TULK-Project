@@ -282,6 +282,6 @@ class UserMediaSerializer(serializers.Serializer):
                 post_files.extend(post.files.all())
 
             if post_files:
-                data['files'] = [file.url for file in post_files]
+                data['files'] = [file for file in post_files]
 
         return data
