@@ -574,14 +574,11 @@ class UserMediaFilesView(generics.ListAPIView):
         media_files = []
 
         # Add user profile media if available
-        if user.avatar:
-            media_files.append(user.avatar)
-        if user.background_image:
-            media_files.append(user.background_image)
+        if user.avatar or user.background_image:
+            media_files.append(user)
 
         # Add media files from posts
         posts = Post.objects.filter(author=user)
-        for post in posts:
-            media_files.extend(post.files.all())
+        media_files.extend(posts)
 
         return media_files
