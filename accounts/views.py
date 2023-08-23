@@ -567,39 +567,9 @@ class UserMediaFilesView(generics.ListAPIView):
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
-        print(f'The ID:{user_id}')
-        # Retrieve the user based on user_id
         user = get_object_or_404(User, id=user_id)
 
-        print(f'This is the user id: {user}')
+        # Only include user and their posts in the queryset
+        queryset = [user] + list(Post.objects.filter(author=user))
 
-        # List to store media files
-        media_files = []
-
-        # Add user profile media if available
-        if user.avatar:
-            print(f'This is the avatar: {user.avatar}')
-            media_files.append(user.avatar.url)
-        if user.background_image:
-            media_files.append(user.background_image.url)
-
-        # Add media files from articles
-        # articles = Article.objects.filter(author=user.id)
-        # print(f'This is the article id: {articles}')
-        # for article in articles:
-        #     if article.featured_image:
-        #         media_files.append(article.featured_image)
-        #         print(
-        #             f'This is the list of all the article files: {article.files.all()}')
-        #     # Add other media files associated with the article
-        #     media_files.extend(article.files.all())
-        #     print(f'This is the whole media files list: {media_files}')
-
-        # Add media files from posts
-        posts = Post.objects.filter(author=user.id)
-        print(f'This is the post: {posts}')
-        for post in posts:
-            # Add other media files associated with the post
-            media_files.extend(post.files.all())
-
-        return media_files
+        return queryset

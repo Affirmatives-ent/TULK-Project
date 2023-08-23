@@ -261,37 +261,27 @@ class NotificationCountSerializer(serializers.Serializer):
 #         fields = ('featured_image', 'files')
 
 class UserMediaSerializer(serializers.Serializer):
-    # Define fields that can represent media files from different models
-    avatar = serializers.SerializerMethodField()
-    background_image = serializers.SerializerMethodField()
-    featured_image = serializers.ImageField(read_only=True)
+    avatar = serializers.ImageField(read_only=True)
+    background_image = serializers.ImageField(read_only=True)
     files = serializers.ListField(
         child=serializers.FileField(), read_only=True)
 
-    def get_avatar(self, obj):
-        if hasattr(obj, 'avatar') and obj.avatar:
-            return obj.avatar.url
-        return None
-
-    def get_background_image(self, obj):
-        if hasattr(obj, 'background_image') and obj.background_image:
-            return obj.background_image.url
-        return None
-
     def to_representation(self, instance):
-        # Create a dictionary that maps model field names to serializer fields
-        field_mapping = {
-            User: ['avatar', 'background_image'],
-            Article: ['featured_image', 'files'],
-            Post: ['files'],
-            # Add more models and their fields here
-        }
-
         data = {}
-        for model, fields in field_mapping.items():
-            if isinstance(instance, model):
-                for field in fields:
-                    if hasattr(instance, field):
-                        data[field] = getattr(instance, field)
+
+        if hasattr(instance, 'avatar'):
+            data['avatar'] = instance.avatar.url
+        if hasattr(instance, 'background_image'):
+            data['background_image'] = instance.background_image.url
+
+        if isinstance(instance, User):
+            posts = Post.objects.filter(author=instance)
+            post_files = []
+
+            for post in posts:
+                post_files.extend(post.files.all())
+
+            if post_files:
+                data['files'] = [file.url for file in post_files]
 
         return data
