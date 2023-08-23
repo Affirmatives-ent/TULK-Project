@@ -261,27 +261,30 @@ class NotificationCountSerializer(serializers.Serializer):
 #         fields = ('featured_image', 'files')
 
 class UserMediaSerializer(serializers.Serializer):
-    avatar = serializers.ImageField(read_only=True)
-    background_image = serializers.ImageField(read_only=True)
-    files = serializers.ListField(
-        child=serializers.FileField(), read_only=True)
+    # Define fields that can represent media files from different models
+    avatar = serializers.SerializerMethodField()
+    background_image = serializers.SerializerMethodField()
+    files = serializers.SerializerMethodField()
+
+    def get_avatar(self, obj):
+        if isinstance(obj, User) and obj.avatar:
+            return obj.avatar.url
+        return None
+
+    def get_background_image(self, obj):
+        if isinstance(obj, User) and obj.background_image:
+            return obj.background_image.url
+        return None
+
+    def get_files(self, obj):
+        if isinstance(obj, Post):
+            return [file_obj.file.url for file_obj in obj.files.all()]
+        return []
 
     def to_representation(self, instance):
-        data = {}
-
-        if hasattr(instance, 'avatar'):
-            data['avatar'] = instance.avatar.url
-        if hasattr(instance, 'background_image'):
-            data['background_image'] = instance.background_image.url
-
-        if isinstance(instance, User):
-            posts = Post.objects.filter(author=instance)
-            post_files = []
-
-            for post in posts:
-                post_files.extend(post.files.all())
-
-            if post_files:
-                data['files'] = [file for file in post_files]
-
+        data = {
+            'avatar': self.get_avatar(instance),
+            'background_image': self.get_background_image(instance),
+            'files': self.get_files(instance),
+        }
         return data
