@@ -3,6 +3,7 @@ from django.conf import settings
 from accounts.models import Friendship
 from django.contrib.auth import get_user_model
 import uuid
+from cloudinary_storage.storage import MediaCloudinaryStorage
 User = get_user_model()
 
 
@@ -19,9 +20,9 @@ class ConversationGroup(models.Model):
     admin_email = models.EmailField(blank=True, null=True)
     admin_website = models.URLField(blank=True, null=True)
     background_image = models.ImageField(
-        upload_to='group/backgrounds/', blank=True, null=True)
+        upload_to='group/backgrounds/', blank=True, null=True, storage=MediaCloudinaryStorage())
     avatar = models.ImageField(
-        upload_to='group/avatars/', blank=True, null=True)
+        upload_to='group/avatars/', blank=True, null=True, storage=MediaCloudinaryStorage())
     members = models.ManyToManyField(
         User, related_name='usergroups', blank=True, null=True)
 
@@ -66,7 +67,8 @@ class GroupPost(models.Model):
 
 class GroupMedia(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    file = models.FileField(upload_to='post_files/')
+    file = models.FileField(upload_to='post_files/',
+                            storage=MediaCloudinaryStorage())
     # post = models.ForeignKey(
     #     Post, on_delete=models.CASCADE, related_name='files')
 

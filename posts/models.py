@@ -2,6 +2,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 import uuid
+from cloudinary_storage.storage import MediaCloudinaryStorage
 
 User = get_user_model()
 
@@ -23,7 +24,8 @@ class Post(models.Model):
 
 class File(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    file = models.FileField(upload_to='post_files/')
+    file = models.FileField(upload_to='post_files/',
+                            storage=MediaCloudinaryStorage())
     # post = models.ForeignKey(
     #     Post, on_delete=models.CASCADE, related_name='files')
 

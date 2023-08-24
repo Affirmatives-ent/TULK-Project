@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 import uuid
+from cloudinary_storage.storage import MediaCloudinaryStorage
 # from django.utils.text import slugify
 # from autoslug import AutoSlugField
 
@@ -48,7 +49,8 @@ class Article(models.Model):
 
 class MediaFile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    file = models.FileField(upload_to='article_files/')
+    file = models.FileField(upload_to='article_files/',
+                            storage=MediaCloudinaryStorage())
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

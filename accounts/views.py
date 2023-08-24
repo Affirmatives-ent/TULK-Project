@@ -195,15 +195,6 @@ class ForgotPasswordAPIView(APIView):
         otp = str(random.randint(100000, 999999))
         print(otp)
 
-        # digits_only = ''.join(filter(str.isdigit, phone_number))
-
-        # # Extract the last 10 digits from the phone number
-        # last_10_digits = digits_only[-10:]
-
-        # # Add '234' to the beginning of the last 10 digits
-        # formatted_number = '234' + last_10_digits
-        # # Send the OTP to the user's phone number (implement your send_otp function)
-        # print(formatted_number)
         utils.send_otp(phone_number, otp)
 
         # Save the OTP in the user's model
@@ -386,14 +377,6 @@ class FriendRequestRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAP
             friendship = models.Friendship.objects.create(
                 user1=friend_request.sender, user2=friend_request.recipient
             )
-
-            # # Optionally, you can also update the is_online status for both users
-            # friend_request.sender.is_online = True
-            # friend_request.sender.save()
-            # friend_request.recipient.is_online = True
-            # friend_request.recipient.save()
-
-            # Create a notification for the sender
             notification = models.Notification.objects.create(
                 sender=friend_request.recipient,
                 recipient=friend_request.sender,
@@ -529,38 +512,6 @@ class SearchAPIView(APIView):
 
         return Response({"data": results})
 
-
-# class UserMediaFilesView(generics.RetrieveAPIView):
-#     serializer_class = UserProfileMediaSerializer  # Default serializer
-#     queryset = User.objects.all()
-
-#     def get_serializer_class(self):
-#         user_id = self.kwargs['user_id']
-
-#         # Determine which serializer to use based on the model associated with the user
-#         if User.objects.filter(id=user_id).exists():
-#             return UserProfileMediaSerializer
-#         elif Post.objects.filter(author_id=user_id).exists():
-#             return PostMediaSerializer
-#         elif Article.objects.filter(author_id=user_id).exists():
-#             return ArticleMediaSerializer
-
-#         # Default to UserProfileMediaSerializer if no match is found
-#         return UserProfileMediaSerializer
-
-#     def get_object(self):
-#         user_id = self.kwargs['user_id']
-
-#         # Determine which model to use based on the user's associated model
-#         if User.objects.filter(id=user_id).exists():
-#             return User.objects.get(id=user_id)
-#         elif Post.objects.filter(author_id=user_id).exists():
-#             return Post.objects.filter(author_id=user_id)
-#         elif Article.objects.filter(author_id=user_id).exists():
-#             return Article.objects.filter(author_id=user_id)
-
-#         # Default to UserProfile if no match is found
-#         return User.objects.get(id=user_id)
 
 class UserMediaFilesView(generics.ListAPIView):
     serializer_class = UserMediaSerializer

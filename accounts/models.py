@@ -10,7 +10,7 @@ from django.conf import settings
 from django.conf import settings
 import os
 import uuid
-from cloudinary_storage.storage import RawMediaCloudinaryStorage
+from cloudinary_storage.storage import MediaCloudinaryStorage
 from django.contrib.contenttypes.models import ContentType
 
 
@@ -89,10 +89,10 @@ class User(PermissionsMixin, AbstractBaseUser):
     is_online = models.BooleanField(default=False)
     user_register_at = models.DateTimeField(auto_now_add=True)
     avatar = models.ImageField(
-        upload_to='user_avatar/', blank=True, null=True, storage=RawMediaCloudinaryStorage()
+        upload_to='user_avatar/', blank=True, null=True, storage=MediaCloudinaryStorage()
     )
     background_image = models.ImageField(
-        upload_to='cover_image/', blank=True, null=True, storage=RawMediaCloudinaryStorage()
+        upload_to='cover_image/', blank=True, null=True, storage=MediaCloudinaryStorage()
     )
     marital_status = models.CharField(
         max_length=20, choices=MARITAL_STATUS, blank=True, null=True)
