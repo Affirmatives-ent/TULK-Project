@@ -436,7 +436,7 @@ class NotificationUpdateAPIView(generics.UpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         notification = self.get_object()
-        notification.read = True
+        notification.viewed = True
         notification.save()
         return Response(self.get_serializer(notification).data, status=status.HTTP_200_OK)
 
