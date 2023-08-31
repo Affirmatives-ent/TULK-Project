@@ -10,7 +10,7 @@ class PostAdmin(admin.ModelAdmin):
 
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'post',)
-    list_filter = ('post',)
+    list_filter = ('user',)
 
 
 admin.site.register(Post, PostAdmin)
