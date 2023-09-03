@@ -75,17 +75,35 @@ class AdminArticleListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+# class AdminArticleDetailView(RetrieveUpdateDestroyAPIView):
+#     queryset = Article.objects.all()
+#     serializer_class = ArticleSerializer
+#     permission_classes = (permissions.IsAdminUser,)
+
+#     def get_object(self):
+#         article_pk = self.kwargs['pk']
+#         try:
+#             return self.queryset.get(pk=article_pk)
+#         except Article.DoesNotExist:
+#             raise NotFound(f"Article with ID {article_pk} does not exist.")
+
+#     def retrieve(self, request, *args, **kwargs):
+#         instance = self.get_object()
+#         serializer = self.get_serializer(instance)
+#         return Response(serializer.data)
+
+
 class AdminArticleDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     permission_classes = (permissions.IsAdminUser,)
 
     def get_object(self):
-        article_pk = self.kwargs['pk']
+        slug = self.kwargs['slug']
         try:
-            return self.queryset.get(pk=article_pk)
+            return self.queryset.get(slug=slug)
         except Article.DoesNotExist:
-            raise NotFound(f"Article with ID {article_pk} does not exist.")
+            raise NotFound(f"Article with slug '{slug}' does not exist.")
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()

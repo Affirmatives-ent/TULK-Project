@@ -1,3 +1,4 @@
+from autoslug import AutoSlugField
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
@@ -23,7 +24,7 @@ class Article(models.Model):
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=200)
-    # slug = AutoSlugField(unique=True, populate_from='title')
+    slug = AutoSlugField(unique=True, populate_from='title')
     content = models.TextField(blank=True)
     featured_image = models.ImageField(
         upload_to='images/', null=True, blank=True)
