@@ -33,15 +33,12 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
-    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'channels',
-    'channels_redis',
     'rest_framework',
     "corsheaders",
     "rest_framework_simplejwt",
@@ -53,7 +50,7 @@ INSTALLED_APPS = [
     'user_groups',
     'posts',
     'article',
-    # 'chat',
+    'chat',
 
 
 ]
@@ -88,8 +85,21 @@ TEMPLATES = [
     },
 ]
 
+# Replace 'project_name' with your project's name
+
+
 WSGI_APPLICATION = 'backendAPI.wsgi.application'
-# ASGI_APPLICATION = "backendAPI.asgi.application"
+
+# Use the in-memory channel layer for development
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels.layers.InMemoryChannelLayer',
+#     },
+# }
+
+
+# ROOT_URLCONF = 'backendAPI.urls'  # Replace 'project_name' with your project's name
+
 
 load_dotenv()
 # Database
@@ -97,7 +107,7 @@ load_dotenv()
 
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
+#         'ENGINE': 'django.db.backends.postgresql',
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
@@ -106,10 +116,10 @@ load_dotenv()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd5bbgp5l2vmi1k',
-        'USER': 'dmkvzftrjsffjt',
-        'PASSWORD': '581a4379613bb43ef775e88c42130738feb981e304fb0e1eb4d9b86c6ad4cdd2',
-        'HOST': 'ec2-44-214-132-149.compute-1.amazonaws.com',
+        'NAME': 'Tulk_Social_DB',
+        'USER': 'postgres',
+        'PASSWORD': 'Payboi10',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
@@ -167,15 +177,6 @@ SPECTACULAR_SETTINGS = {
     # OTHER SETTINGS
 }
 
-
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [('localhost', 6379)],
-        },
-    },
-}
 
 AUTHENTICATION_BACKENDS = [
     'accounts.authentications.CustomAuthBackend',
@@ -255,5 +256,3 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
-
-django_heroku.settings(locals())

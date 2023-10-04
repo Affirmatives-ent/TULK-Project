@@ -51,10 +51,6 @@ urlpatterns = [
          FriendRequestRetrieveUpdateDestroyAPIView.as_view(), name='friend-request-detail'),
     path('friendships/<uuid:user_id>/',
          FriendsListAPIView.as_view(), name='friendship-list'),
-    #     path('friendships/create/', FriendshipCreateAPIView.as_view(),
-    #          name='friendship-create'),
-    #     path('online-friends/', OnlineFriendsListView.as_view(),
-    #          name='online-friends-list'),
     path('notifications/', NotificationListAPIView.as_view(),
          name='notification-list'),
     path('notifications/<uuid:pk>/', NotificationUpdateAPIView.as_view(),
@@ -64,6 +60,7 @@ urlpatterns = [
     path('user-notifications/', UserNotificationListView.as_view(),
          name='user-notifications'),
     path('search/', SearchAPIView.as_view(), name='search'),
-    path('user-media/<uuid:user_id>/', UserMediaFilesView.as_view(), name='user-media'),
+    path('user-media/<uuid:user_id>/',
+         UserMediaFilesView.as_view(), name='user-media'),
 
 ]
