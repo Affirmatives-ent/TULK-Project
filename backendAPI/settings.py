@@ -127,7 +127,7 @@ DATABASES = {
 # MY_SENDCHAMP_PUBLIC_KEY = os.getenv('SENDCHAMP_KEY')
 SENDCHAMP_KEY = os.getenv('SENDCHAMP_KEY')
 # print("SENDCHAMP_KEY:", SENDCHAMP_KEY)
-print("Hello world")
+print("Hello world!")
 
 
 # cloudinary.config(
