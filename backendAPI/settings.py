@@ -22,12 +22,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DEBUG", cast=bool)
+SECRET_KEY = os.environ['SECRET']
+ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']]
+CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']]
+DEBUG = True
+# SECRET_KEY = config("SECRET_KEY")
 
-ALLOWED_HOSTS = ["*"]
+# # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = config("DEBUG", cast=bool)
+
+# ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -113,14 +118,29 @@ load_dotenv()
 # }
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'Tulk_Social_DB',
+#         'USER': 'postgres',
+#         'PASSWORD': 'Payboi10',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+
+
+connection_string = os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
+parameters = {pair.split('='): pair.split(
+    '=')[1] for pair in connection_string.split(' ')}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'Tulk_Social_DB',
-        'USER': 'postgres',
-        'PASSWORD': 'Payboi10',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': parameters['dbname'],
+        'USER': parameters['user'],
+        'PASSWORD': parameters['password'],
+        'HOST': parameters['host'],
     }
 }
 
@@ -224,13 +244,12 @@ MIN_PASSWORD_LENGTH = 8
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-
-if 'DYNO' in os.environ:  # Check if running on Heroku
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Check if running on Heroku
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Use django.contrib.staticfiles.storage.StaticFilesStorage for local development on Windows
-else:
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+# else:
+#     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
