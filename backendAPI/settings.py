@@ -129,21 +129,33 @@ load_dotenv()
 #     }
 # }
 
+connection_string = os.environ.get('AZURE_POSTGRESQL_CONNECTIONSTRING')
+if connection_string:
+    parameters = {pair.split('=')[0]: pair.split('=')[1]
+                  for pair in connection_string.split(';')}
 
-connection_string = os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
-parameters = {pair.split('=')[0]: pair.split('=')[1]
-              for pair in connection_string.split(';')}
+    # Check if 'user' parameter is present
+    if 'user' in parameters:
+        user = parameters['user']
+    else:
+        # Handle the case where 'user' parameter is missing
+        user = None
+else:
+    # Handle the case where the environment variable is not set
+    user = None
 
-
+# Use the 'user' variable in your database configuration
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': parameters['dbname'],
-        'USER': parameters['user'],
+        'USER': user,
         'PASSWORD': parameters['password'],
         'HOST': parameters['host'],
+        'PORT': parameters['port'],
     }
 }
+
 
 # MY_SENDCHAMP_PUBLIC_KEY = os.getenv('SENDCHAMP_KEY')
 SENDCHAMP_KEY = os.getenv('SENDCHAMP_KEY')
