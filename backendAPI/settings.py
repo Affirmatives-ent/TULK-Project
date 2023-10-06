@@ -132,7 +132,7 @@ load_dotenv()
 connection_string = os.environ.get('AZURE_POSTGRESQL_CONNECTIONSTRING')
 if connection_string:
     parameters = {pair.split('=')[0]: pair.split('=')[1]
-                  for pair in connection_string.split(';')}
+                  for pair in connection_string.split()}
 
     # Check if 'user' parameter is present
     if 'user' in parameters:
@@ -146,20 +146,41 @@ if connection_string:
     else:
         # Handle the case where 'password' parameter is missing
         password = None
+
+    if 'dbname' in parameters:
+        dbname = parameters['dbname']
+    else:
+        # Handle the case where 'dbname' parameter is missing
+        dbname = None
+
+    if 'host' in parameters:
+        host = parameters['host']
+    else:
+        # Handle the case where 'host' parameter is missing
+        host = None
+
+    if 'port' in parameters:
+        port = parameters['port']
+    else:
+        # Handle the case where 'port' parameter is missing
+        port = None
 else:
     # Handle the case where the environment variable is not set
     user = None
     password = None
+    dbname = None
+    host = None
+    port = None
 
-# Use the 'user' variable in your database configuration
+# Use the extracted parameters in your database configuration
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': parameters['dbname'],
+        'NAME': dbname,
         'USER': user,
         'PASSWORD': password,
-        'HOST': parameters['host'],
-        'PORT': parameters['port'],
+        'HOST': host,
+        'PORT': port,
     }
 }
 
