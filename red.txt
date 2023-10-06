@@ -37,3 +37,4 @@ sendchamp-py
 uuid
 whitenoise
 drf-spectacular
+hi
