@@ -6,7 +6,7 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    settings_module = 'backendAPI.deploment' if 'WEBSITE_HOSTNAME' in os.environ else 'backendAPI.settings'
+    settings_module = 'backendAPI.settings'
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings_module)
 
     try:
