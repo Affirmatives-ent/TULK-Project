@@ -140,9 +140,16 @@ if connection_string:
     else:
         # Handle the case where 'user' parameter is missing
         user = None
+
+    if 'password' in parameters:
+        password = parameters['password']
+    else:
+        # Handle the case where 'password' parameter is missing
+        password = None
 else:
     # Handle the case where the environment variable is not set
     user = None
+    password = None
 
 # Use the 'user' variable in your database configuration
 DATABASES = {
@@ -150,7 +157,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': parameters['dbname'],
         'USER': user,
-        'PASSWORD': parameters['password'],
+        'PASSWORD': password,
         'HOST': parameters['host'],
         'PORT': parameters['port'],
     }
