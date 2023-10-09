@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ['SECRET']
 ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']]
 CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']]
-DEBUG = os.getenv['DEBUG']
+
 # SECRET_KEY = config("SECRET_KEY")
 
 # # SECURITY WARNING: don't run with debug turned on in production!
@@ -187,6 +187,7 @@ DATABASES = {
 
 # MY_SENDCHAMP_PUBLIC_KEY = os.getenv('SENDCHAMP_KEY')
 SENDCHAMP_KEY = os.getenv('SENDCHAMP_KEY')
+DEBUG = os.getenv('DEBUG')
 # print("SENDCHAMP_KEY:", SENDCHAMP_KEY)
 print("Hello world!")
 
