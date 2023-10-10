@@ -10,8 +10,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.views import TokenObtainPairView
 from . import serializers, models, utils
 from django.contrib.auth import get_user_model
-from posts.models import Post
-from posts.serializers import PostSerializer
+from posts.models import Post, File
+from posts.serializers import PostSerializer, FileSerializer
 from user_groups.models import ConversationGroup
 from user_groups.serializers import ConversationGroupSerializer
 from article.models import Article
@@ -24,7 +24,7 @@ import datetime
 import random
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import CustomTokenObtainPairSerializer, TokenExpiredError, UserMediaSerializer
+from .serializers import CustomTokenObtainPairSerializer, TokenExpiredError, ProfileMediaSerializer
 from datetime import datetime, timedelta
 
 User = get_user_model()
@@ -527,15 +527,29 @@ class SearchAPIView(APIView):
 
 
 class UserMediaFilesView(generics.ListAPIView):
-    serializer_class = UserMediaSerializer
-
     def get_queryset(self):
         user_id = self.kwargs['user_id']
-        print("Received user_id:", user_id)
         # Retrieve the user based on user_id
         user = get_object_or_404(User, id=user_id)
 
-        # Query UserMedia objects associated with the user
-        media_files = models.UserMedia.objects.filter(user=user)
+        # Query ProfileMedia objects associated with the user
+        profile_media_files = models.ProfileMedia.objects.filter(user=user)
 
-        return media_files
+        # Query Files objects associated with the user
+        post_media_files = File.objects.filter(author=user)
+
+        # Serialize the data using the UserSerializer for the User model
+        user_serializer = ProfileMediaSerializer(user)
+        user_data = user_serializer.data
+
+        # Serialize the data using the FilesSerializer for the Files model
+        post_media_serializer = FileSerializer(post_media_files, many=True)
+        post_media_data = post_media_serializer.data
+
+        # Combine the serialized data into a single dictionary
+        media_data = {
+            'user_data': user_data,
+            'post_media_data': post_media_data,
+        }
+
+        return media_data

@@ -88,11 +88,20 @@ class User(PermissionsMixin, AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_online = models.BooleanField(default=False)
     user_register_at = models.DateTimeField(auto_now_add=True)
-    avatar = models.ImageField(
-        upload_to='user_avatar/', blank=True, null=True, storage=MediaCloudinaryStorage()
+    avatar = models.ForeignKey(
+        'ProfileMedia',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='users_avatar',
     )
-    background_image = models.ImageField(
-        upload_to='cover_image/', blank=True, null=True, storage=MediaCloudinaryStorage()
+
+    background_image = models.ForeignKey(
+        'ProfileMedia',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='users_background',
     )
     marital_status = models.CharField(
         max_length=20, choices=MARITAL_STATUS, blank=True, null=True)
@@ -182,16 +191,15 @@ class Notification(models.Model):
         return f'{self.sender.first_name} -> {self.recipient.first_name}: {self.message}'
 
 
-class UserMedia(models.Model):
+class ProfileMedia(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='user_media', to_field='id')
-    file = models.FileField(upload_to='user_media_files/',
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    file = models.FileField(upload_to='user_files/',
                             storage=MediaCloudinaryStorage())
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ["-uploaded_at"]
+        ordering = ["timestamp"]
 
     def __str__(self):
-        return "Uploaded"
+        return f"Media owned by {self.user.first_name}"

@@ -1,16 +1,26 @@
+# serializers.py
+
 from rest_framework import serializers
-from .models import Chat, File
+from .models import Message, Chat, File
 
 
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
-        fields = ('id', 'file', 'timestamp')
+        fields = '__all__'
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    files = FileSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Message
+        fields = '__all__'
 
 
 class ChatSerializer(serializers.ModelSerializer):
-    files = FileSerializer(many=True, read_only=True)  # Add File serializer
+    messages = MessageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Chat
-        fields = ('id', 'sender', 'receiver', 'message', 'files', 'timestamp')
+        fields = '__all__'

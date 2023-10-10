@@ -13,6 +13,7 @@ from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from posts.models import Like, Post
 from article.models import Article
+from .models import ProfileMedia
 User = get_user_model()
 
 
@@ -22,15 +23,22 @@ class UserFriendsSerializer(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name']
 
 
+class ProfileMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProfileMedia
+        fields = ('id', 'user', 'file', 'timestamp')
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
-    # user_friends = UserFriendsSerializer(
-    #     many=True, read_only=True)  # Include this line
+    avatar = ProfileMediaSerializer()  # Serializer for the avatar
+    # Serializer for the background image
+    background_image = ProfileMediaSerializer()
 
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'date_of_birth', 'gender',
-                  'email', 'phone_number', 'avatar', 'background_image', 'school', 'marital_status',
-                  'bio', 'website', 'location', 'is_staff']
+                  'email', 'phone_number', 'school', 'marital_status',
+                  'bio', 'website', 'location', 'is_staff', 'avatar', 'background_image']
 
         extra_kwargs = {
             'avatar': {'required': False},
@@ -259,8 +267,3 @@ class NotificationCountSerializer(serializers.Serializer):
 #     class Meta:
 #         model = Article
 #         fields = ('featured_image', 'files')
-
-class UserMediaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserMedia
-        fields = '__all__'
