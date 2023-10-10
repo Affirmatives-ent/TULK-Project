@@ -48,6 +48,7 @@ class PostListCreateView(APIView):
     def post(self, request, format=None):
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
+            user = request.user
             post = serializer.save()
 
             # Process and save multiple files
@@ -57,8 +58,8 @@ class PostListCreateView(APIView):
                 file_instance.save()
                 post.files.add(file_instance)
 
-            user_media_instance = self.create_user_media_instance(
-                file_instance)
+            user_media_instance = self.create_user_media_instance(user,
+                                                                  file_instance)
             user_media_instance.save()
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)

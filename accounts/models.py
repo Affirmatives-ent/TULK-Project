@@ -186,7 +186,7 @@ class UserMedia(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='user_media', to_field='id')
-    file = models.FileField(upload_to='post_files/',
+    file = models.FileField(upload_to='user_media_files/',
                             storage=MediaCloudinaryStorage())
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
