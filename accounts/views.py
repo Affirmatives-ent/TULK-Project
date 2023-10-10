@@ -134,20 +134,6 @@ class VerifyOTPAPIView(generics.GenericAPIView, mixins.UpdateModelMixin):
         user.is_active = True
         user.save()
 
-        # Retrieve background image and avatar from request data
-        background_image = request.data.get('background_image')
-        avatar = request.data.get('avatar')
-
-        # Save background image and avatar to UserMedia model
-        if background_image:
-            user_media_background = models.UserMedia(
-                user=user, file=background_image)
-            user_media_background.save()
-
-        if avatar:
-            user_media_avatar = models.UserMedia(user=user, file=avatar)
-            user_media_avatar.save()
-
         return Response({"user_id": user.id, "message": "OTP verified and account created successfully."})
 
 
@@ -303,6 +289,18 @@ class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
         serializer = self.get_serializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        background_image = request.data.get('background_image')
+        avatar = request.data.get('avatar')
+
+        # Save background image and avatar to UserMedia model
+        if background_image:
+            user_media_background = models.UserMedia(
+                user=user, file=background_image)
+            user_media_background.save()
+
+        if avatar:
+            user_media_avatar = models.UserMedia(user=user, file=avatar)
+            user_media_avatar.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, *args, **kwargs):
