@@ -135,6 +135,8 @@ class LikeToggleAPIView(APIView):
             like.delete()
 
             try:
+                if like.user == request.user:
+                    pass
                 notification = Notification.objects.get(
                     sender=user, recipient=post.author, message=f'{user.first_name} Unliked your post')
                 notification.delete()

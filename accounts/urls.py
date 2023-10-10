@@ -61,6 +61,8 @@ urlpatterns = [
          name='user-notifications'),
     path('search/', SearchAPIView.as_view(), name='search'),
     path('user-media/<uuid:user_id>/',
-         UserMediaFilesView.as_view(), name='user-media'),
+         UserMediaFilesView.as_view(), name='user-media-files')
+
+
 
 ]

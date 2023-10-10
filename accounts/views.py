@@ -533,6 +533,7 @@ class UserMediaFilesView(generics.ListAPIView):
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
+        print("Received user_id:", user_id)
         # Retrieve the user based on user_id
         user = get_object_or_404(User, id=user_id)
 
