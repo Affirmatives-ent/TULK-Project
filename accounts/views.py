@@ -517,7 +517,7 @@ class SearchAPIView(APIView):
                 articles_results = Article.objects.filter(
                     Q(title__icontains=search_query) |
                     Q(category__icontains=search_query) |
-                    Q(author__icontains=search_query)
+                    Q(author__first_name__icontains=search_query)
                 )
                 article_serializer = ArticleSerializer(
                     articles_results, many=True)
