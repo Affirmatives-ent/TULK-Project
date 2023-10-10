@@ -133,6 +133,21 @@ class VerifyOTPAPIView(generics.GenericAPIView, mixins.UpdateModelMixin):
 
         user.is_active = True
         user.save()
+
+        # Retrieve background image and avatar from request data
+        background_image = request.data.get('background_image')
+        avatar = request.data.get('avatar')
+
+        # Save background image and avatar to UserMedia model
+        if background_image:
+            user_media_background = models.UserMedia(
+                user=user, file=background_image)
+            user_media_background.save()
+
+        if avatar:
+            user_media_avatar = models.UserMedia(user=user, file=avatar)
+            user_media_avatar.save()
+
         return Response({"user_id": user.id, "message": "OTP verified and account created successfully."})
 
 
@@ -521,15 +536,7 @@ class UserMediaFilesView(generics.ListAPIView):
         # Retrieve the user based on user_id
         user = get_object_or_404(User, id=user_id)
 
-        # List to store media file instances
-        media_files = []
-
-        # Add user profile media if available
-        if user.avatar or user.background_image:
-            media_files.append(user)
-
-        # Add media files from posts
-        posts = Post.objects.filter(author=user)
-        media_files.extend(posts)
+        # Query UserMedia objects associated with the user
+        media_files = models.UserMedia.objects.filter(user=user)
 
         return media_files

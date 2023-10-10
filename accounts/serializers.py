@@ -1,7 +1,7 @@
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from .models import User, Friendship, FriendRequest, Notification
+from .models import User, Friendship, FriendRequest, Notification, UserMedia
 from django.contrib.auth import authenticate
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -260,31 +260,7 @@ class NotificationCountSerializer(serializers.Serializer):
 #         model = Article
 #         fields = ('featured_image', 'files')
 
-class UserMediaSerializer(serializers.Serializer):
-    # Define fields that can represent media files from different models
-    avatar = serializers.SerializerMethodField()
-    background_image = serializers.SerializerMethodField()
-    files = serializers.SerializerMethodField()
-
-    def get_avatar(self, obj):
-        if isinstance(obj, User) and obj.avatar:
-            return obj.avatar.url
-        return None
-
-    def get_background_image(self, obj):
-        if isinstance(obj, User) and obj.background_image:
-            return obj.background_image.url
-        return None
-
-    def get_files(self, obj):
-        if isinstance(obj, Post):
-            return [file_obj.file.url for file_obj in obj.files.all()]
-        return []
-
-    def to_representation(self, instance):
-        data = {
-            'avatar': self.get_avatar(instance),
-            'background_image': self.get_background_image(instance),
-            'files': self.get_files(instance),
-        }
-        return data
+class UserMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserMedia
+        fields = '__all__'
