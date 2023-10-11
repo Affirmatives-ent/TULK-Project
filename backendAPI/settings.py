@@ -137,7 +137,7 @@ if connection_string:
     if 'user' in parameters:
         user = parameters['user']
     else:
-        # Handle the case where 'user' parameter is missing
+        # Handle the case where 'user'
         user = None
 
     if 'password' in parameters:
