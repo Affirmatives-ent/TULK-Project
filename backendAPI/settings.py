@@ -143,7 +143,7 @@ if connection_string:
     if 'password' in parameters:
         password = parameters['password']
     else:
-        # Handle the case where 'password' parameter is missing
+        # Handle the case where 'password' parameter
         password = None
 
     if 'dbname' in parameters:
