@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from .models import Chat, File, Message
+from .models import File, Message
 from .serializers import MessageSerializer
 from django.contrib.auth import get_user_model
 

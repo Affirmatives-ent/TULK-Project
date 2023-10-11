@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import Chat
+from .models import Message
 
 # Register your models here.
 
 
-class ChatAdmin(admin.ModelAdmin):
+class MessageAdmin(admin.ModelAdmin):
     list_display = ('sender', 'receiver', 'timestamp')
 
 
-admin.site.register(Chat, ChatAdmin)
+admin.site.register(Message, MessageAdmin)

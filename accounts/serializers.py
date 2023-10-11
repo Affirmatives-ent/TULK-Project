@@ -1,7 +1,7 @@
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from .models import User, Friendship, FriendRequest, Notification, UserMedia
+from .models import User, Friendship, FriendRequest, Notification, ProfileMedia
 from django.contrib.auth import authenticate
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -13,7 +13,6 @@ from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from posts.models import Like, Post
 from article.models import Article
-from .models import ProfileMedia
 User = get_user_model()
 
 

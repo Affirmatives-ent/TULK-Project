@@ -13,7 +13,7 @@ class Message(models.Model):
         User, on_delete=models.CASCADE, related_name='received_messages')
     message_content = models.TextField()
     files = models.ManyToManyField(
-        'File', related_name='messages', storage=MediaCloudinaryStorage())
+        'File', related_name='messages')
     timestamp = models.DateTimeField(auto_now_add=True)
 
 

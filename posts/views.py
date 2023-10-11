@@ -8,7 +8,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth import get_user_model
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer, ShareSerializer, FileSerializer
 from .models import Post, Comment, Like, Share, File
-from accounts.models import Notification, UserMedia
+from accounts.models import Notification, ProfileMedia
 from accounts.serializers import NotificationSerializer
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -66,7 +66,7 @@ class PostListCreateView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def create_user_media_instance(self, file_instance, user):
-        user_media_instance = UserMedia()
+        user_media_instance = ProfileMedia()
         user_media_instance.user = user  # Set the user who uploaded the file
         user_media_instance.file = file_instance.file
         user_media_instance.save()
