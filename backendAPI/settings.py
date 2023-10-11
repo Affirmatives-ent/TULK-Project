@@ -172,16 +172,16 @@ else:
     port = None
 
 # Use the extracted parameters in your database configuration
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': dbname,
-        'USER': user,
-        'PASSWORD': password,
-        'HOST': host,
-        'PORT': port,
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': dbname,
+#         'USER': user,
+#         'PASSWORD': password,
+#         'HOST': host,
+#         'PORT': port,
+#     }
+# }
 
 
 # MY_SENDCHAMP_PUBLIC_KEY = os.getenv('SENDCHAMP_KEY')
