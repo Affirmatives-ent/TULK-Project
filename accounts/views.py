@@ -289,18 +289,7 @@ class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
         serializer = self.get_serializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        background_image = request.data.get('background_image')
-        avatar = request.data.get('avatar')
 
-        # Save background image and avatar to UserMedia model
-        if background_image:
-            user_media_background = models.UserMedia(
-                user=user, file=background_image)
-            user_media_background.save()
-
-        if avatar:
-            user_media_avatar = models.UserMedia(user=user, file=avatar)
-            user_media_avatar.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, *args, **kwargs):
