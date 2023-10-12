@@ -27,15 +27,12 @@ class File(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     file = models.FileField(upload_to='post_files/',
                             storage=MediaCloudinaryStorage())
-    post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name='files_post')
+    uploaded_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="user_post_media", to_field="id")
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ["-uploaded_at"]
-
-    def author(self):
-        return self.post.author
 
     def __str__(self):
         return "Uploaded"
