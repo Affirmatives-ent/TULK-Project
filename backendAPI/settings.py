@@ -26,6 +26,8 @@ SECRET_KEY = os.environ['SECRET']
 ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']]
 CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']]
 
+# ALLOWED_HOSTS = ["*"]
+
 # SECRET_KEY = config("SECRET_KEY")
 
 # # SECURITY WARNING: don't run with debug turned on in production!
