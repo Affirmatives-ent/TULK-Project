@@ -22,7 +22,15 @@ class UserFriendsSerializer(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name']
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"
+
+
 class ProfileMediaSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
     class Meta:
         model = ProfileMedia
         fields = ('id', 'user', 'file', 'timestamp')
