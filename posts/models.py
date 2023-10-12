@@ -10,8 +10,6 @@ User = get_user_model()
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     content = models.TextField(blank=True)
-    files = models.ManyToManyField(
-        'File', blank=True, related_name="post_files")
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='posts', to_field='id')
@@ -19,7 +17,7 @@ class Post(models.Model):
     class Meta:
         ordering = ["-created_at"]
 
-    def __str__(self):
+    def str(self):
         return self.content[:20]
 
 
@@ -27,14 +25,14 @@ class File(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     file = models.FileField(upload_to='post_files/',
                             storage=MediaCloudinaryStorage())
-    uploaded = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="user_post_media", to_field="id")
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name="post_file")
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ["-uploaded_at"]
 
-    def __str__(self):
+    def str(self):
         return "Uploaded"
 
 

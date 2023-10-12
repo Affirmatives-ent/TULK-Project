@@ -526,7 +526,7 @@ class UserMediaFilesView(generics.ListAPIView):
 
         # Query Files objects associated with the user
 
-        post_media_files = File.objects.filter(uploaded=user)
+        post_media_files = File.objects.filter(post__author=user)
 
         # Serialize the data using the UserSerializer for the User model
         user_serializer = ProfileMediaSerializer(user)

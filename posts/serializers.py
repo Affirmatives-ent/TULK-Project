@@ -27,6 +27,7 @@ class FileSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
+    # Use the ListSerializer for the 'files' field
     files = FileSerializer(many=True, required=False)
 
     class Meta:
