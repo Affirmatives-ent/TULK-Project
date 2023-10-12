@@ -54,7 +54,7 @@ class PostListCreateView(APIView):
             # Process and save multiple files
             files_data = request.FILES.getlist('files')
             for file_data in files_data:
-                file_instance = File(file=file_data, uploaded_by=user)
+                file_instance = File(file=file_data, uploaded=user)
                 file_instance.save()
                 post.files.add(file_instance)
 
