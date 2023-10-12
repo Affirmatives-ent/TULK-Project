@@ -27,7 +27,7 @@ class File(models.Model):
     file = models.FileField(upload_to='post_files/',
                             storage=MediaCloudinaryStorage())
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name='files')
+        Post, on_delete=models.CASCADE, related_name='files_post')
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
