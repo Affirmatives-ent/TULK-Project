@@ -36,10 +36,13 @@ class ProfileMediaSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    avatar = ProfileMediaSerializer(
-        source='profile_media_user', required=False)
-    background_image = ProfileMediaSerializer(
-        source='profile_media_user', required=False)
+    # avatar = ProfileMediaSerializer(
+    #     source='profile_media_user', required=False)
+    # background_image = ProfileMediaSerializer(
+    #     source='profile_media_user', required=False)
+    avatar = serializers.ImageField(allow_empty_file=True, required=False)
+    background_image = serializers.ImageField(
+        allow_empty_file=True, required=False)
 
     class Meta:
         model = User
@@ -47,10 +50,36 @@ class UserProfileSerializer(serializers.ModelSerializer):
                   'email', 'phone_number', 'school', 'marital_status',
                   'bio', 'website', 'location', 'is_staff', 'avatar', 'background_image']
 
-        extra_kwargs = {
-            'avatar': {'required': False},
-            'background_image': {'required': False},
-        }
+        # extra_kwargs = {
+        #     'avatar': {'required': False},
+        #     'background_image': {'required': False},
+        # }
+
+    def update(self, instance, validated_data):
+        # Extract avatar and background_image from validated_data
+        avatar = validated_data.pop('avatar', None)
+        background_image = validated_data.pop('background_image', None)
+
+        # Update user instance with validated_data
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        # Handle avatar upload and create ProfileMedia object
+        if avatar:
+            profile_media_avatar, created = ProfileMedia.objects.get_or_create(
+                user=instance)
+            profile_media_avatar.file = avatar
+            profile_media_avatar.save()
+
+        # Handle background_image upload and create ProfileMedia object
+        if background_image:
+            profile_media_background, created = ProfileMedia.objects.get_or_create(
+                user=instance)
+            profile_media_background.file = background_image
+            profile_media_background.save()
+
+        return instance
 
 
 class TokenExpiredError(serializers.ValidationError):
