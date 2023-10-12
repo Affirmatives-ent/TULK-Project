@@ -88,21 +88,21 @@ class User(PermissionsMixin, AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_online = models.BooleanField(default=False)
     user_register_at = models.DateTimeField(auto_now_add=True)
-    avatar = models.ForeignKey(
-        'ProfileMedia',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='users_avatar',
-    )
+    # avatar = models.ForeignKey(
+    #     'ProfileMedia',
+    #     null=True,
+    #     blank=True,
+    #     on_delete=models.SET_NULL,
+    #     related_name='users_avatar',
+    # )
 
-    background_image = models.ForeignKey(
-        'ProfileMedia',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='users_background',
-    )
+    # background_image = models.ForeignKey(
+    #     'ProfileMedia',
+    #     null=True,
+    #     blank=True,
+    #     on_delete=models.SET_NULL,
+    #     related_name='users_background',
+    # )
     marital_status = models.CharField(
         max_length=20, choices=MARITAL_STATUS, blank=True, null=True)
     school = models.CharField(max_length=100, blank=True, null=True)

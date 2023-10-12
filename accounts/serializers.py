@@ -29,17 +29,17 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ProfileMediaSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
 
     class Meta:
         model = ProfileMedia
-        fields = ('id', 'user', 'file', 'timestamp')
+        fields = "__all__"
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    avatar = ProfileMediaSerializer()  # Serializer for the avatar
-    # Serializer for the background image
-    background_image = ProfileMediaSerializer()
+    avatar = ProfileMediaSerializer(
+        source='profile_media_user', required=False)
+    background_image = ProfileMediaSerializer(
+        source='profile_media_user', required=False)
 
     class Meta:
         model = User
