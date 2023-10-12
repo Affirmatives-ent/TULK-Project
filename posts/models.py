@@ -10,7 +10,8 @@ User = get_user_model()
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     content = models.TextField(blank=True)
-    files = models.ManyToManyField('File', blank=True)
+    files = models.ManyToManyField(
+        'File', blank=True, related_name="post_files")
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='posts', to_field='id')
