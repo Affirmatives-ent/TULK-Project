@@ -37,7 +37,7 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ['id', 'author', 'content', 'files', "uploaded_files"]
 
     def create(self, validated_data):
-        uploaded_files = validated_data.pop('uploaded_files')
+        uploaded_files = validated_data.pop('uploaded_files', [])
 
         post = Post.objects.create(**validated_data)
 

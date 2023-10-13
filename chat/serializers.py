@@ -19,7 +19,7 @@ class MessageSerializer(serializers.ModelSerializer):
                   'files', 'uploaded_files', 'timestamp']
 
     def create(self, validated_data):
-        uploaded_files = validated_data.pop('uploaded_files')
+        uploaded_files = validated_data.pop('uploaded_files', [])
         message = Message.objects.create(**validated_data)
 
         for file in uploaded_files:
