@@ -51,12 +51,12 @@ class PostListCreateView(APIView):
             user = request.user
             post = serializer.save()
 
-            files_data = request.FILES.getlist('files')
+            # files_data = request.FILES.getlist('files')
 
-            if files_data:
-                for file_data in files_data:
-                    file_instance = File(file=file_data, post=post)
-                    file_instance.save()
+            # if files_data:
+            #     for file_data in files_data:
+            #         file_instance = File(file=file_data, post=post)
+            #         file_instance.save()
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

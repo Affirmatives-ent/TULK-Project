@@ -23,23 +23,25 @@ class ShareSerializer(serializers.ModelSerializer):
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
-        fields = ('id', 'file', 'post')
+        fields = "__all__"
 
 
 class PostSerializer(serializers.ModelSerializer):
     # Use the ListSerializer for the 'files' field
-    files = FileSerializer(many=True, required=False)
+    files = FileSerializer(many=True, read_only=True)
+    uploaded_files = serializers.ListField(
+        child=serializers.FileField(allow_empty_file=True), write_only=True)
 
     class Meta:
         model = Post
-        fields = ['id', 'author', 'content', 'files', 'created_at']
+        fields = ['id', 'author', 'content', 'files', "uploaed_files"]
 
     def create(self, validated_data):
-        files_data = validated_data.pop('files')
+        uploaded_files = validated_data.pop('uploaded_files')
 
         post = Post.objects.create(**validated_data)
 
-        for file_data in files_data:
-            File.objects.create(post=post, **file_data)
+        for file in uploaded_files:
+            File.objects.create(post=post, file=file)
 
         return post
