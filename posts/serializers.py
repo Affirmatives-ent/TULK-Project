@@ -30,7 +30,7 @@ class PostSerializer(serializers.ModelSerializer):
     # Use the ListSerializer for the 'files' field
     files = FileSerializer(many=True, read_only=True)
     uploaded_files = serializers.ListField(
-        child=serializers.FileField(allow_empty_file=True), write_only=True)
+        child=serializers.FileField(allow_empty_file=True), write_only=True, read_only=False)
 
     class Meta:
         model = Post
