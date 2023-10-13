@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import User, Friendship, FriendRequest, Notification, ProfileMedia
+from .models import User, Friendship, FriendRequest, Notification
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -22,12 +22,7 @@ class NotificationAdmin(admin.ModelAdmin):
     list_filter = ('type',)
 
 
-class ProfileMediaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user',)
-
-
 admin.site.register(User, UserAdmin)
 admin.site.register(Friendship, FriendshipAdmin)
 admin.site.register(FriendRequest, FriendRequestAdmin)
 admin.site.register(Notification, NotificationAdmin)
-admin.site.register(ProfileMedia, ProfileMediaAdmin)
