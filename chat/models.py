@@ -18,7 +18,7 @@ class Message(models.Model):
 class File(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     file = models.FileField(upload_to='messages_files/',
-                            storage=MediaCloudinaryStorage())
+                            storage=MediaCloudinaryStorage(), blank=True, null=True)
     message = models.ForeignKey(
         Message, on_delete=models.CASCADE, related_name="files")
 
