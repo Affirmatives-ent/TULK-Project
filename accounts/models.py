@@ -88,21 +88,10 @@ class User(PermissionsMixin, AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_online = models.BooleanField(default=False)
     user_register_at = models.DateTimeField(auto_now_add=True)
-    # avatar = models.ForeignKey(
-    #     'ProfileMedia',
-    #     null=True,
-    #     blank=True,
-    #     on_delete=models.SET_NULL,
-    #     related_name='users_avatar',
-    # )
-
-    # background_image = models.ForeignKey(
-    #     'ProfileMedia',
-    #     null=True,
-    #     blank=True,
-    #     on_delete=models.SET_NULL,
-    #     related_name='users_background',
-    # )
+    avatar = models.ImageField(
+        upload_to='user_avatar/', storage=MediaCloudinaryStorage(), blank=True, null=True)
+    background_image = models.ImageField(
+        upload_to='user_background_image/', storage=MediaCloudinaryStorage(), blank=True, null=True)
     marital_status = models.CharField(
         max_length=20, choices=MARITAL_STATUS, blank=True, null=True)
     school = models.CharField(max_length=100, blank=True, null=True)
@@ -191,16 +180,16 @@ class Notification(models.Model):
         return f'{self.sender.first_name} -> {self.recipient.first_name}: {self.message}'
 
 
-class ProfileMedia(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name="profile_media_user", to_field="id")
-    file = models.FileField(upload_to='user_files/',
-                            storage=MediaCloudinaryStorage())
-    timestamp = models.DateTimeField(auto_now_add=True)
+# class ProfileMedia(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE,
+#                              related_name="profile_media_user", to_field="id")
+#     file = models.FileField(upload_to='user_files/',
+#                             storage=MediaCloudinaryStorage())
+#     timestamp = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        ordering = ["timestamp"]
+#     class Meta:
+#         ordering = ["timestamp"]
 
-    def __str__(self):
-        return f"Media owned by {self.user.first_name}"
+#     def __str__(self):
+#         return f"Media owned by {self.user.first_name}"

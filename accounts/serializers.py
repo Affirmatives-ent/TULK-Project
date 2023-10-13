@@ -1,7 +1,7 @@
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from .models import User, Friendship, FriendRequest, Notification, ProfileMedia
+from .models import User, Friendship, FriendRequest, Notification
 from django.contrib.auth import authenticate
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -22,27 +22,13 @@ class UserFriendsSerializer(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name']
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = "__all__"
-
-
-class ProfileMediaSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = ProfileMedia
-        fields = "__all__"
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = "__all__"
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    # avatar = ProfileMediaSerializer(
-    #     source='profile_media_user', required=False)
-    # background_image = ProfileMediaSerializer(
-    #     source='profile_media_user', required=False)
-    avatar = serializers.ImageField(allow_empty_file=True, required=False)
-    background_image = serializers.ImageField(
-        allow_empty_file=True, required=False)
 
     class Meta:
         model = User
@@ -50,36 +36,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
                   'email', 'phone_number', 'school', 'marital_status',
                   'bio', 'website', 'location', 'is_staff', 'avatar', 'background_image']
 
-        # extra_kwargs = {
-        #     'avatar': {'required': False},
-        #     'background_image': {'required': False},
-        # }
-
-    def update(self, instance, validated_data):
-        # Extract avatar and background_image from validated_data
-        avatar = validated_data.pop('avatar', None)
-        background_image = validated_data.pop('background_image', None)
-
-        # Update user instance with validated_data
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
-
-        # Handle avatar upload and create ProfileMedia object
-        if avatar:
-            profile_media_avatar, created = ProfileMedia.objects.get_or_create(
-                user=instance)
-            profile_media_avatar.file = avatar
-            profile_media_avatar.save()
-
-        # Handle background_image upload and create ProfileMedia object
-        if background_image:
-            profile_media_background, created = ProfileMedia.objects.get_or_create(
-                user=instance)
-            profile_media_background.file = background_image
-            profile_media_background.save()
-
-        return instance
+        extra_kwargs = {
+            'avatar': {'required': False},
+            'background_image': {'required': False},
+        }
 
 
 class TokenExpiredError(serializers.ValidationError):

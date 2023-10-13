@@ -24,7 +24,7 @@ import datetime
 import random
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import CustomTokenObtainPairSerializer, TokenExpiredError, ProfileMediaSerializer
+from .serializers import CustomTokenObtainPairSerializer, TokenExpiredError
 from datetime import datetime, timedelta
 
 User = get_user_model()
@@ -521,25 +521,21 @@ class UserMediaFilesView(generics.ListAPIView):
         # Retrieve the user based on user_id
         user = get_object_or_404(User, id=user_id)
 
-        # Query ProfileMedia objects associated with the user
-        profile_media_files = models.ProfileMedia.objects.filter(user=user)
+        # # Query ProfileMedia objects associated with the user
+        # profile_media_files = models.ProfileMedia.objects.filter(user=user)
 
         # Query Files objects associated with the user
 
         post_media_files = File.objects.filter(post__author=user)
 
-        # Serialize the data using the UserSerializer for the User model
-        user_serializer = ProfileMediaSerializer(user)
-        user_data = user_serializer.data
+        # # Serialize the data using the UserSerializer for the User model
+        # user_serializer = ProfileMediaSerializer(user)
+        # user_data = user_serializer.data
 
         # Serialize the data using the FilesSerializer for the Files model
         post_media_serializer = FileSerializer(post_media_files, many=True)
         post_media_data = post_media_serializer.data
 
         # Combine the serialized data into a single dictionary
-        media_data = {
-            'user_data': user_data,
-            'post_media_data': post_media_data,
-        }
 
-        return media_data
+        return post_media_data
