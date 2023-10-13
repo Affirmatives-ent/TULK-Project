@@ -21,7 +21,7 @@ class MessageSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         uploaded_files = validated_data.pop('uploaded_files', [])
         message = Message.objects.create(**validated_data)
-
-        for file in uploaded_files:
-            File.objects.create(message=message, file=file)
+        if uploaded_files:
+            for file in uploaded_files:
+                File.objects.create(message=message, file=file)
         return message

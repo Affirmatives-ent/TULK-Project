@@ -26,7 +26,7 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path("", include(("posts.urls", "posts"), namespace="posts")),
-    path("", include(("chat.urls", "chat"), namespace="chat")),
+    path("", include(("chats.urls", "chat"), namespace="chat")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/schema/redoc/", SpectacularRedocView.as_view(
         url_name="schema"), name="redoc",),
