@@ -34,7 +34,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'author', 'content', 'files', "uploaed_files"]
+        fields = ['id', 'author', 'content', 'files', "uploaded_files"]
 
     def create(self, validated_data):
         uploaded_files = validated_data.pop('uploaded_files')

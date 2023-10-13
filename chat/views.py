@@ -27,7 +27,7 @@ class ChatListView(generics.ListCreateAPIView):
         # Ensure that the receiver exists
         receiver = get_object_or_404(User, id=receiver_id)
 
-        chat, _ = Message.objects.get_or_create(
+        chat = Message.objects.create(
             sender=sender, receiver=receiver)
 
         serializer.save(sender=sender, receiver=receiver)
