@@ -8,7 +8,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth import get_user_model
 from .serializers import PostSerializer, CommentSerializer, LikeSerializer, ShareSerializer, FileSerializer
 from .models import Post, Comment, Like, Share, File
-from accounts.models import Notification, ProfileMedia
+from accounts.models import Notification
 from accounts.serializers import NotificationSerializer
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
