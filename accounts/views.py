@@ -26,6 +26,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomTokenObtainPairSerializer, TokenExpiredError
 from datetime import datetime, timedelta
+from rest_framework.pagination import PageNumberPagination
 
 User = get_user_model()
 
@@ -517,6 +518,7 @@ class SearchAPIView(APIView):
 
 class UserMediaFilesView(generics.ListAPIView):
     serializer_class = FileSerializer  # Define the serializer class
+    pagination_class = None
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
