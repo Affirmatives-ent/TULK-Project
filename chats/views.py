@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from .models import File, Message
-from .serializers import MessageSerializer
+from .models import File, Message, Conversation
+from .serializers import MessageSerializer, ConversationSerializer
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -37,12 +37,11 @@ class UserChatList(generics.ListAPIView):
         return Message.objects.filter(query).order_by('sender', '-timestamp').distinct('sender')
 
 
-class ChatConversationView(generics.ListAPIView):
-    serializer_class = MessageSerializer
+class ConversationListView(generics.ListAPIView):
+    queryset = Conversation.objects.all()
+    serializer_class = ConversationSerializer
 
     def get_queryset(self):
+        # Filter conversations for the current user
         user = self.request.user
-        receiver_id = self.kwargs.get('receiver_id')
-        query = Q(sender=user, receiver=receiver_id) | Q(
-            sender=receiver_id, receiver=user)
-        return Message.objects.filter(query).order_by('timestamp')
+        return Conversation.objects.filter(participants=user)

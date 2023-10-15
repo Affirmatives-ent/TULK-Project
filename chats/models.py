@@ -29,3 +29,13 @@ class File(models.Model):
 
     def __str__(self):
         return "Media file added"
+
+
+class Conversation(models.Model):
+    participants = models.ManyToManyField(User, related_name='conversations')
+    last_message = models.ForeignKey(
+        Message, on_delete=models.SET_NULL, null=True, related_name='conversation')
+
+    def add_message(self, message):
+        self.last_message = message
+        self.save()

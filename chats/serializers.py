@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Message, File
+from .models import Message, File, Conversation
 
 
 class FileSerializer(serializers.ModelSerializer):
@@ -25,3 +25,9 @@ class MessageSerializer(serializers.ModelSerializer):
             for file in uploaded_files:
                 File.objects.create(message=message, file=file)
         return message
+
+
+class ConversationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Conversation
+        fields = ['id', 'participants', 'last_message']
