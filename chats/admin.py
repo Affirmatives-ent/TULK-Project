@@ -13,7 +13,7 @@ class FileAdmin(admin.ModelAdmin):
 
 
 class ConversationAdmin(admin.ModelAdmin):
-    list_display = ('participants')
+    list_display = ('participants',)
 
 
 admin.site.register(Message, MessageAdmin)
