@@ -12,10 +12,6 @@ class FileAdmin(admin.ModelAdmin):
     list_display = ('file', 'message')
 
 
-class ConversationAdmin(admin.ModelAdmin):
-    list_display = ('participants',)
-
-
 admin.site.register(Message, MessageAdmin)
 admin.site.register(File, FileAdmin)
-admin.site.register(Conversation, ConversationAdmin)
+admin.site.register(Conversation)
