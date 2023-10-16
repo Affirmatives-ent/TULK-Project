@@ -187,8 +187,8 @@ DATABASES = {
 
 
 # MY_SENDCHAMP_PUBLIC_KEY = os.getenv('SENDCHAMP_KEY')
-SENDCHAMP_KEY = os.getenv('SENDCHAMP_KEY')
-DEBUG = True
+SENDCHAMP_KEY = os.environ['SENDCHAMP_KEY']
+DEBUG = os.environ['DEBUG']
 # DEBUG = os.getenv('DEBUG')
 # print("SENDCHAMP_KEY:", SENDCHAMP_KEY)
 print("Hello world!")
@@ -303,8 +303,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': "djwh3low0",
-    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
+    'API_KEY': os.environ['CLOUDINARY_API_KEY'],
+    'API_SECRET': os.environ['CLOUDINARY_API_SECRET'],
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
