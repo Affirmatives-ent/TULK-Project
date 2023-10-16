@@ -26,16 +26,17 @@ class ChatCreateView(generics.CreateAPIView):
             sender=sender, receiver=receiver)
 
         conversation, created = Conversations.objects.get_or_create(
-            participant1=sender, participant2=receiver)
+            participant1=sender, participant2=receiver, last_message=message_content)
 
         if created:
             conversation.participant1 = sender
             conversation.participant2 = receiver
+            conversation.last_message = message_content
             conversation.save()
 
-        # Update the last message in the conversation
-        conversation.last_message
-        conversation.save()
+        # # Update the last message in the conversation
+        # conversation.last_message
+        # conversation.save()
 
         # last_message = Message.objects.filter(
         #     sender=sender, receiver=receiver).order_by('-timestamp').first()
