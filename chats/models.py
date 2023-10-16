@@ -31,7 +31,7 @@ class File(models.Model):
         return "Media file added"
 
 
-class Conversation(models.Model):
+class Conversations(models.Model):
     participant1 = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='conversation_participant1')
     participant2 = models.ForeignKey(

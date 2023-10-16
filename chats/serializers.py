@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Message, File, Conversation
+from .models import Message, File, Conversations
 
 
 class FileSerializer(serializers.ModelSerializer):
@@ -29,5 +29,5 @@ class MessageSerializer(serializers.ModelSerializer):
 
 class ConversationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Conversation
+        model = Conversations
         fields = ['id', 'participant1', 'participant2', 'last_message']

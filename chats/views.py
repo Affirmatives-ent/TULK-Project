@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from .models import File, Message, Conversation
+from .models import File, Message, Conversations
 from .serializers import MessageSerializer, ConversationSerializer
 from django.contrib.auth import get_user_model
 
@@ -25,7 +25,7 @@ class ChatCreateView(generics.CreateAPIView):
         chat = Message.objects.create(
             sender=sender, receiver=receiver)
 
-        conversation, created = Conversation.objects.get_or_create(
+        conversation, created = Conversations.objects.get_or_create(
             participant1=sender, participant2=receiver)
 
         if created:
@@ -56,13 +56,13 @@ class ChatCreateView(generics.CreateAPIView):
 
 
 class UserChatListView(generics.ListAPIView):
-    queryset = Conversation.objects.all()
+    queryset = Conversations.objects.all()
     serializer_class = ConversationSerializer
 
     def get_queryset(self):
         # Filter conversations for the current user
         user = self.request.user
-        return Conversation.objects.filter(Q(participant1=user) | Q(participant2=user))
+        return Conversations.objects.filter(Q(participant1=user) | Q(participant2=user))
 
 
 class ChatConversationView(generics.ListAPIView):
