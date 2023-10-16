@@ -24,24 +24,40 @@ class ChatCreateView(generics.CreateAPIView):
         chat = Message.objects.create(
             sender=sender, receiver=receiver)
 
+        last_message = Message.objects.filter(
+            sender=sender, receiver=receiver).order_by('-timestamp').first()
+        conversation = Conversation.objects.create(
+            participant1=sender, participant2=receiver, last_message=last_message)
+
         serializer.save(sender=sender, receiver=receiver)
 
 
-class UserChatList(generics.ListAPIView):
-    serializer_class = MessageSerializer
+# class UserChatList(generics.ListAPIView):
+#     serializer_class = MessageSerializer
 
-    def get_queryset(self):
-        user = self.request.user
-        # Retrieve all unique users that the current user has communicated with
-        query = Q(sender=user) | Q(receiver=user)
-        return Message.objects.filter(query).order_by('sender', '-timestamp').distinct('sender')
+#     def get_queryset(self):
+#         user = self.request.user
+#         # Retrieve all unique users that the current user has communicated with
+#         query = Q(sender=user) | Q(receiver=user)
+#         return Message.objects.filter(query).order_by('sender', '-timestamp').distinct('sender')
 
 
-class ConversationListView(generics.ListAPIView):
+class UserChatListView(generics.ListAPIView):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
 
     def get_queryset(self):
         # Filter conversations for the current user
         user = self.request.user
-        return Conversation.objects.filter(participants=user)
+        return Conversation.objects.filter(Q(participant1=user) | Q(participant2=user))
+
+
+class ChatConversationView(generics.ListAPIView):
+    serializer_class = MessageSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        receiver_id = self.kwargs.get('receiver_id')
+        query = Q(sender=user, receiver=receiver_id) | Q(
+            sender=receiver_id, receiver=user)
+        return Message.objects.filter(query).order_by('timestamp')

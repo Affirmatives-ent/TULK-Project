@@ -32,10 +32,11 @@ class File(models.Model):
 
 
 class Conversation(models.Model):
-    participants = models.ManyToManyField(User, related_name='conversations')
-    last_message = models.ForeignKey(
-        Message, on_delete=models.SET_NULL, null=True, related_name='conversation')
+    participant1 = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='conversation_participant1')
+    participant2 = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='conversation_participant2')
+    last_message = models.TextField()
 
-    def add_message(self, message):
-        self.last_message = message
-        self.save()
+    def __str__(self):
+        return f"{self.participant1} ==> {self.participant2}"
