@@ -12,7 +12,7 @@ User = get_user_model()
 
 class ChatCreateView(generics.CreateAPIView):
     serializer_class = MessageSerializer
-    parser_classes = (MultiPartParser, FormParser)  # Enable file uploads
+    parser_classes = (MultiPartParser, FormParser)
 
     def perform_create(self, serializer):
         sender = self.request.user
@@ -23,35 +23,25 @@ class ChatCreateView(generics.CreateAPIView):
         receiver = get_object_or_404(User, id=receiver_id)
 
         chat = Message.objects.create(
-            sender=sender, receiver=receiver)
+            sender=sender, receiver=receiver, message_content=message_content)
 
-        conversation, created = Conversations.objects.get_or_create(
-            participant1=sender, participant2=receiver, last_message=message_content)
+        # Check if a conversation already exists between sender and receiver
+        conversation = Conversations.objects.filter(
+            Q(participant1=sender, participant2=receiver) | Q(
+                participant1=receiver, participant2=sender)
+        ).first()
 
-        if created:
+        if conversation:
+            # Conversation already exists, update the last message
             conversation.last_message = message_content
             conversation.save()
-
-        # # Update the last message in the conversation
-        # conversation.last_message
-        # conversation.save()
-
-        # last_message = Message.objects.filter(
-        #     sender=sender, receiver=receiver).order_by('-timestamp').first()
-        # conversation = Conversation.objects.create(
-        #     participant1=sender, participant2=receiver, last_message=last_message)
+        else:
+            # Conversation doesn't exist, create a new one
+            conversation = Conversations.objects.create(
+                participant1=sender, participant2=receiver, last_message=message_content
+            )
 
         serializer.save(sender=sender, receiver=receiver)
-
-
-# class UserChatList(generics.ListAPIView):
-#     serializer_class = MessageSerializer
-
-#     def get_queryset(self):
-#         user = self.request.user
-#         # Retrieve all unique users that the current user has communicated with
-#         query = Q(sender=user) | Q(receiver=user)
-#         return Message.objects.filter(query).order_by('sender', '-timestamp').distinct('sender')
 
 
 class UserChatListView(generics.ListAPIView):
