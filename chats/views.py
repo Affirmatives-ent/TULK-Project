@@ -17,6 +17,7 @@ class ChatCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         sender = self.request.user
         receiver_id = self.request.data.get('receiver')
+        message_content = self.request.data.get('message_content')
 
         # Ensure that the receiver exists
         receiver = get_object_or_404(User, id=receiver_id)
@@ -24,10 +25,22 @@ class ChatCreateView(generics.CreateAPIView):
         chat = Message.objects.create(
             sender=sender, receiver=receiver)
 
-        last_message = Message.objects.filter(
-            sender=sender, receiver=receiver).order_by('-timestamp').first()
-        conversation = Conversation.objects.create(
-            participant1=sender, participant2=receiver, last_message=last_message)
+        conversation, created = Conversation.objects.get_or_create(
+            participant1=sender, participant2=receiver)
+
+        if created:
+            conversation.participant1 = sender
+            conversation.participant2 = receiver
+            conversation.save()
+
+        # Update the last message in the conversation
+        conversation.last_message
+        conversation.save()
+
+        # last_message = Message.objects.filter(
+        #     sender=sender, receiver=receiver).order_by('-timestamp').first()
+        # conversation = Conversation.objects.create(
+        #     participant1=sender, participant2=receiver, last_message=last_message)
 
         serializer.save(sender=sender, receiver=receiver)
 
