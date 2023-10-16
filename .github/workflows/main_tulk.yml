@@ -64,4 +64,4 @@ jobs:
         with:
           app-name: 'tulk'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8AA3B8691C09419887EAEB8B0C2D4674 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0BABFADFCEC747D582AD5544B2BA1E57 }}
