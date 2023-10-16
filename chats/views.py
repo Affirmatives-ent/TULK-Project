@@ -29,8 +29,6 @@ class ChatCreateView(generics.CreateAPIView):
             participant1=sender, participant2=receiver, last_message=message_content)
 
         if created:
-            conversation.participant1 = sender
-            conversation.participant2 = receiver
             conversation.last_message = message_content
             conversation.save()
 
