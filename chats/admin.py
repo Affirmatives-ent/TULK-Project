@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Message, File, Conversation
+from .models import Message, File, Conversations
 
 # Register your models here.
 
@@ -14,4 +14,4 @@ class FileAdmin(admin.ModelAdmin):
 
 admin.site.register(Message, MessageAdmin)
 admin.site.register(File, FileAdmin)
-admin.site.register(Conversation)
+admin.site.register(Conversations)
