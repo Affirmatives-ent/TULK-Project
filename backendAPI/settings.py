@@ -188,7 +188,8 @@ DATABASES = {
 
 # MY_SENDCHAMP_PUBLIC_KEY = os.getenv('SENDCHAMP_KEY')
 SENDCHAMP_KEY = os.getenv('SENDCHAMP_KEY')
-DEBUG = os.getenv('DEBUG')
+DEBUG = True
+# DEBUG = os.getenv('DEBUG')
 # print("SENDCHAMP_KEY:", SENDCHAMP_KEY)
 print("Hello world!")
 
