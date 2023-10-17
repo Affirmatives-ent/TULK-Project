@@ -51,7 +51,7 @@ class UserChatListView(generics.ListAPIView):
     pagination_class = None
 
     def get_queryset(self):
-        # Filter conversations for the current user
+        # Filter conversations for the current
         user = self.request.user
         return Conversations.objects.filter(Q(participant1=user) | Q(participant2=user))
 
