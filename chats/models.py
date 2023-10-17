@@ -39,6 +39,7 @@ class Conversations(models.Model):
     participant2 = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='conversation_participant2')
     last_message = models.TextField()
+    timestamp = models.DateTimeField()
 
     def __str__(self):
         return f"{self.participant1} ==> {self.participant2}"
