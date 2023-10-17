@@ -15,7 +15,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ['sender', 'receiver', 'message_content',
+        fields = ['id', 'sender', 'receiver', 'message_content',
                   'files', 'uploaded_files', 'timestamp']
 
     def create(self, validated_data):
