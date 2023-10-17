@@ -7,7 +7,7 @@ User = get_user_model()
 
 
 class Message(models.Model):
-    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     sender = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='sent_messages')
     receiver = models.ForeignKey(
@@ -33,7 +33,7 @@ class File(models.Model):
 
 
 class Conversations(models.Model):
-    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     participant1 = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='conversation_participant1')
     participant2 = models.ForeignKey(
