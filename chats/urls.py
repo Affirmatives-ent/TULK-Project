@@ -6,6 +6,6 @@ urlpatterns = [
     # path('user-chats/', UserChatList.as_view(), name='user-chats'),
     path('chat-list/', UserChatListView.as_view(),
          name='chat-list'),
-    path('chat/<int:receiver_id>/',
+    path('chat/<uuid:receiver_id>/',
          ChatConversationView.as_view(), name='chat-conversation'),
 ]
