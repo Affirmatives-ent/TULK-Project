@@ -23,8 +23,8 @@ class ChatCreateView(generics.CreateAPIView):
         # Ensure that the receiver exists
         receiver = get_object_or_404(User, id=receiver_id)
 
-        chat = Message.objects.create(
-            sender=sender, receiver=receiver, message_content=message_content)
+        # chat = Message.objects.create(
+        #     sender=sender, receiver=receiver, message_content=message_content)
 
         # Check if a conversation already exists between sender and receiver
         conversation = Conversations.objects.filter(
