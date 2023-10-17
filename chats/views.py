@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from .models import File, Message, Conversations
 from .serializers import MessageSerializer, ConversationSerializer
 from django.contrib.auth import get_user_model
+from rest_framework.pagination import PageNumberPagination
 
 User = get_user_model()
 
@@ -47,6 +48,7 @@ class ChatCreateView(generics.CreateAPIView):
 class UserChatListView(generics.ListAPIView):
     queryset = Conversations.objects.all()
     serializer_class = ConversationSerializer
+    pagination_class = None
 
     def get_queryset(self):
         # Filter conversations for the current user
@@ -56,6 +58,7 @@ class UserChatListView(generics.ListAPIView):
 
 class ChatConversationView(generics.ListAPIView):
     serializer_class = MessageSerializer
+    pagination_class = None
 
     def get_queryset(self):
         user = self.request.user
