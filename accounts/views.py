@@ -331,7 +331,7 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
         recipient = serializer.validated_data['recipient']
 
         # Check if a friend request already exists between sender and recipient
-        if models.FriendRequest.objects.filter(sender=sender, recipient=recipient, accepted=False).exists():
+        if models.FriendRequest.objects.filter(Q(sender=sender, recipient=recipient, accepted=False) | Q(sender=recipient, recipient=sender, accept=False)).exists():
             raise exceptions.ValidationError(
                 "A friend request already exists for this recipient.")
 
