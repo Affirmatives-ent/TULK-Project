@@ -201,6 +201,7 @@ class ForgotPasswordAPIView(APIView):
         print(otp)
 
         utils.send_otp(phone, otp)
+        print(phone)
 
         # Save the OTP in the user's model
         user.reset_password_otp = otp
