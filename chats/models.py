@@ -5,6 +5,11 @@ from cloudinary_storage.storage import MediaCloudinaryStorage
 from django.conf import settings
 User = get_user_model()
 
+MESSAGE_STATUS = (
+    ('read', 'Read'),
+    ('unread', 'Unread')
+)
+
 
 class Message(models.Model):
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -13,6 +18,8 @@ class Message(models.Model):
     receiver = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='received_messages')
     message_content = models.TextField()
+    status = models.CharField(
+        max_length=10, choices=MESSAGE_STATUS, default='unread')
     timestamp = models.DateTimeField(auto_now_add=True)
 
 

@@ -16,11 +16,12 @@ class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ['id', 'sender', 'receiver', 'message_content',
-                  'files', 'uploaded_files', 'timestamp']
+                  'files', 'uploaded_files', 'status', 'timestamp']
 
     def create(self, validated_data):
         uploaded_files = validated_data.pop('uploaded_files', [])
         message = Message.objects.create(**validated_data)
+        message.status = 'unread'
         if uploaded_files:
             for file in uploaded_files:
                 File.objects.create(message=message, file=file)

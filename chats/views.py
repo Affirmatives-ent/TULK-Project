@@ -67,4 +67,6 @@ class ChatConversationView(generics.ListAPIView):
         receiver_id = self.kwargs.get('receiver_id')
         query = Q(sender=user, receiver=receiver_id) | Q(
             sender=receiver_id, receiver=user)
-        return Message.objects.filter(query).order_by('timestamp')
+        chat = Message.objects.filter(query).order_by('timestamp')
+        chat.status = 'read'
+        return chat
