@@ -214,7 +214,7 @@ class VerifyPasswordOTPAPIView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        serializer = serializers.VerifyOTPSerializer(data=request.data)
+        serializer = serializers.VerifyPasswordOTPSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         otp = serializer.validated_data['otp']
@@ -240,6 +240,10 @@ class ResetPasswordAPIView(APIView):
         serializer.is_valid(raise_exception=True)
 
         otp = request.session.get('verified_otp')
+        otp = request.session.get('verified_otp')
+        if otp is None:
+            return Response({"message": "OTP verification required."}, status=status.HTTP_400_BAD_REQUEST)
+
         new_password = serializer.validated_data['new_password']
         confirm_password = serializer.validated_data['confirm_password']
 

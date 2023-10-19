@@ -141,7 +141,7 @@ class ForgotPasswordSerializer(serializers.Serializer):
         return phone_number
 
 
-class VerifyOTPSerializer(serializers.Serializer):
+class VerifyPasswordOTPSerializer(serializers.Serializer):
     otp = serializers.CharField()
 
     def validate_otp(self, otp):

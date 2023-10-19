@@ -274,6 +274,8 @@ SIMPLE_JWT = {
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
+SESSION_COOKIE_AGE = 2592000
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
