@@ -191,6 +191,8 @@ class ForgotPasswordAPIView(APIView):
         user = User.objects.filter(
             phone_number=phone_number, is_active=True).first()
 
+        phone = user.phone_number
+
         if user is None:
             return Response({"message": "No active user found with the provided phone number."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -198,7 +200,7 @@ class ForgotPasswordAPIView(APIView):
         otp = str(random.randint(100000, 999999))
         print(otp)
 
-        utils.send_otp(phone_number, otp)
+        utils.send_otp(phone, otp)
 
         # Save the OTP in the user's model
         user.reset_password_otp = otp
