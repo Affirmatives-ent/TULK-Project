@@ -200,27 +200,11 @@ class FriendRequestSerializer(serializers.ModelSerializer):
         return value
 
 
-# class FriendshipSerializer(serializers.ModelSerializer):
-#     user1_data = UserProfileSerializer(source='user1', read_only=True)
-#     user2_data = UserProfileSerializer(source='user2', read_only=True)
-
-#     class Meta:
-#         model = Friendship
-#         fields = ['id', 'user1', 'user2',
-#                   'user1_data', 'user2_data', 'created_at']
-
-
 class FriendshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Friendship
         fields = ['user1', 'user2']
 
-
-# class NotificationSerializer(serializers.ModelSerializer):
-
-#     class Meta:
-#         model = Notification
-#         fields = "__all__"
 
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -244,22 +228,3 @@ class NotificationSerializer(serializers.ModelSerializer):
 
 class NotificationCountSerializer(serializers.Serializer):
     count = serializers.IntegerField()
-
-
-# class UserProfileMediaSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         # Add other relevant fields for UserProfile
-#         fields = ('avatar', 'background_image')
-
-
-# class PostMediaSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Post
-#         fields = ('files',)  # Add other relevant fields for Post
-
-
-# class ArticleMediaSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Article
-#         fields = ('featured_image', 'files')

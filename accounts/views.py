@@ -22,6 +22,7 @@ from rest_framework import exceptions
 from django.db.models import Q
 import datetime
 import random
+from django.contrib.contenttypes.models import ContentType
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomTokenObtainPairSerializer, TokenExpiredError
@@ -329,6 +330,7 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         sender = self.request.user
         recipient = serializer.validated_data['recipient']
+        request_id = serializer.validated_data['id']
 
         # Check if a friend request already exists between sender and recipient
         if models.FriendRequest.objects.filter(Q(sender=sender, recipient=recipient, accepted=False) | Q(sender=recipient, recipient=sender, accepted=False)).exists():
@@ -350,7 +352,10 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
             sender=sender,
             recipient=recipient,
             message=f'{sender.first_name} sent you a friend request.',
-            type='friend_request'
+            type='friend_request',
+            content_type=ContentType.objects.get_for_model(
+                models.FriendRequest),
+            object_id=request_id
         )
         notification_serializer = serializers.NotificationSerializer(
             notification)
