@@ -330,7 +330,6 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         sender = self.request.user
         recipient = serializer.validated_data['recipient']
-        request_id = serializer.validated_data['id']
 
         # Check if a friend request already exists between sender and recipient
         if models.FriendRequest.objects.filter(Q(sender=sender, recipient=recipient, accepted=False) | Q(sender=recipient, recipient=sender, accepted=False)).exists():
@@ -346,6 +345,9 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
                 "You are already friends with this user.")
 
         friend_request = serializer.save(sender=sender)
+
+        request_id = models.FriendRequest.objects.filter(
+            sender=sender, recipient=recipient, accepted=False).get().id
 
         # Create a notification for the recipient
         notification = models.Notification.objects.create(

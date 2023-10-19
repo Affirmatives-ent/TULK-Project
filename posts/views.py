@@ -159,6 +159,7 @@ class LikeToggleAPIView(APIView):
 class LikeListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = LikeSerializer
+    pagination_class = None
 
     def get_queryset(self):
         post_id = self.kwargs['post_id']
