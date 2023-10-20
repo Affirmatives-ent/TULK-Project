@@ -32,4 +32,4 @@ class ConversationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conversations
         fields = ['id', 'participant1', 'participant2',
-                  'last_message', 'timestamp']
+                  'last_message', 'status', 'timestamp']

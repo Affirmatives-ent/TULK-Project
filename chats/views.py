@@ -20,6 +20,7 @@ class ChatCreateView(generics.CreateAPIView):
         sender = self.request.user
         receiver_id = self.request.data.get('receiver')
         message_content = self.request.data.get('message_content')
+        status = self.request.data.get('status')
         # timestamp = self.request.data.get('timestamp')
 
         # Ensure that the receiver exists
@@ -42,7 +43,7 @@ class ChatCreateView(generics.CreateAPIView):
         else:
             # Conversation doesn't exist, create a new one
             conversation = Conversations.objects.create(
-                participant1=sender, participant2=receiver, last_message=message_content, timestamp=timezone.now())
+                participant1=sender, participant2=receiver, last_message=message_content, status=status, timestamp=timezone.now())
 
         serializer.save(sender=sender, receiver=receiver)
 

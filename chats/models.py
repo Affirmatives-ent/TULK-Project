@@ -46,6 +46,7 @@ class Conversations(models.Model):
     participant2 = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='conversation_participant2')
     last_message = models.TextField()
+    status = models.CharField(max_length=15)
     timestamp = models.DateTimeField()
 
     def __str__(self):
