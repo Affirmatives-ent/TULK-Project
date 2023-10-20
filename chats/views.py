@@ -42,6 +42,7 @@ class ChatCreateView(generics.CreateAPIView):
             conversation.save()
         else:
             # Conversation doesn't exist, create a new one
+            status = 'read'
             conversation = Conversations.objects.create(
                 participant1=sender, participant2=receiver, last_message=message_content, status=status, timestamp=timezone.now())
 
