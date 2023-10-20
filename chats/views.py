@@ -68,5 +68,7 @@ class ChatConversationView(generics.ListAPIView):
         query = Q(sender=user, receiver=receiver_id) | Q(
             sender=receiver_id, receiver=user)
         chat = Message.objects.filter(query).order_by('timestamp')
-        chat.status = 'read'
+        for message in chat:
+            message.status = 'read'
+            message.save()
         return chat
