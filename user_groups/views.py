@@ -16,6 +16,7 @@ from django.contrib.auth import get_user_model
 from article.models import Article
 from accounts.models import Friendship, Notification
 from accounts.serializers import UserProfileSerializer
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.utils.timezone import make_aware
 from django.core.paginator import Paginator
@@ -92,7 +93,7 @@ class InviteUserToGroup(APIView):
             return Response(serializer.data)
         except models.ConversationGroup.DoesNotExist:
             return Response(status=404)
-        except User.DoesNotExist:
+        except ObjectDoesNotExist:
             return Response(status=404)
 
 
