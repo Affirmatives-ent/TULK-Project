@@ -451,10 +451,18 @@ class NotificationUpdateAPIView(generics.UpdateAPIView):
     serializer_class = serializers.NotificationSerializer
     permission_classes = [IsAuthenticated]
 
+    # def get(self, request, format=None):
+    #     user = request.user
+
     def update(self, request, *args, **kwargs):
         notification = self.get_object()
         notification.viewed = True
         notification.save()
+        if notification.type == 'friend_request':
+            sender = notification.sender
+            user = notification.recipient
+            models.Friendship.objects.create(user1=sender, user2=user)
+
         return Response(self.get_serializer(notification).data, status=status.HTTP_200_OK)
 
 
