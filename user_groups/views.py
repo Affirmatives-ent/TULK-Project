@@ -84,11 +84,10 @@ class InviteUserToGroup(APIView):
         notification = Notification(
             sender=group.admin,
             recipient=user,
-            type=Notification.NOTIFICATION_TYPES.group_request,
+            type="group_request",
             message='You have a new group invitation.',
         )
         notification.save()
-
         serializer = serializers.ConversationGroupSerializer(group)
         return Response(serializer.data)
         # except models.ConversationGroup.DoesNotExist:
