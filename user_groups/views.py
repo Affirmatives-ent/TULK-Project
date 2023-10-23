@@ -77,8 +77,8 @@ class InviteUserToGroup(APIView):
             return Response({'detail': 'User is not on your friend list.'}, status=400)
 
         # Add the user to the group's pending members
-        group.members.add(user)
-        group.save()
+        # group.members.add(user)
+        # group.save()
 
         # Create a notification for the invited user
         notification = Notification(
