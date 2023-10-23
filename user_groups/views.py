@@ -15,7 +15,7 @@ from .permissions import IsGroupAdmin
 from django.contrib.auth import get_user_model
 from article.models import Article
 from accounts.models import Friendship, Notification
-from accounts.serializers import UserProfileSerializer
+from accounts.serializers import UserProfileSerializer, NotificationSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.utils.timezone import make_aware
@@ -88,6 +88,10 @@ class InviteUserToGroup(APIView):
             message='You have a new group invitation.',
         )
         notification.save()
+        notification_serializer = NotificationSerializer(
+            notification)
+        return Response(notification_serializer.data, status=status.HTTP_200_OK)
+
         serializer = serializers.ConversationGroupSerializer(group)
         return Response(serializer.data)
         # except models.ConversationGroup.DoesNotExist:
