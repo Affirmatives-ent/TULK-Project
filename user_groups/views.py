@@ -127,24 +127,24 @@ class AcceptOrRejectInvitation(APIView):
         try:
             group = models.ConversationGroup.objects.get(id=group_id)
             user = request.user
-            invitation_status = request.data.get('invitation_status')
+            invitation_status = request.data.get('is_accepted')
 
             # Check if the user is a pending member of the group
-            if user not in group.members.all() or group.invitation_status != 'pending':
+            if user not in group.members.all():
                 return Response({'detail': 'Invalid invitation.'}, status=400)
 
             # Update the invitation status based on the user's response
-            if invitation_status == 'accept':
-                group.members.remove(user)
+            if invitation_status == True:
+                # group.members.remove(user)
                 group.members.add(user)
-                group.invitation_status = 'accepted'
+                # group.invitation_status = 'accepted'
                 group.save()
 
                 # Create a notification for the group owner
                 notification = Notification(
                     user=group.owner, message=f'{user.username} accepted the group invitation.')
                 notification.save()
-            elif invitation_status == 'reject':
+            else:
                 group.members.remove(user)
                 group.invitation_status = 'rejected'
                 group.save()
@@ -153,9 +153,6 @@ class AcceptOrRejectInvitation(APIView):
                 notification = Notification(
                     user=group.owner, message=f'{user.username} rejected the group invitation.')
                 notification.save()
-            else:
-                return Response({'detail': 'Invalid invitation status.'}, status=400)
-
             serializer = serializers.ConversationGroupSerializer(group)
             return Response(serializer.data)
         except models.ConversationGroup.DoesNotExist:
