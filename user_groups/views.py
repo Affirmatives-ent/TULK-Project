@@ -28,7 +28,7 @@ import random
 from .models import ConversationGroup, Comment, Like, GroupMedia, GroupPost
 from .serializers import GroupPostSerializer, CommentSerializer, LikeSerializer, GroupMediaSerializer
 
-User = get_user_model
+User = get_user_model()
 
 
 class CreateConversationGroup(generics.CreateAPIView):
