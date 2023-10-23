@@ -58,43 +58,43 @@ class InviteUserToGroup(APIView):
     permission_classes = [IsAuthenticated, IsGroupAdmin]
 
     def post(self, request, group_id):
-        try:
-            group = models.ConversationGroup.objects.get(id=group_id)
-            user_id = request.data.get('user_id')
-            user = User.objects.get(id=user_id)
+        # try:
+        group = models.ConversationGroup.objects.get(id=group_id)
+        user_id = request.data.get('user_id')
+        user = User.objects.get(id=user_id)
 
-            # Check if the user is already a member of the group
-            if user in group.members.all():
-                return Response({'detail': 'User is already a member of the group.'}, status=400)
+        # Check if the user is already a member of the group
+        if user in group.members.all():
+            return Response({'detail': 'User is already a member of the group.'}, status=400)
 
-            # Check if the group admin and the user are friends
-            friendship = Friendship.objects.filter(
-                (Q(user1=request.user) & Q(user2=user)) | (
-                    Q(user1=user) & Q(user2=request.user))
-            ).first()
+        # Check if the group admin and the user are friends
+        friendship = Friendship.objects.filter(
+            (Q(user1=request.user) & Q(user2=user)) | (
+                Q(user1=user) & Q(user2=request.user))
+        ).first()
 
-            if not friendship:
-                return Response({'detail': 'User is not on your friend list.'}, status=400)
+        if not friendship:
+            return Response({'detail': 'User is not on your friend list.'}, status=400)
 
-            # Add the user to the group's pending members
-            group.members.add(user)
-            group.save()
+        # Add the user to the group's pending members
+        group.members.add(user)
+        group.save()
 
-            # Create a notification for the invited user
-            notification = Notification(
-                sender=group.admin,
-                recipient=user,
-                type=Notification.NOTIFICATION_TYPES.group_request,
-                message='You have a new group invitation.',
-            )
-            notification.save()
+        # Create a notification for the invited user
+        notification = Notification(
+            sender=group.admin,
+            recipient=user,
+            type=Notification.NOTIFICATION_TYPES.group_request,
+            message='You have a new group invitation.',
+        )
+        notification.save()
 
-            serializer = serializers.ConversationGroupSerializer(group)
-            return Response(serializer.data)
-        except models.ConversationGroup.DoesNotExist:
-            return Response(status=404)
-        except ObjectDoesNotExist:
-            return Response(status=404)
+        serializer = serializers.ConversationGroupSerializer(group)
+        return Response(serializer.data)
+        # except models.ConversationGroup.DoesNotExist:
+        #     return Response(status=404)
+        # except ObjectDoesNotExist:
+        #     return Response(status=404)
 
 
 class FriendSearch(APIView):
