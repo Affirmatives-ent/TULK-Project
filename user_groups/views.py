@@ -129,7 +129,8 @@ class AcceptOrRejectInvitation(APIView):
     def post(self, request, invitation_id):
         try:
             invitation = models.GroupInvitation.objects.get(id=invitation_id)
-            group = models.ConversationGroup.objects.get(id=invitation.group)
+            group = models.ConversationGroup.objects.get(
+                id=invitation.group.id)
             user = request.user
             invitation_status = request.data.get('is_accepted')
 
