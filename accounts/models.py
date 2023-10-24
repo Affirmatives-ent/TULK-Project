@@ -172,6 +172,7 @@ class Notification(models.Model):
         blank=True, null=True
     )
     object_id = models.UUIDField(blank=True, null=True)
+    other_fields = models.UUIDField(blank=True, null=True)
 
     class Meta:
         ordering = ["-created_at"]

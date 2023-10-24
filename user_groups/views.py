@@ -88,7 +88,8 @@ class InviteUserToGroup(APIView):
             recipient=user,
             type="group_request",
             message='You have a new group invitation.',
-            object_id=invitation.id
+            object_id=invitation.id,
+            other_fields=group.id
         )
         notification.save()
         notification_serializer = NotificationSerializer(
