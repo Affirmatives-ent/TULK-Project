@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ConversationGroup, GroupPost, GroupMedia, Like, Comment
+from .models import ConversationGroup, GroupInvitation, GroupPost, GroupMedia, Like, Comment
 
 
 from rest_framework import serializers
@@ -8,6 +8,12 @@ from rest_framework import serializers
 class ConversationGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConversationGroup
+        fields = '__all__'
+
+
+class GroupInvitationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GroupInvitation
         fields = '__all__'
 
 

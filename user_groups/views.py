@@ -26,7 +26,7 @@ from django.db.models import Q
 import datetime
 import random
 from .models import ConversationGroup, Comment, Like, GroupMedia, GroupPost
-from .serializers import GroupPostSerializer, CommentSerializer, LikeSerializer, GroupMediaSerializer
+from .serializers import GroupPostSerializer, CommentSerializer, LikeSerializer, GroupMediaSerializer, GroupInvitationSerializer
 
 User = get_user_model()
 
@@ -59,8 +59,8 @@ class InviteUserToGroup(APIView):
 
     def post(self, request, group_id):
         # try:
-        group = models.ConversationGroup.objects.get(id=group_id)
-        user_id = request.data.get('user_id')
+        group = models.ConversationGroup.objects.get(group=group_id)
+        user_id = request.data.get('user')
         user = User.objects.get(id=user_id)
 
         # Check if the user is already a member of the group
@@ -76,6 +76,8 @@ class InviteUserToGroup(APIView):
         if not friendship:
             return Response({'detail': 'User is not on your friend list.'}, status=400)
 
+        invitation = models.GroupInvitation.objects.create(
+            group=group, invited_by=group.admin, user=user, is_accepted=False)
         # Add the user to the group's pending members
         # group.members.add(user)
         # group.save()
@@ -86,14 +88,15 @@ class InviteUserToGroup(APIView):
             recipient=user,
             type="group_request",
             message='You have a new group invitation.',
+            object_id=invitation.id
         )
         notification.save()
         notification_serializer = NotificationSerializer(
             notification)
         return Response(notification_serializer.data, status=status.HTTP_200_OK)
 
-        serializer = serializers.ConversationGroupSerializer(group)
-        return Response(serializer.data)
+        # serializer = serializers.ConversationGroupSerializer(group)
+        # return Response(serializer.data)
         # except models.ConversationGroup.DoesNotExist:
         #     return Response(status=404)
         # except ObjectDoesNotExist:
@@ -123,9 +126,10 @@ class FriendSearch(APIView):
 class AcceptOrRejectInvitation(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, group_id):
+    def post(self, request, invitation_id):
         try:
-            group = models.ConversationGroup.objects.get(id=group_id)
+            invitation = models.GroupInvitation.objects.get(id=invitation_id)
+            group = models.ConversationGroup.objects.get(id=invitation.group)
             user = request.user
             invitation_status = request.data.get('is_accepted')
 
