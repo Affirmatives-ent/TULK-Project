@@ -45,7 +45,7 @@ class GroupInvitation(models.Model):
         ordering = ["-invited_at"]
 
     def __str__(self):
-        return f'{self.invited_by.username} invited {self.user.username} to {self.group.name}'
+        return f'{self.invited_by.first_name} invited {self.user.first_name} to {self.group.name}'
 
 
 class GroupPost(models.Model):
