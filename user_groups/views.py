@@ -135,8 +135,8 @@ class AcceptOrRejectInvitation(APIView):
             invitation_status = request.data.get('is_accepted')
 
             # Check if the user is a pending member of the group
-            if user not in group.members.all():
-                return Response({'detail': 'Invalid invitation.'}, status=400)
+            # if user not in group.members.all():
+            #     return Response({'detail': 'Invalid invitation.'}, status=400)
 
             # Update the invitation status based on the user's response
             if invitation_status == True:
