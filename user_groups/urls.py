@@ -19,7 +19,7 @@ urlpatterns = [
     path('groups/', views.ListConversationGroups.as_view(), name='group-list'),
     path('groups/<uuid:group_id>/invite/',
          views.InviteUserToGroup.as_view(), name='invite_user_to_group'),
-    path('groups/<uuid:group_id>/invitation/',
+    path('groups/<uuid:invitation_id>/',
          views.AcceptOrRejectInvitation.as_view(), name='accept_or_reject_invitation'),
     path('group/<uuid:group_id>/posts/', GroupPostListCreateView.as_view(),
          name='group-post-list-create'),
