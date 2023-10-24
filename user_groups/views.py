@@ -60,7 +60,7 @@ class InviteUserToGroup(APIView):
     def post(self, request, group_id):
         # try:
         group = models.ConversationGroup.objects.get(id=group_id)
-        user_id = request.data.get('user')
+        user_id = request.data.get('user_id')
         user = User.objects.get(id=user_id)
 
         # Check if the user is already a member of the group
