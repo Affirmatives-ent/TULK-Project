@@ -42,7 +42,7 @@ class ListConversationGroups(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class ConversationGroupDetail(generics.RetrieveUpdateAPIView):
+class ConversationGroupDetail(generics.RetrieveAPIView):
     queryset = ConversationGroup.objects.all()
     serializer_class = serializers.ConversationGroupSerializer
     permission_classes = [IsAuthenticated]

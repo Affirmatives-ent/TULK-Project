@@ -272,7 +272,7 @@ class ResetPasswordAPIView(APIView):
 class UserProfileListAPIView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserProfileSerializer
-    pagination_class = pagination.PageNumberPagination
+    pagination_class = None
 
 
 class UserProfileDetailAPIView(generics.RetrieveUpdateAPIView):
@@ -332,7 +332,7 @@ class FriendRequestListCreateAPIView(generics.ListCreateAPIView):
     queryset = models.FriendRequest.objects.all()
     serializer_class = serializers.FriendRequestSerializer
     permission_classes = [IsAuthenticated]
-    # pagination_class = pagination.PageNumberPagination
+    pagination_class = None
 
     def perform_create(self, serializer):
         sender = self.request.user
