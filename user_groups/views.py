@@ -146,8 +146,8 @@ class AcceptOrRejectInvitation(APIView):
                 group.save()
 
                 # Create a notification for the group owner
-                notification = Notification(
-                    user=group.owner, message=f'{user.username} accepted the group invitation.')
+                notification = Notification(sender=user, recipient=group.admin, type="group_request_accept",
+                                            message=f'{user.first_name} accepted the group invitation.')
                 notification.save()
             else:
                 group.members.remove(user)
@@ -156,7 +156,7 @@ class AcceptOrRejectInvitation(APIView):
 
                 # Create a notification for the group owner
                 notification = Notification(
-                    user=group.owner, message=f'{user.username} rejected the group invitation.')
+                    sender=user, recipient=group.admin, type="group_request_accept", message=f'{user.first_name} rejected the group invitation.')
                 notification.save()
             serializer = serializers.ConversationGroupSerializer(group)
             return Response(serializer.data)
