@@ -42,33 +42,71 @@ class ListConversationGroups(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
 
-# class ConversationGroupDetail(generics.RetrieveAPIView):
-#     queryset = ConversationGroup.objects.all()
-#     serializer_class = serializers.ConversationGroupSerializer
-#     permission_classes = [IsAuthenticated]
-
-    # def get(self, request, group_id):
-    #     try:
-    #         group = ConversationGroup.objects.get(id=group_id)
-    #         serializer = serializers.ConversationGroupSerializer(group)
-    #         return Response(serializer.data, status=status.HTTP_200_OK)
-
-    #     except ConversationGroup.DoesNotExist:
-    #         return Response(status=404)
-
-
-class ConversationGroupDetailUpdate(generics.RetrieveUpdateDestroyAPIView):
+class ConversationGroupDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ConversationGroup.objects.all()
     serializer_class = serializers.ConversationGroupUpdateSerializer
-    permission_classes = [IsAuthenticated, IsGroupAdmin]
+    permission_classes = [IsAuthenticated]
 
-    # def put(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     serializer = self.get_serializer(
-    #         instance, data=request.data, partial=kwargs.pop('partial', False))
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_update(serializer)
-    #     return Response(serializer.data, status=status.HTTP_200_OK)
+    def get_object(self):
+        group_id = self.kwargs.get('pk')
+        return get_object_or_404(ConversationGroup, pk=group_id)
+
+    def update(self, request, *args, **kwargs):
+        group = self.get_object()
+
+        # Check if the user is an admin of the group
+        if not request.user == group.creator:
+            return Response(
+                {'detail': 'You do not have permission to update this group.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        serializer = self.get_serializer(
+            group, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        group = self.get_object()
+
+        # Check if the user is the creator of the group (an admin)
+        if not request.user == group.creator:
+            return Response(
+                {'detail': 'You do not have permission to delete this group.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        group.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# class ConversationGroupDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = ConversationGroup.objects.all()
+#     serializer_class = serializers.ConversationGroupUpdateSerializer
+#     permission_classes = [IsAuthenticated]
+
+#     def get_object(self):
+#         group_id = self.kwargs.get('pk')
+#         group = get_object_or_404(ConversationGroup, pk=group_id)
+#         return group
+
+#     def update(self, request, *args, **kwargs):
+#         group_id = self.kwargs.get('pk')
+#         group = get_object_or_404(ConversationGroup, pk=group_id)
+#         if request.user != IsGroupAdmin:
+#             return Response(
+#                 {'detail': 'You do not have permission to update this user.'},
+#                 status=status.HTTP_403_FORBIDDEN
+#             )
+
+#         serializer = self.get_serializer(
+#             group, data=request.data, partial=True)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+
+#         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class InviteUserToGroup(APIView):
