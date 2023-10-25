@@ -9,8 +9,8 @@ User = get_user_model()
 
 class ConversationGroup(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=255)
-    category = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, blank=True, null=True)
+    category = models.CharField(max_length=255, blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
     slogan = models.CharField(max_length=255, blank=True, null=True)
     about = models.TextField(blank=True, null=True)
