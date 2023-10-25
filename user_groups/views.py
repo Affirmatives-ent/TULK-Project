@@ -42,19 +42,19 @@ class ListConversationGroups(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class ConversationGroupDetail(generics.APIView):
-    # queryset = ConversationGroup.objects.all()
-    # serializer_class = serializers.ConversationGroupSerializer
+class ConversationGroupDetail(generics.RetrieveAPIView):
+    queryset = ConversationGroup.objects.all()
+    serializer_class = serializers.ConversationGroupSerializer
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, group_id):
-        try:
-            group = ConversationGroup.objects.get(id=group_id)
-            serializer = serializers.ConversationGroupSerializer(group)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+    # def get(self, request, group_id):
+    #     try:
+    #         group = ConversationGroup.objects.get(id=group_id)
+    #         serializer = serializers.ConversationGroupSerializer(group)
+    #         return Response(serializer.data, status=status.HTTP_200_OK)
 
-        except ConversationGroup.DoesNotExist:
-            return Response(status=404)
+    #     except ConversationGroup.DoesNotExist:
+    #         return Response(status=404)
 
 
 class ConversationGroupDetailUpdate(generics.RetrieveUpdateAPIView):
@@ -62,13 +62,13 @@ class ConversationGroupDetailUpdate(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.ConversationGroupUpdateSerializer
     permission_classes = [IsAuthenticated, IsGroupAdmin]
 
-    def put(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(
-            instance, data=request.data, partial=kwargs.pop('partial', False))
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    # def put(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(
+    #         instance, data=request.data, partial=kwargs.pop('partial', False))
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_update(serializer)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class InviteUserToGroup(APIView):
