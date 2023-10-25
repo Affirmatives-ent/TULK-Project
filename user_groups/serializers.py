@@ -17,16 +17,6 @@ class GroupInvitationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class ConversationGroupUpdateSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = ConversationGroup
-#         fields = '__all__'
-
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         self.fields.pop('members')
-
-
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
