@@ -10,10 +10,8 @@ from django.conf import settings
 from django.conf import settings
 import os
 import uuid
-from PIL import Image
 from cloudinary_storage.storage import MediaCloudinaryStorage
 from django.contrib.contenttypes.models import ContentType
-from .utils import compress_image
 
 
 email_validator = EmailValidator()
@@ -110,17 +108,7 @@ class User(PermissionsMixin, AbstractBaseUser):
         return self.first_name
 
     def save(self, *args, **kwargs):
-        # Compress and resize avatar image
-        if self.avatar:
-            # Specify the desired dimensions
-            self.avatar = compress_image(self.avatar, (200, 200))
-
-        # Compress and resize background image
-        if self.background_image:
-            self.background_image = compress_image(
-                self.background_image, (800, 600))  # Specify the desired dimensions
-
-        super(User, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class FriendRequest(models.Model):
