@@ -33,9 +33,9 @@ urlpatterns = [
          LikeToggleAPIView.as_view(), name='like-toggle'),
     path('group-posts/<uuid:post_id>/likes/',
          LikeListAPIView.as_view(), name='like-list'),
-    path('groups/<uuid:group_id>/',
-         views.ConversationGroupDetail.as_view(), name='group-detail'),
     path('groups/<uuid:group_id>/update', views.ConversationGroupDetailUpdate.as_view(),
          name='group-detail-update'),
+    path('groups/<uuid:group_id>/',
+         views.ConversationGroupDetail.as_view(), name='group-detail'),
     path('user-groups/', UserGroupsAPIView.as_view(), name='user-groups'),
 ]
