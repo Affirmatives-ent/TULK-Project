@@ -64,6 +64,34 @@ class ConversationGroupDetail(APIView):
         group_serializer = serializers.ConversationGroupSerializer(group)
         return Response(group_serializer.data, status=status.HTTP_200_OK)
 
+    def put(self, request, group_id):
+        try:
+            group = ConversationGroup.objects.get(id=group_id)
+        except ConversationGroup.DoesNotExist:
+            return Response({"error": "Group not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        if group.admin.id != request.user.id:
+            return Response({"error": "Only the admin can update this group"}, status=status.HTTP_403_FORBIDDEN)
+
+        serializer = serializers.ConversationGroupSerializer(
+            group, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, group_id):
+        try:
+            group = ConversationGroup.objects.get(id=group_id)
+        except ConversationGroup.DoesNotExist:
+            return Response({"error": "Group not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        if group.admin.id != request.user.id:
+            return Response({"error": "Only the admin can delete this group"}, status=status.HTTP_403_FORBIDDEN)
+
+        group.delete()
+        return Response({"message": "Group deleted"}, status=status.HTTP_204_NO_CONTENT)
+
 
 class InviteUserToGroup(APIView):
     permission_classes = [IsAuthenticated, IsGroupAdmin]
