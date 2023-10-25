@@ -77,9 +77,17 @@ class ConversationGroupDetail(APIView):
             group, data=request.data, partial=True)
 
         if serializer.is_valid():
-            # Custom update logic to selectively update fields
             for attr, value in request.data.items():
-                setattr(group, attr, value)
+                if attr == 'admin':
+                    # If 'admin' is in the request data, convert the UUID to a User instance
+                    try:
+                        # Assuming the UUID is a valid user ID
+                        user = User.objects.get(id=value)
+                        setattr(group, attr, user)
+                    except User.DoesNotExist:
+                        return Response({"error": "Admin user not found"}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    setattr(group, attr, value)
             group.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
