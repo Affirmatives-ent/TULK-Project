@@ -35,7 +35,5 @@ urlpatterns = [
          LikeListAPIView.as_view(), name='like-list'),
     path('groups/<uuid:pk>/', views.ConversationGroupDetail.as_view(),
          name='group-detail'),
-    #     path('groups/<uuid:group_id>/',
-    #          views.ConversationGroupDetail.as_view(), name='group-detail'),
     path('user-groups/', UserGroupsAPIView.as_view(), name='user-groups'),
 ]
