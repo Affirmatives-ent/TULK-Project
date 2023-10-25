@@ -45,7 +45,8 @@ class ListConversationGroups(generics.ListAPIView):
 class ConversationGroupDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ConversationGroup.objects.all()
     serializer_class = serializers.ConversationGroupUpdateSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsGroupAdmin]
+    lookup_field = 'pk'
 
     def get_object(self):
         group_id = self.kwargs.get('pk')
