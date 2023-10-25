@@ -25,7 +25,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from django.db.models import Q
 import datetime
 import random
-from .permissions import IsAdminOrReadOnly
+# from .permissions import IsAdminOrReadOnly
 from .models import ConversationGroup, Comment, Like, GroupMedia, GroupPost
 from .serializers import GroupPostSerializer, CommentSerializer, LikeSerializer, GroupMediaSerializer, GroupInvitationSerializer
 
