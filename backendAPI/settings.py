@@ -22,13 +22,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = os.environ['SECRET']
-# ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']]
-# CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']]
+SECRET_KEY = os.environ['SECRET']
+ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']]
+CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']]
 
-ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS = ["*"]
 
-SECRET_KEY = config("SECRET_KEY")
+# SECRET_KEY = config("SECRET_KEY")
 
 # # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = config("DEBUG", cast=bool)
@@ -130,60 +130,60 @@ load_dotenv()
 #     }
 # }
 
-# connection_string = os.environ.get('AZURE_POSTGRESQL_CONNECTIONSTRING')
-# if connection_string:
-#     parameters = {pair.split('=')[0]: pair.split('=')[1]
-#                   for pair in connection_string.split()}
+connection_string = os.environ.get('AZURE_POSTGRESQL_CONNECTIONSTRING')
+if connection_string:
+    parameters = {pair.split('=')[0]: pair.split('=')[1]
+                  for pair in connection_string.split()}
 
-#     # Check if 'user' parameter is present
-#     if 'user' in parameters:
-#         user = parameters['user']
-#     else:
-#         # Handle the case where 'user'
-#         user = None
+    # Check if 'user' parameter is present
+    if 'user' in parameters:
+        user = parameters['user']
+    else:
+        # Handle the case where 'user'
+        user = None
 
-#     if 'password' in parameters:
-#         password = parameters['password']
-#     else:
-#         # Handle the case where 'password' parameter
-#         password = None
+    if 'password' in parameters:
+        password = parameters['password']
+    else:
+        # Handle the case where 'password' parameter
+        password = None
 
-#     if 'dbname' in parameters:
-#         dbname = parameters['dbname']
-#     else:
-#         # Handle the case where 'dbname' parameter is missing
-#         dbname = None
+    if 'dbname' in parameters:
+        dbname = parameters['dbname']
+    else:
+        # Handle the case where 'dbname' parameter is missing
+        dbname = None
 
-#     if 'host' in parameters:
-#         host = parameters['host']
-#     else:
-#         # Handle the case where 'host' parameter is missing
-#         host = None
+    if 'host' in parameters:
+        host = parameters['host']
+    else:
+        # Handle the case where 'host' parameter is missing
+        host = None
 
-#     if 'port' in parameters:
-#         port = parameters['port']
-#     else:
-#         # Handle the case where 'port' parameter is missing
-#         port = None
-# else:
-#     # Handle the case where the environment variable is not set
-#     user = None
-#     password = None
-#     dbname = None
-#     host = None
-#     port = None
+    if 'port' in parameters:
+        port = parameters['port']
+    else:
+        # Handle the case where 'port' parameter is missing
+        port = None
+else:
+    # Handle the case where the environment variable is not set
+    user = None
+    password = None
+    dbname = None
+    host = None
+    port = None
 
-# # Use the extracted parameters in your database configuration
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': dbname,
-#         'USER': user,
-#         'PASSWORD': password,
-#         'HOST': host,
-#         'PORT': port,
-#     }
-# }
+# Use the extracted parameters in your database configuration
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': dbname,
+        'USER': user,
+        'PASSWORD': password,
+        'HOST': host,
+        'PORT': port,
+    }
+}
 
 
 # MY_SENDCHAMP_PUBLIC_KEY = os.getenv('SENDCHAMP_KEY')
