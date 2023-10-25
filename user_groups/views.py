@@ -3,7 +3,7 @@
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly, AllowAny, IsAdminOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.decorators import action
 from django.contrib.auth import authenticate, update_session_auth_hash
 from rest_framework import status, generics, mixins
@@ -43,10 +43,26 @@ class ListConversationGroups(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class ConversationGroupDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ConversationGroup.objects.all()
-    serializer_class = serializers.ConversationGroupSerializer
-    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
+class ConversationGroupDetail(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, group_id):
+        try:
+            group = ConversationGroup.objects.get(id=group_id)
+        except ConversationGroup.DoesNotExist:
+            return Response({"error": "Group not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        user_id = request.user.id
+
+        # Check if the user is a member or an admin of the group
+        is_member = group.members.filter(id=user_id).exists()
+        is_admin = group.admin.id == user_id
+
+        if not (is_member or is_admin):
+            return Response({"error": "You are not a member or admin of this group"}, status=status.HTTP_403_FORBIDDEN)
+
+        group_serializer = serializers.ConversationGroupSerializer(group)
+        return Response(group_serializer.data, status=status.HTTP_200_OK)
 
 
 class InviteUserToGroup(APIView):
