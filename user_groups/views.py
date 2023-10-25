@@ -42,10 +42,10 @@ class ListConversationGroups(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class ConversationGroupDetail(generics.RetrieveAPIView):
-    queryset = ConversationGroup.objects.all()
-    serializer_class = serializers.ConversationGroupSerializer
-    permission_classes = [IsAuthenticated]
+# class ConversationGroupDetail(generics.RetrieveAPIView):
+#     queryset = ConversationGroup.objects.all()
+#     serializer_class = serializers.ConversationGroupSerializer
+#     permission_classes = [IsAuthenticated]
 
     # def get(self, request, group_id):
     #     try:
@@ -57,7 +57,7 @@ class ConversationGroupDetail(generics.RetrieveAPIView):
     #         return Response(status=404)
 
 
-class ConversationGroupDetailUpdate(generics.RetrieveUpdateAPIView):
+class ConversationGroupDetailUpdate(generics.RetrieveUpdateDestroyAPIView):
     queryset = ConversationGroup.objects.all()
     serializer_class = serializers.ConversationGroupUpdateSerializer
     permission_classes = [IsAuthenticated, IsGroupAdmin]
